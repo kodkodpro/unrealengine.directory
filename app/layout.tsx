@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import "./globals.css"
+import Header from "@/components/layout/Header"
 
 export const metadata = {
   title: "UEDirectory",
@@ -13,7 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-neutral-900 text-neutral-100 antialiased">
+        <div className="mx-4 md:mx-12">
+          <Header />
+          {children}
+        </div>
+      </body>
     </html>
   )
 }
