@@ -8,10 +8,30 @@ import Label from "@/components/form/Label"
 import clsx from "clsx"
 import MultiSelect from "@/components/form/MultiSelect"
 import Button from "@/components/form/Button"
-import { Category, Tag } from "@prisma/client"
+import { Category, Prisma, Tag } from "@prisma/client"
 import prisma from "@/utils/prisma"
 import { titleize, toBoolean } from "@/utils/helpers/string"
 import Checkbox from "@/components/form/Checkbox"
+import Select from "@/components/form/Select"
+
+const ReleasePeriodOptions = [
+  { label: "Last 7 days", value: "last-7-days" },
+  { label: "Last 30 days", value: "last-30-days" },
+  { label: "Last 90 days", value: "last-90-days" },
+  { label: "Last year", value: "last-year" },
+] as const
+
+const OrderByOptions = [
+  { label: "Newest", value: "newest" },
+  { label: "Oldest", value: "oldest" },
+  { label: "Price: Low to High", value: "least-expensive" },
+  { label: "Price: High to Low", value: "most-expensive" },
+  { label: "Rating: Low to High", value: "least-popular" },
+  { label: "Rating: High to Low", value: "most-popular" },
+] as const
+
+export type ReleasePeriod = typeof ReleasePeriodOptions[number]["value"]
+export type OrderBy = typeof OrderByOptions[number]["value"]
 
 export type FiltersQuery = {
   q?: string,
@@ -20,13 +40,15 @@ export type FiltersQuery = {
   priceFrom?: string,
   priceTo?: string,
   freeOnly?: string,
+  orderBy?: OrderBy,
+  releasePeriod?: ReleasePeriod,
   categoriesIds?: string,
   tagsIds?: string,
 }
 
 export type AssetsFiltersFormProps = {
-  categories: Category[],
-  tags: Tag[],
+  categories: Pick<Category, "id" | "name">[]
+  tags: Pick<Tag, "id" | "name">[],
 } & React.HTMLAttributes<HTMLFormElement>
 
 export default function AssetsFiltersForm({ categories, tags, className, ...props }: AssetsFiltersFormProps) {
@@ -39,6 +61,8 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
   const [priceFrom, setPriceFrom] = useState(searchParams.get("priceFrom") || "")
   const [priceTo, setPriceTo] = useState(searchParams.get("priceTo") || "")
   const [freeOnly, setFreeOnly] = useState(toBoolean(searchParams.get("freeOnly")))
+  const [releasePeriod, setReleasePeriod] = useState<string>(searchParams.get("releasePeriod") || "")
+  const [orderBy, setOrderBy] = useState<string>(searchParams.get("orderBy") || OrderByOptions[0].value)
 
   const initialCategoriesIds = searchParams.get("categoriesIds")?.split(",").map((id) => parseInt(id)) || []
   const initialTagsIds = searchParams.get("tagsIds")?.split(",").map((id) => parseInt(id)) || []
@@ -58,6 +82,8 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
       ratingTo,
       priceFrom,
       priceTo,
+      releasePeriod: releasePeriod as ReleasePeriod,
+      orderBy: orderBy as OrderBy,
       categoriesIds: categoriesIds.join(","),
       tagsIds: tagsIds.join(","),
       freeOnly: freeOnly ? "1" : "",
@@ -180,6 +206,22 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
           onToggle={setFreeOnly}
         />
       </div>
+
+      <Select
+        label="Release date"
+        placeholder="Any"
+        options={ReleasePeriodOptions}
+        value={releasePeriod}
+        onChange={setReleasePeriod}
+        clearable
+      />
+
+      <Select
+        label="Sort results by"
+        options={OrderByOptions}
+        value={orderBy}
+        onChange={setOrderBy}
+      />
 
       <Button type="submit" className="w-full">
         Apply

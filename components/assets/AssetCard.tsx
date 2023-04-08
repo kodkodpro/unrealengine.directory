@@ -1,31 +1,55 @@
 import Image from "next/image"
 import { FolderIcon, StarIcon, UserIcon } from "@heroicons/react/24/solid"
-import { formatMoney } from "@/utils/helpers/string"
+import { formatMoney, makeMarketplaceURL } from "@/utils/helpers/string"
 import { Asset, Author, Category } from "@prisma/client"
 
+export const AssetSelect = {
+  id: true,
+  url: true,
+  name: true,
+  shortDescription: true,
+  price: true,
+  discount: true,
+  ratingScore: true,
+  ratingCount: true,
+  images: true,
+}
+
+export const AuthorSelect = {
+  id: true,
+  name: true,
+}
+
+export const CategorySelect = {
+  id: true,
+  name: true,
+}
+
 export type AssetCardProps = {
-  asset: Asset & { author: Author, category: Category }
+  asset: Pick<Asset, keyof typeof AssetSelect> & {
+    author: Pick<Author, keyof typeof AuthorSelect>,
+    category: Pick<Category, keyof typeof CategorySelect>,
+  }
 }
 
 export default function AssetCard({ asset }: AssetCardProps) {
   return (
-    <div className="group cursor-pointer">
+    <div className="group">
       <div className="relative aspect-video overflow-hidden rounded-lg bg-neutral-800 group-hover:brightness-110">
         <Image
           src={asset.images[0]}
-          width={1920}
-          height={1080}
           alt={`Image of ${asset.name}`}
           unoptimized
+          fill
         />
 
         {asset.ratingScore !== 0 && (
-          <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded bg-neutral-900/50 px-1.5 py-1 text-sm font-semibold">
-            <StarIcon className="inline-block h-5 w-5 text-amber-500" />
+          <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded bg-neutral-900/75 px-1.5 py-1 text-sm font-semibold">
+            <StarIcon className="inline-block h-4 w-4 text-amber-500" />
             {asset.ratingScore}
 
-            <span className="text-neutral-300">
-            ({asset.ratingCount})
+            <span className="text-neutral-100">
+              ({asset.ratingCount})
             </span>
           </div>
         )}

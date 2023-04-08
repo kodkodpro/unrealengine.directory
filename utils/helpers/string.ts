@@ -42,6 +42,10 @@ export const toBoolean = (value: unknown): boolean => {
   return false
 }
 
+export const pluralize = (count: number, singular: string, plural: string) => {
+  return count === 1 ? singular : plural
+}
+
 const titleizeExceptions = [
   "2D",
   "3D",

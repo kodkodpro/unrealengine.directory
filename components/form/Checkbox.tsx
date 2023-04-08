@@ -25,6 +25,7 @@ export default function Checkbox({ label, value, onChange, onToggle, size: s = "
       size.text,
       size.gapSmaller.x,
       variant.text,
+      variant.accent,
       className,
     )}>
       <input

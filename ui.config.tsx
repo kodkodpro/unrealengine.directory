@@ -22,6 +22,8 @@ const uiConfig = {
       borderMoreContrast: "border border-neutral-800",
 
       focus: "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+
+      accent: "accent-blue-500",
     },
 
     primary: {
@@ -46,10 +48,130 @@ const uiConfig = {
       borderMoreContrast: "border border-blue-600",
 
       focus: "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+
+      accent: "accent-blue-500",
     },
   },
 
   sizes: {
+    sm: {
+      text: "text-sm font-medium",
+      textSmaller: "text-xs font-medium",
+      textBigger: "text-base font-medium",
+
+      height: "h-9",
+      heightSmall: "h-8",
+      heightSmaller: "h-4",
+      heightSmallest: "h-3",
+
+      minHeight: "min-h-9",
+      minHeightSmall: "min-h-8",
+      minHeightSmaller: "min-h-4",
+      minHeightSmallest: "min-h-3",
+
+      width: "w-9",
+      widthSmall: "w-8",
+      widthSmaller: "w-4",
+      widthSmallest: "w-3",
+
+      rounding: "rounded",
+      roundingMore: "rounded-lg",
+      roundingLess: "rounded-sm",
+
+      padding: {
+        all: "p-3",
+        top: "pt-3",
+        right: "pr-3",
+        bottom: "pb-3",
+        left: "pl-3",
+        x: "px-3",
+        y: "py-3",
+      },
+
+      paddingSmaller: {
+        all: "p-2",
+        top: "pt-2",
+        right: "pr-2",
+        bottom: "pb-2",
+        left: "pl-2",
+        x: "px-2",
+        y: "py-2",
+      },
+
+      paddingSmallest: {
+        all: "p-1",
+        top: "pt-1",
+        right: "pr-1",
+        bottom: "pb-1",
+        left: "pl-1",
+        x: "px-1",
+        y: "py-1",
+      },
+
+      margin: {
+        all: "m-3",
+        top: "mt-3",
+        right: "mr-3",
+        bottom: "mb-3",
+        left: "ml-3",
+        x: "mx-3",
+        y: "my-3",
+      },
+
+      marginSmaller: {
+        all: "m-2",
+        top: "mt-2",
+        right: "mr-2",
+        bottom: "mb-2",
+        left: "ml-2",
+        x: "mx-2",
+        y: "my-2",
+      },
+
+      marginSmallest: {
+        all: "m-1",
+        top: "mt-1",
+        right: "mr-1",
+        bottom: "mb-1",
+        left: "ml-1",
+      },
+
+      gap: {
+        all: "gap-3",
+        x: "gap-x-3",
+        y: "gap-y-3",
+      },
+
+      gapSmaller: {
+        all: "gap-2",
+        x: "gap-x-2",
+        y: "gap-y-2",
+      },
+
+      gapSmallest: {
+        all: "gap-1",
+        x: "gap-x-1",
+        y: "gap-y-1",
+      },
+
+      spacing: {
+        all: "space-3",
+        x: "space-x-3",
+        y: "space-y-3",
+      },
+
+      spacingSmaller: {
+        all: "space-2",
+        x: "space-x-2",
+        y: "space-y-2",
+      },
+
+      spacingSmallest: {
+        all: "space-1",
+        x: "space-x-1",
+        y: "space-y-1",
+      },
+    },
     md: {
       text: "text-base font-medium",
       textSmaller: "text-sm font-medium",

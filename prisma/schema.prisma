@@ -10,15 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Asset belongs to Category
-// Asset has many Tags
-
 model Category {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
   assets    Asset[]
 }
 
@@ -27,7 +23,6 @@ model Tag {
   name      String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
   assets    Asset[]
 }
 
@@ -36,7 +31,14 @@ model Author {
   name      String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  assets    Asset[]
+}
+
+model EngineVersion {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   assets    Asset[]
 }
 
@@ -52,12 +54,13 @@ model Asset {
   discount         Float
   ratingScore      Float
   ratingCount      Int
+  releasedAt       DateTime
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
-  deletedAt        DateTime?
   author           Author    @relation(fields: [authorId], references: [id])
   authorId         Int
   category         Category  @relation(fields: [categoryId], references: [id])
   categoryId       Int
   tags             Tag[]
+  engineVersions   EngineVersion[]
 }

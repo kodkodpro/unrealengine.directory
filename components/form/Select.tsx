@@ -8,28 +8,37 @@ import uiConfig, { Sizes, Variants } from "@/ui.config"
 import { Combobox, Listbox } from "@headlessui/react"
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/solid"
 
-type WrapperProps = Omit<InputWrapperProps, "children" | "size" | "variant" | "rightIcon" | "rightIconOnClick" | "onChange">
-type HTMLInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "value" | "onChange">
+type WrapperProps = Omit<
+  InputWrapperProps,
+  "children" | "size" | "variant" | "rightIcon" | "rightIconOnClick" | "onChange"
+>
 
-type Option<T = string> = {
+type HTMLInputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size" | "value" | "onChange"
+>
+
+type Option<T> = {
   label: string
   value: T
 }
 
-export type MultiSelectProps<T = string> = {
+export type SelectProps<T = string> = {
   placeholder?: string
-  value?: T[]
+  value?: T
+  emptyValue?: T
   options?: readonly Option<T>[]
-  onChange?: (value: T[]) => void
+  onChange?: (value: T) => void
 
   size?: InputWrapperProps["size"]
   variant?: InputWrapperProps["variant"]
 } & WrapperProps & HTMLInputProps
 
-export default function MultiSelect<T extends string | number>({
-  // MultiSelectProps
+export default function Select<T extends string>({
+  // SelectProps
   placeholder,
   value,
+  emptyValue,
   options,
   onChange,
 
@@ -45,15 +54,9 @@ export default function MultiSelect<T extends string | number>({
   // HTMLInputProps
   className,
   ...props
-} : MultiSelectProps<T>) {
-  const [query, setQuery] = useState("")
-
-  const selectedOptions = options?.filter((option) => value?.includes(option.value)) ?? []
-  const filteredOptions = options?.filter((option) => option.label.toLowerCase().includes(query.toLowerCase())) ?? []
-
+} : SelectProps<T>) {
+  const selectedOption = options?.find((option) => option.value === value)
   const noOptions = !options || options.length === 0
-  const noSelectedOptions = selectedOptions.length === 0
-  const noFilteredOptions = filteredOptions.length === 0
 
   const size = uiConfig.sizes[s]
   const variant = uiConfig.variants[v]
@@ -64,21 +67,21 @@ export default function MultiSelect<T extends string | number>({
       labelProps={labelProps}
       leftIcon={leftIcon}
       leftIconOnClick={leftIconOnClick}
-      clearable={clearable && !!value?.length}
+      clearable={clearable && !!value}
       className={clsx("relative", className)}
       size={s}
       variant={v}
       resizable
-      onClear={() => onChange?.([])}
+      onClear={() => emptyValue && onChange?.(emptyValue)}
       {...props}
     >
-      <Listbox value={value} onChange={onChange} multiple>
+      <Listbox value={value} onChange={onChange}>
         <Listbox.Button className={clsx(
           "h-full flex-1 bg-transparent text-left focus:outline-none focus:ring-0 w-full",
           size.textSmaller,
-          noSelectedOptions ? variant.textLessContrast : variant.text,
+          !selectedOption ? variant.textLessContrast : variant.text,
         )}>
-          {noSelectedOptions ? placeholder : selectedOptions.map((option) => option.label).join(", ")}
+          {!selectedOption ? placeholder : selectedOption.label}
         </Listbox.Button>
 
         <Listbox.Options className={clsx(
@@ -92,42 +95,23 @@ export default function MultiSelect<T extends string | number>({
           variant.bg,
           variant.border,
         )}>
-          {!noOptions && (
-            <li className={clsx(size.marginSmallest.bottom)}>
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search..."
-                className={clsx(
-                  "w-full",
-                  size.textSmaller,
-                  size.heightSmall,
-                  size.rounding,
-                  size.paddingSmaller.x,
-                  variant.bgMoreContrast,
-                  variant.focus,
-                )}
-              />
-            </li>
-          )}
-
-          {noFilteredOptions && (
+          {noOptions && (
             <li className={clsx(
               "text-center",
               size.textSmaller,
               size.padding.all,
               variant.textLessContrast,
             )}>
-              No options found
+              No options available
             </li>
           )}
 
-          {filteredOptions.map((option) => (
+          {(options || []).map((option) => (
             <Listbox.Option
               key={option.value}
               value={option.value}
               className={({ active, selected }) => clsx(
-                "flex cursor-pointer items-center",
+                "cursor-pointer",
                 size.textSmaller,
                 size.rounding,
                 size.paddingSmaller.all,
@@ -140,18 +124,7 @@ export default function MultiSelect<T extends string | number>({
                   : variant.text,
               )}
             >
-              <span className={clsx(
-                size.heightSmallest,
-                size.widthSmallest,
-              )}>
-                {value?.includes(option.value) && (
-                  <CheckIcon className="w-full h-full" />
-                )}
-              </span>
-
-              <span className="flex-1">
-                {option.label}
-              </span>
+              {option.label}
             </Listbox.Option>
           ))}
         </Listbox.Options>

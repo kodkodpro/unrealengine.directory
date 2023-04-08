@@ -1,9 +1,8 @@
-// import TurndownService from "turndown"
 import { isValidUrl, parseMoney } from "@/utils/helpers/string"
 import { JSDOM } from "jsdom"
 import prisma from "@/utils/prisma"
-
-// const turndownService = new TurndownService()
+import { Prisma } from "@prisma/client"
+import { NodeHtmlMarkdown } from "node-html-markdown"
 
 export type Data = {
   assetUrl: string
@@ -28,12 +27,16 @@ export default async function parseAsset({ assetUrl }: Data) {
   const shortDescription = window.document.querySelector("p.asset-detail-text")?.textContent || ""
 
   // Get description from "div.read-more__text" as HTML, then convert it to Markdown
-  // const description = turndownService.turndown(window.document.querySelector("div.read-more__text")?.textContent || "")
-  const description = window.document.querySelector("div.read-more__text")?.textContent || ""
+  const description = NodeHtmlMarkdown.translate(window.document.querySelector("div.read-more__text")?.textContent || "")
 
   // Get technical details from "div.technical-details"
-  // const technicalDetails = turndownService.turndown(window.document.querySelector("div.technical-details")?.textContent || "")
-  const technicalDetails = window.document.querySelector("div.technical-details")?.textContent || ""
+  const technicalDetails = NodeHtmlMarkdown.translate(window.document.querySelector("div.technical-details")?.textContent || "")
+
+  // Get release date from "div.asset-desc-nvs span:nth-child(3)"
+  // Parse it to a Date object
+  // Example: Mar 12, 2023
+  const releasedAtText = window.document.querySelector("div.asset-desc-nvs span:nth-child(3)")?.textContent || ""
+  const releasedAt = new Date(releasedAtText)
 
   // Get author from "span.author-name a"
   const authorName = window.document.querySelector("span.seller-name a")?.textContent || ""
@@ -46,17 +49,40 @@ export default async function parseAsset({ assetUrl }: Data) {
     .from(window.document.querySelectorAll("section.tags a"))
     .map((tag) => tag.textContent || "")
 
+  // Get supported engine versions from "span.ue-version" and generate single versions from this text
+  // Example: "4.27, 5.0 - 5.2"
+  const engineVersionsText = window.document.querySelector("span.ue-version")?.textContent || ""
+  const engineVersions = engineVersionsText
+    .split(",")
+    .map((version) => version.trim())
+    .map((version) => {
+      if (version.includes("-")) {
+        const [start, end] = version.split("-").map((version) => version.trim())
+
+        return Array
+          .from({ length: parseFloat(end) - parseFloat(start) + 0.1 })
+          .map((_, index) => parseFloat(start) + index)
+          .map((version) => version.toString())
+      }
+
+      return [version]
+    })
+    .flat()
+
   // Get rating and number of reviews from "div.rating-board__pop__title"
-  // Example: <span>4.43 out of 5 stars</span><span>(124 ratings)</span>
+  // Example #1: <span>5 out of 5 stars</span><span>(2 ratings)</span>
+  // Example #2: <span>4.43 out of 5 stars</span><span>(124 ratings)</span>
   let ratingScore = 0
   let ratingCount = 0
 
-  try {
-    const ratingText = window.document.querySelector("div.rating-board__pop__title")?.textContent || ""
+  const ratingText = window.document.querySelector("div.rating-board__pop__title")?.textContent || ""
 
-    ratingScore = parseFloat((ratingText.match(/(\d+\.\d+)/) || []).pop() || "") || 0
-    ratingCount = parseInt((ratingText.match(/\((\d+)\s/) || []).pop() || "") || 0
-  } catch (error) {}
+  if (ratingText) {
+    const [ratingScoreText, ratingCountText] = ratingText.split("(")
+
+    ratingScore = parseFloat(ratingScoreText.split(" ")[0]) || 0
+    ratingCount = parseInt(ratingCountText.split(" ")[0]) || 0
+  }
 
   // Get slider images from "div.image-gallery-image img"
   const images = Array
@@ -105,7 +131,7 @@ export default async function parseAsset({ assetUrl }: Data) {
     },
   })
 
-  const data = {
+  const data: Prisma.AssetCreateInput = {
     url: assetUrl,
     name,
     shortDescription,
@@ -116,6 +142,7 @@ export default async function parseAsset({ assetUrl }: Data) {
     images,
     ratingScore,
     ratingCount,
+    releasedAt,
 
     author: {
       connect: {
@@ -136,6 +163,17 @@ export default async function parseAsset({ assetUrl }: Data) {
         },
         create: {
           name: tag,
+        },
+      })),
+    },
+
+    engineVersions: {
+      connectOrCreate: engineVersions.map((version) => ({
+        where: {
+          name: version,
+        },
+        create: {
+          name: version,
         },
       })),
     },
