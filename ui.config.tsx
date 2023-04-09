@@ -82,7 +82,7 @@ const uiConfig = {
       widthSmallest: "w-3",
 
       rounding: "rounded",
-      roundingMore: "rounded-lg",
+      roundingMore: "rounded-md",
       roundingLess: "rounded-sm",
 
       padding: {
@@ -199,9 +199,9 @@ const uiConfig = {
       widthSmaller: "w-6",
       widthSmallest: "w-4",
 
-      rounding: "rounded",
+      rounding: "rounded-md",
       roundingMore: "rounded-lg",
-      roundingLess: "rounded-sm",
+      roundingLess: "rounded",
 
       padding: {
         all: "p-4",

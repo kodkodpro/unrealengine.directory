@@ -244,7 +244,7 @@ export default async function Home({ searchParams }: HomeProps) {
           />
 
           {assetsCount > 0 && (
-            <p className="text-center font-medium">
+            <p className="text-center text-base">
               Found {assetsCount} {pluralize(assetsCount, "asset", "assets")}
             </p>
           )}
