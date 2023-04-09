@@ -1,7 +1,7 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
 import clsx from "clsx"
+import { useRouter, useSearchParams } from "next/navigation"
 import Button from "@/components/form/Button"
 
 export type PaginationProps = {

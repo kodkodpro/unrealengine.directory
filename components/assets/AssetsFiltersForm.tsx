@@ -1,18 +1,19 @@
 "use client"
 
-import Input from "@/components/form/Input"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
-import { startTransition, useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import Label from "@/components/form/Label"
+import { Category, Tag, EngineVersion } from "@prisma/client"
 import clsx from "clsx"
-import MultiSelect from "@/components/form/MultiSelect"
+import { useRouter, useSearchParams } from "next/navigation"
+import { startTransition, useState } from "react"
 import Button from "@/components/form/Button"
-import { Category, Prisma, Tag } from "@prisma/client"
-import prisma from "@/utils/prisma"
-import { titleize, toBoolean } from "@/utils/helpers/string"
 import Checkbox from "@/components/form/Checkbox"
+import Input from "@/components/form/Input"
+import Label from "@/components/form/Label"
+import MultiSelect from "@/components/form/MultiSelect"
+import Range from "@/components/form/Range"
 import Select from "@/components/form/Select"
+import { getIdsFromSearchParams } from "@/utils/helpers/searchParams"
+import { formatMoney, titleize, toBoolean } from "@/utils/helpers/string"
 
 const ReleasePeriodOptions = [
   { label: "Last 7 days", value: "last-7-days" },
@@ -44,31 +45,39 @@ export type FiltersQuery = {
   releasePeriod?: ReleasePeriod,
   categoriesIds?: string,
   tagsIds?: string,
+  engineVersionsIds?: string,
 }
 
 export type AssetsFiltersFormProps = {
+  assetsMaxPrice: number,
   categories: Pick<Category, "id" | "name">[]
   tags: Pick<Tag, "id" | "name">[],
+  engineVersions: Pick<EngineVersion, "id" | "name">[]
 } & React.HTMLAttributes<HTMLFormElement>
 
-export default function AssetsFiltersForm({ categories, tags, className, ...props }: AssetsFiltersFormProps) {
+export default function AssetsFiltersForm({
+  assetsMaxPrice,
+  categories,
+  tags,
+  engineVersions,
+  className,
+  ...props
+}: AssetsFiltersFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const [q, setQ] = useState(searchParams.get("q") || "")
-  const [ratingFrom, setRatingFrom] = useState(searchParams.get("ratingFrom") || "")
-  const [ratingTo, setRatingTo] = useState(searchParams.get("ratingTo") || "")
-  const [priceFrom, setPriceFrom] = useState(searchParams.get("priceFrom") || "")
-  const [priceTo, setPriceTo] = useState(searchParams.get("priceTo") || "")
+  const [ratingFrom, setRatingFrom] = useState(parseFloat(searchParams.get("ratingFrom") || "0"))
+  const [ratingTo, setRatingTo] = useState(parseFloat(searchParams.get("ratingTo") || "5"))
+  const [priceFrom, setPriceFrom] = useState(parseInt(searchParams.get("priceFrom") || "0"))
+  const [priceTo, setPriceTo] = useState(parseInt(searchParams.get("priceTo") || "") || assetsMaxPrice)
   const [freeOnly, setFreeOnly] = useState(toBoolean(searchParams.get("freeOnly")))
   const [releasePeriod, setReleasePeriod] = useState<string>(searchParams.get("releasePeriod") || "")
   const [orderBy, setOrderBy] = useState<string>(searchParams.get("orderBy") || OrderByOptions[0].value)
 
-  const initialCategoriesIds = searchParams.get("categoriesIds")?.split(",").map((id) => parseInt(id)) || []
-  const initialTagsIds = searchParams.get("tagsIds")?.split(",").map((id) => parseInt(id)) || []
-
-  const [categoriesIds, setCategoriesIds] = useState<number[]>(initialCategoriesIds)
-  const [tagsIds, setTagsIds] = useState<number[]>(initialTagsIds)
+  const [categoriesIds, setCategoriesIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "categoriesIds"))
+  const [tagsIds, setTagsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "tagsIds"))
+  const [engineVersionsIds, setEngineVersionsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "engineVersionsIds"))
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -78,10 +87,10 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
 
     const filters: FiltersQuery = {
       q,
-      ratingFrom,
-      ratingTo,
-      priceFrom,
-      priceTo,
+      ratingFrom: ratingFrom.toString(),
+      ratingTo: ratingTo.toString(),
+      priceFrom: priceFrom.toString(),
+      priceTo: priceTo.toString(),
       releasePeriod: releasePeriod as ReleasePeriod,
       orderBy: orderBy as OrderBy,
       categoriesIds: categoriesIds.join(","),
@@ -121,7 +130,7 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
         leftIcon={MagnifyingGlassIcon}
         value={q}
         onChangeText={setQ}
-        clearable
+        onClear={() => setQ("")}
       />
 
       <MultiSelect
@@ -133,7 +142,7 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
         }))}
         value={categoriesIds}
         onChange={setCategoriesIds}
-        clearable
+        onClear={() => setCategoriesIds([])}
       />
 
       <MultiSelect
@@ -145,67 +154,20 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
         }))}
         value={tagsIds}
         onChange={setTagsIds}
-        clearable
+        onClear={() => setTagsIds([])}
       />
 
-      <div>
-        <Label text="Rating" />
-        <div className="flex items-center gap-2">
-          <Input
-            leftText="From"
-            value={ratingFrom}
-            onChangeText={setRatingFrom}
-            type="number"
-            min="0"
-            step="0.1"
-            className="w-full text-center"
-          />
-
-          <span className="text-neutral-500">&ndash;</span>
-
-          <Input
-            leftText="To"
-            value={ratingTo}
-            onChangeText={setRatingTo}
-            type="number"
-            min="0"
-            step="0.1"
-            className="w-full text-center"
-          />
-        </div>
-      </div>
-
-      <div>
-        <Label text="Price" />
-
-        <div className="flex items-center gap-2 mb-3">
-          <Input
-            leftText="From"
-            value={priceFrom}
-            onChangeText={setPriceFrom}
-            type="number"
-            min="0"
-            className="w-full text-center"
-          />
-
-          <span className="text-neutral-500">&ndash;</span>
-
-          <Input
-            leftText="To"
-            value={priceTo}
-            onChangeText={setPriceTo}
-            type="number"
-            className="w-full text-center"
-          />
-        </div>
-
-        <Checkbox
-          label="Free only"
-          id="free-only"
-          checked={freeOnly}
-          onToggle={setFreeOnly}
-        />
-      </div>
+      <MultiSelect
+        label="Engine Versions"
+        placeholder="All"
+        options={(engineVersions || []).map((engineVersion) => ({
+          value: engineVersion.id,
+          label: engineVersion.name,
+        }))}
+        value={engineVersionsIds}
+        onChange={setEngineVersionsIds}
+        onClear={() => setEngineVersionsIds([])}
+      />
 
       <Select
         label="Release date"
@@ -213,7 +175,7 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
         options={ReleasePeriodOptions}
         value={releasePeriod}
         onChange={setReleasePeriod}
-        clearable
+        onClear={() => setReleasePeriod("")}
       />
 
       <Select
@@ -222,6 +184,88 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
         value={orderBy}
         onChange={setOrderBy}
       />
+
+      <div>
+        <Label text="Rating" />
+
+        <div className="flex items-center gap-2 mb-2">
+          <Input
+            value={ratingFrom.toString()}
+            onChangeText={(value) => setRatingFrom(parseInt(value) || 0)}
+            type="number"
+            min="0"
+            className="w-full text-center"
+          />
+
+          <span className="text-neutral-500">&ndash;</span>
+
+          <Input
+            value={ratingTo.toString()}
+            onChangeText={(value) => setRatingTo(parseInt(value) || assetsMaxPrice)}
+            type="number"
+            className="w-full text-center"
+          />
+        </div>
+
+        <Range
+          min={0}
+          max={5}
+          step={0.1}
+          value={[ratingFrom, ratingTo]}
+          onChange={(values) => {
+            setRatingFrom(values[0])
+            setRatingTo(values[1])
+          }}
+        />
+      </div>
+
+      <div>
+        <Label text="Price ($)" />
+
+        <div className="flex items-center gap-2 mb-2">
+          <Input
+            value={priceFrom.toString()}
+            onChangeText={(value) => setPriceFrom(parseInt(value) || 0)}
+            type="number"
+            min="0"
+            className="w-full text-center"
+            disabled={freeOnly}
+          />
+
+          <span className="text-neutral-500">&ndash;</span>
+
+          <Input
+            value={priceTo.toString()}
+            onChangeText={(value) => setPriceTo(parseInt(value) || assetsMaxPrice)}
+            type="number"
+            className="w-full text-center"
+            disabled={freeOnly}
+          />
+        </div>
+
+        <Range
+          min={0}
+          max={assetsMaxPrice}
+          step={1}
+          formatValue={(value) => formatMoney(value, { maximumFractionDigits: 0 })}
+          disabled={freeOnly}
+          value={[priceFrom, priceTo]}
+          onChange={(values) => {
+            setPriceFrom(values[0])
+            setPriceTo(values[1])
+          }}
+        />
+      </div>
+
+      <Checkbox
+        label="Free only"
+        id="free-only"
+        value={freeOnly}
+        onToggle={setFreeOnly}
+        toggle
+      />
+
+      <hr className="border-neutral-800" />
 
       <Button type="submit" className="w-full">
         Apply
@@ -233,7 +277,7 @@ export default function AssetsFiltersForm({ categories, tags, className, ...prop
         className="w-full"
         onClick={handleClear}
       >
-        Clear
+        Clear filters
       </Button>
     </form>
   )

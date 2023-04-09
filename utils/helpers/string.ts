@@ -23,10 +23,11 @@ export const isValidUrl = (url: string): boolean => {
   }
 }
 
-export const formatMoney = (money: number): string => {
+export const formatMoney = (money: number, options: Intl.NumberFormatOptions = {}) => {
   return (money || 0).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    ...options,
   })
 }
 

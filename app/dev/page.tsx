@@ -1,8 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Button from "@/components/form/Button"
 import Input from "@/components/form/Input"
-import { useState } from "react"
 
 export default function Dev() {
   const [collectionUrl, setCollectionUrl] = useState<string>("")

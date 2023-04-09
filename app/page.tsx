@@ -1,13 +1,22 @@
-import prisma from "@/utils/prisma"
 import { Prisma } from "@prisma/client"
-import AssetsList from "@/components/assets/AssetsList"
 import AssetsFiltersForm, { FiltersQuery, OrderBy } from "@/components/assets/AssetsFiltersForm"
-import Pagination from "@/components/Pagination"
-import { AssetSelect, AuthorSelect, CategorySelect } from "@/components/assets/AssetCard"
+import AssetsList from "@/components/assets/AssetsList"
 import AssetsListSort from "@/components/assets/AssetsListSort"
+import Pagination from "@/components/Pagination"
+import Sticky from "@/components/Sticky"
+import {
+  AssetFullSelect,
+  AssetFullAuthorSelect,
+  AssetFullCategorySelect,
+  AssetFullTagsSelect,
+  AssetFullEngineVersionsSelect,
+} from "@/types/AssetFull"
+import { pluralize, toBoolean } from "@/utils/helpers/string"
+import prisma from "@/utils/prisma"
 
 function getFilters(searchParams: HomeProps["searchParams"]) {
   const where: Prisma.AssetWhereInput = {}
+  const freeOnly = toBoolean(searchParams.freeOnly)
 
   if (searchParams.q) {
     where["name"] = {
@@ -28,19 +37,19 @@ function getFilters(searchParams: HomeProps["searchParams"]) {
     }
   }
 
-  if (searchParams.priceFrom) {
+  if (searchParams.priceFrom && !freeOnly) {
     where["price"] = {
       gte: +searchParams.priceFrom,
     }
   }
 
-  if (searchParams.priceTo) {
+  if (searchParams.priceTo && !freeOnly) {
     where["price"] = {
       lte: +searchParams.priceTo,
     }
   }
 
-  if (searchParams.freeOnly) {
+  if (freeOnly) {
     where["price"] = {
       equals: 0,
     }
@@ -85,6 +94,16 @@ function getFilters(searchParams: HomeProps["searchParams"]) {
     }
   }
 
+  if (searchParams.engineVersionsIds) {
+    where["engineVersions"] = {
+      some: {
+        id: {
+          in: searchParams.engineVersionsIds.split(",").map((id) => parseInt(id)),
+        },
+      },
+    }
+  }
+
   return where
 }
 
@@ -122,12 +141,18 @@ async function getAssets(searchParams: HomeProps["searchParams"]) {
 
   return await prisma.asset.findMany({
     select: {
-      ...AssetSelect,
+      ...AssetFullSelect,
       author: {
-        select: AuthorSelect,
+        select: AssetFullAuthorSelect,
       },
       category: {
-        select: CategorySelect,
+        select: AssetFullCategorySelect,
+      },
+      tags: {
+        select: AssetFullTagsSelect,
+      },
+      engineVersions: {
+        select: AssetFullEngineVersionsSelect,
       },
     },
     where,
@@ -141,6 +166,16 @@ async function getAssetsCount(searchParams: HomeProps["searchParams"]) {
   return await prisma.asset.count({
     where: getFilters(searchParams),
   })
+}
+
+async function getAssetsMaxPrice() {
+  const maxPrice = await prisma.asset.aggregate({
+    _max: {
+      price: true,
+    },
+  })
+
+  return maxPrice._max.price
 }
 
 async function getCategories() {
@@ -167,6 +202,18 @@ async function getTags() {
   })
 }
 
+async function getEngineVersions() {
+  return await prisma.engineVersion.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    orderBy: {
+      name: "desc",
+    },
+  })
+}
+
 type HomeProps = {
   searchParams: FiltersQuery & {
     page?: string,
@@ -175,21 +222,33 @@ type HomeProps = {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const assetsPromise = getAssets(searchParams)
-  const assetsCountPromise = getAssetsCount(searchParams)
-  const categoriesPromise = getCategories()
-  const tagsPromise = getTags()
-
-  const [assets, assetsCount, categories, tags] = await Promise.all([assetsPromise, assetsCountPromise, categoriesPromise, tagsPromise])
+  const [assets, assetsCount, assetsMaxPrice, categories, tags, engineVersions] = await Promise.all([
+    getAssets(searchParams),
+    getAssetsCount(searchParams),
+    getAssetsMaxPrice(),
+    getCategories(),
+    getTags(),
+    getEngineVersions(),
+  ])
 
   return (
     <div className="flex-row gap-8 pb-24 xl:flex">
       <div className="mb-16 xl:mb-0 xl:basis-96">
-        <AssetsFiltersForm
-          categories={categories}
-          tags={tags}
-          className="xl:sticky xl:top-8"
-        />
+        <Sticky offsetTop={32} offsetBottom={32}>
+          <AssetsFiltersForm
+            assetsMaxPrice={Math.ceil(assetsMaxPrice || 0)}
+            categories={categories}
+            tags={tags}
+            engineVersions={engineVersions}
+            className="mb-4"
+          />
+
+          {assetsCount > 0 && (
+            <p className="text-center font-medium">
+              Found {assetsCount} {pluralize(assetsCount, "asset", "assets")}
+            </p>
+          )}
+        </Sticky>
       </div>
 
       <div className="flex-1 pb-8">

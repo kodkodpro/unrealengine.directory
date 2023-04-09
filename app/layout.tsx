@@ -1,6 +1,17 @@
 import { ReactNode } from "react"
 import "./globals.css"
 import Header from "@/components/layout/Header"
+import { Inter } from "next/font/google"
+import clsx from "clsx"
+import "@total-typescript/ts-reset"
+
+const inter = Inter({
+  preload: true,
+  weight: "variable",
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
 
 export const metadata = {
   title: "UEDirectory",
@@ -14,7 +25,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-neutral-900 text-neutral-100 antialiased">
+      <body className={clsx(
+        "bg-neutral-900 text-neutral-100 font-sans antialiased",
+        inter.variable,
+      )}>
         <div className="mx-4 md:mx-12">
           <Header />
           {children}

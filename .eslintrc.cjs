@@ -1,5 +1,15 @@
 module.exports = {
-  "extends": "next/core-web-vitals",
+  "root": true,
+
+  "plugins": [
+    "unused-imports",
+  ],
+
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+  ],
 
   "rules": {
     "quotes": [
@@ -38,5 +48,34 @@ module.exports = {
         "named": "never",
       },
     ],
-  }
+    "import/order": [
+      "error",
+      {
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+        ],
+        "newlines-between": "never",
+      },
+    ],
+    "import/no-named-as-default": "off", // Turn off because of "clsx" package
+    "unused-imports/no-unused-imports": "error",
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": true,
+      "node": true,
+    }
+  },
 }

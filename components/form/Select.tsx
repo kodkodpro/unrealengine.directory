@@ -1,16 +1,13 @@
 "use client"
 
-import InputWrapper, { InputWrapperProps } from "@/components/form/InputWrapper"
+import { Listbox } from "@headlessui/react"
 import clsx from "clsx"
-import { LabelProps } from "@/components/form/Label"
-import { FunctionComponent, ReactNode, useState } from "react"
-import uiConfig, { Sizes, Variants } from "@/ui.config"
-import { Combobox, Listbox } from "@headlessui/react"
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/solid"
+import InputWrapper, { InputWrapperProps } from "@/components/form/InputWrapper"
+import uiConfig from "@/ui.config"
 
 type WrapperProps = Omit<
   InputWrapperProps,
-  "children" | "size" | "variant" | "rightIcon" | "rightIconOnClick" | "onChange"
+  "children" | "size" | "variant" | "rightIcon" | "rightIconOnClick" | "onChange" | "clearable"
 >
 
 type HTMLInputProps = Omit<
@@ -26,7 +23,6 @@ type Option<T> = {
 export type SelectProps<T = string> = {
   placeholder?: string
   value?: T
-  emptyValue?: T
   options?: readonly Option<T>[]
   onChange?: (value: T) => void
 
@@ -38,7 +34,6 @@ export default function Select<T extends string>({
   // SelectProps
   placeholder,
   value,
-  emptyValue,
   options,
   onChange,
 
@@ -47,9 +42,9 @@ export default function Select<T extends string>({
   labelProps,
   leftIcon,
   leftIconOnClick,
-  clearable,
   size: s = "md",
   variant: v = "default",
+  onClear,
 
   // HTMLInputProps
   className,
@@ -67,12 +62,11 @@ export default function Select<T extends string>({
       labelProps={labelProps}
       leftIcon={leftIcon}
       leftIconOnClick={leftIconOnClick}
-      clearable={clearable && !!value}
+      clearable={onClear && !!value}
       className={clsx("relative", className)}
       size={s}
       variant={v}
-      resizable
-      onClear={() => emptyValue && onChange?.(emptyValue)}
+      onClear={onClear}
       {...props}
     >
       <Listbox value={value} onChange={onChange}>

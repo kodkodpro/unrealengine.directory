@@ -1,8 +1,9 @@
-import { isValidUrl, parseMoney } from "@/utils/helpers/string"
-import { JSDOM } from "jsdom"
-import prisma from "@/utils/prisma"
 import { Prisma } from "@prisma/client"
-import { NodeHtmlMarkdown } from "node-html-markdown"
+import { isValidUrl } from "@/utils/helpers/string"
+import { Parser } from "@/utils/parsers/parser"
+import prisma from "@/utils/prisma"
+
+const RemoveFromTextRegex = /https:\/\/redirect.epicgames.com\/\?redirectTo=/g
 
 export type Data = {
   assetUrl: string
@@ -13,45 +14,51 @@ export default async function parseAsset({ assetUrl }: Data) {
     throw new Error("The function must be called with a valid URL")
   }
 
-  // Get page source using fetch
-  const response = await fetch(assetUrl)
-  const html = await response.text()
+  const parser = new Parser()
 
-  // Parse page source using JSDOM
-  const { window } = new JSDOM(html)
+  const url = new URL(assetUrl)
+  await parser.parse(url)
+
+  // // Get page source using fetch
+  // const response = await fetch(assetUrl)
+  // const html = await response.text()
+  //
+  // // Parse page source using JSDOM
+  // const { window } = new JSDOM(html)
+  // const { querySelector, querySelectorAll } = window.document
 
   // Get name from "h1.post-title"
-  const name = window.document.querySelector("h1.post-title")?.textContent || ""
+  const name = parser.getText("h1.post-title")
 
   // Get short description from "p.asset-detail-text"
-  const shortDescription = window.document.querySelector("p.asset-detail-text")?.textContent || ""
+  const shortDescription = parser.getText("p.asset-detail-text")
 
-  // Get description from "div.read-more__text" as HTML, then convert it to Markdown
-  const description = NodeHtmlMarkdown.translate(window.document.querySelector("div.read-more__text")?.textContent || "")
+  // Get description from "div.read-more__text" as Markdown
+  const description = parser.getMarkdown("div.read-more__text").replaceAll(RemoveFromTextRegex, "")
 
-  // Get technical details from "div.technical-details"
-  const technicalDetails = NodeHtmlMarkdown.translate(window.document.querySelector("div.technical-details")?.textContent || "")
+  // Get technical details from "div.technical-details" as Markdown
+  const technicalDetails = parser.getMarkdown("div.technical-details").replaceAll(RemoveFromTextRegex, "")
 
   // Get release date from "div.asset-desc-nvs span:nth-child(3)"
   // Parse it to a Date object
   // Example: Mar 12, 2023
-  const releasedAtText = window.document.querySelector("div.asset-desc-nvs span:nth-child(3)")?.textContent || ""
+  const releasedAtText = parser.getText("div.asset-desc-nvs span:nth-child(3)")
   const releasedAt = new Date(releasedAtText)
 
   // Get author from "span.author-name a"
-  const authorName = window.document.querySelector("span.seller-name a")?.textContent || ""
+  const authorName = parser.getText("span.seller-name a")
 
   // Get category from "a.item-cat"
-  const categoryName = window.document.querySelector("a.item-cat")?.textContent || ""
+  const categoryName = parser.getText("a.item-cat")
 
   // Get list of tags from "section.tags a"
-  const tags = Array
-    .from(window.document.querySelectorAll("section.tags a"))
-    .map((tag) => tag.textContent || "")
+  const tags = parser.getElements("section.tags a")
+    .map((tag) => tag.textContent)
+    .filter(Boolean)
 
   // Get supported engine versions from "span.ue-version" and generate single versions from this text
   // Example: "4.27, 5.0 - 5.2"
-  const engineVersionsText = window.document.querySelector("span.ue-version")?.textContent || ""
+  const engineVersionsText = parser.getText("span.ue-version")
   const engineVersions = engineVersionsText
     .split(",")
     .map((version) => version.trim())
@@ -75,7 +82,7 @@ export default async function parseAsset({ assetUrl }: Data) {
   let ratingScore = 0
   let ratingCount = 0
 
-  const ratingText = window.document.querySelector("div.rating-board__pop__title")?.textContent || ""
+  const ratingText = parser.getText("div.rating-board__pop__title")
 
   if (ratingText) {
     const [ratingScoreText, ratingCountText] = ratingText.split("(")
@@ -85,29 +92,28 @@ export default async function parseAsset({ assetUrl }: Data) {
   }
 
   // Get slider images from "div.image-gallery-image img"
-  const images = Array
-    .from(window.document.querySelectorAll("div.image-gallery-image img"))
-    .map((image) => image.getAttribute("src") || "")
+  const images = parser.getElements("div.image-gallery-image img")
+    .map((image) => image.getAttribute("src"))
+    .filter(Boolean)
 
   // Get price from "span.save-discount.discounted" and "span.base-price"
-  let price = 0
-  let discount = 0
+  let price
+  let discount
 
   // If "span.save-discount.discounted" exists, then get discounted price and calculate discount amount
-  const discountedPriceElement = window.document.querySelector("span.save-discount.discounted")
-
-  if (discountedPriceElement) {
+  if (parser.elementExists("span.save-discount.discounted")) {
     // Get discounted price from "span.save-discount.discounted"
-    price = parseMoney(discountedPriceElement.textContent || "") || 0
+    price = parser.getMoney("span.save-discount.discounted")
 
     // Get base price from "span.base-price"
-    const basePrice = parseMoney(window.document.querySelector("span.base-price")?.textContent || "") || 0
+    const basePrice = parser.getMoney("span.base-price") || 0
 
     // Calculate discount amount
     discount = basePrice - price
   } else {
     // Get price from "span.save-discount"
-    price = parseMoney(window.document.querySelector("span.save-discount")?.textContent || "") || 0
+    price = parser.getMoney("span.save-discount") || 0
+    discount = 0
   }
 
   // Save or update asset and related records in Prisma

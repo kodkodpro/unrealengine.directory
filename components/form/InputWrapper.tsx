@@ -1,13 +1,12 @@
 "use client"
 
-import Label, { LabelProps } from "@/components/form/Label"
-import { FC, FunctionComponent, ReactNode } from "react"
-import clsx from "clsx"
-import uiConfig, { Sizes, Variants } from "@/ui.config"
-import InputWrapperIcon from "@/components/form/InputWrapperIcon"
 import { XMarkIcon } from "@heroicons/react/24/solid"
+import clsx from "clsx"
+import { FunctionComponent, ReactNode } from "react"
+import InputWrapperIcon from "@/components/form/InputWrapperIcon"
 import InputWrapperText from "@/components/form/InputWrapperText"
-import { text } from "stream/consumers"
+import Label, { LabelProps } from "@/components/form/Label"
+import uiConfig, { Sizes, Variants } from "@/ui.config"
 
 export type InputWrapperProps = {
   label?: string
@@ -18,6 +17,7 @@ export type InputWrapperProps = {
   rightIcon?: FunctionComponent
   rightIconOnClick?: () => void
   rightText?: string
+  disabled?: boolean
   clearable?: boolean
   resizable?: boolean
   size: Sizes
@@ -35,6 +35,7 @@ export default function InputWrapper({
   rightIcon,
   rightIconOnClick,
   rightText,
+  disabled,
   clearable,
   resizable,
   onClear,
@@ -53,8 +54,8 @@ export default function InputWrapper({
       <div className={clsx(
         "flex flex-row items-stretch",
         size.rounding,
-        variant.bg,
-        variant.border,
+        disabled ? variant.bgLessContrast : variant.bg,
+        disabled ? variant.borderLessContrast : variant.border,
       )}>
         {leftIcon && (
           <InputWrapperIcon

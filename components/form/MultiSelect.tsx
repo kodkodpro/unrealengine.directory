@@ -1,15 +1,20 @@
 "use client"
 
-import InputWrapper, { InputWrapperProps } from "@/components/form/InputWrapper"
+import { Listbox } from "@headlessui/react"
+import { CheckIcon } from "@heroicons/react/24/solid"
 import clsx from "clsx"
-import { LabelProps } from "@/components/form/Label"
-import { FunctionComponent, ReactNode, useState } from "react"
-import uiConfig, { Sizes, Variants } from "@/ui.config"
-import { Combobox, Listbox } from "@headlessui/react"
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/solid"
+import { useState } from "react"
+import InputWrapper, { InputWrapperProps } from "@/components/form/InputWrapper"
+import uiConfig from "@/ui.config"
 
-type WrapperProps = Omit<InputWrapperProps, "children" | "size" | "variant" | "rightIcon" | "rightIconOnClick" | "onChange">
-type HTMLInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "value" | "onChange">
+type WrapperProps = Omit<
+  InputWrapperProps,
+  "children" | "size" | "variant" | "rightIcon" | "rightIconOnClick" | "onChange" | "clearable"
+>
+type HTMLInputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size" | "value" | "onChange"
+>
 
 type Option<T = string> = {
   label: string
@@ -38,9 +43,9 @@ export default function MultiSelect<T extends string | number>({
   labelProps,
   leftIcon,
   leftIconOnClick,
-  clearable,
   size: s = "md",
   variant: v = "default",
+  onClear,
 
   // HTMLInputProps
   className,
@@ -64,12 +69,12 @@ export default function MultiSelect<T extends string | number>({
       labelProps={labelProps}
       leftIcon={leftIcon}
       leftIconOnClick={leftIconOnClick}
-      clearable={clearable && !!value?.length}
+      clearable={onClear && !!value?.length}
       className={clsx("relative", className)}
       size={s}
       variant={v}
       resizable
-      onClear={() => onChange?.([])}
+      onClear={onClear}
       {...props}
     >
       <Listbox value={value} onChange={onChange} multiple>

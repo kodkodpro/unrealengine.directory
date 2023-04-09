@@ -24,6 +24,9 @@ const uiConfig = {
       focus: "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
 
       accent: "accent-blue-500",
+      bgAccent: "bg-blue-500",
+      bgAccentLessContrast: "bg-blue-400",
+      bgAccentMoreContrast: "bg-blue-600",
     },
 
     primary: {
@@ -50,6 +53,10 @@ const uiConfig = {
       focus: "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
 
       accent: "accent-blue-500",
+
+      bgAccent: "bg-blue-500",
+      bgAccentLessContrast: "bg-blue-400",
+      bgAccentMoreContrast: "bg-blue-600",
     },
   },
 

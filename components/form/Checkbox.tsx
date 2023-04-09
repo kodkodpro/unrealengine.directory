@@ -1,16 +1,28 @@
-import uiConfig, { Sizes, Variants } from "@/ui.config"
 import clsx from "clsx"
+import Toggle from "react-toggle"
 import Label from "@/components/form/Label"
+import uiConfig, { Sizes, Variants } from "@/ui.config"
 
 export type CheckboxProps = {
   label?: string
   value?: boolean
+  toggle?: boolean
   onToggle?: (value: boolean) => void
   size?: Sizes
   variant?: Variants
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "size">
 
-export default function Checkbox({ label, value, onChange, onToggle, size: s = "md", variant: v = "default", className, ...props }: CheckboxProps) {
+export default function Checkbox({
+  label,
+  value,
+  toggle = false,
+  onChange,
+  onToggle,
+  size: s = "md",
+  variant: v = "default",
+  className,
+  ...props
+}: CheckboxProps) {
   const size = uiConfig.sizes[s]
   const variant = uiConfig.variants[v]
 
@@ -20,7 +32,7 @@ export default function Checkbox({ label, value, onChange, onToggle, size: s = "
   }
 
   return (
-    <div className={clsx(
+    <label className={clsx(
       "flex cursor-pointer items-center",
       size.text,
       size.gapSmaller.x,
@@ -28,18 +40,22 @@ export default function Checkbox({ label, value, onChange, onToggle, size: s = "
       variant.accent,
       className,
     )}>
-      <input
-        type="checkbox"
-        checked={value}
-        className={clsx(
-          size.widthSmaller,
-          size.heightSmaller,
-        )}
-        onChange={handleChange}
-        {...props}
-      />
+      {toggle ? (
+        <Toggle
+          icons={false}
+          defaultChecked={value}
+          onChange={handleChange}
+        />
+      ) : (
+        <input
+          type="checkbox"
+          checked={value}
+          onChange={handleChange}
+          {...props}
+        />
+      )}
 
-      {label && <Label text={label} htmlFor={props.id} size={s} variant={v} margin={false} />}
-    </div>
+      {label && <Label text={label} as="span" size={s} variant={v} margin={false} />}
+    </label>
   )
 }

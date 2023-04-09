@@ -1,8 +1,7 @@
 "use client"
 
-import { createElement, FC, FunctionComponent } from "react"
-import utextfig, { Sizes, Variants } from "@/ui.config"
 import clsx from "clsx"
+import utextfig, { Sizes, Variants } from "@/ui.config"
 
 export type InputWrapperTextProps = {
   text: string,

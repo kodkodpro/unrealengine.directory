@@ -1,8 +1,8 @@
 "use client"
 
-import { createElement, FC, FunctionComponent } from "react"
-import uiConfig, { Sizes, Variants } from "@/ui.config"
 import clsx from "clsx"
+import { createElement, FunctionComponent } from "react"
+import uiConfig, { Sizes, Variants } from "@/ui.config"
 
 export type InputWrapperIconProps = {
   icon: FunctionComponent,

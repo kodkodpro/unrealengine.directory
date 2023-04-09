@@ -1,12 +1,10 @@
 "use client"
 
-import InputWrapper, { InputWrapperProps } from "@/components/form/InputWrapper"
 import clsx from "clsx"
-import { LabelProps } from "@/components/form/Label"
-import { FunctionComponent, ReactNode } from "react"
-import { Sizes, Variants } from "@/ui.config"
+import InputWrapper, { InputWrapperProps } from "@/components/form/InputWrapper"
+import uiConfig from "@/ui.config"
 
-type WrapperProps = Omit<InputWrapperProps, "children" | "size" | "variant">
+type WrapperProps = Omit<InputWrapperProps, "children" | "size" | "variant" | "clearable">
 type HTMLInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "value" | "onChange">
 
 export type InputProps = {
@@ -33,14 +31,17 @@ export default function Input({
   rightIcon,
   rightIconOnClick,
   rightText,
-  clearable,
   size: s = "md",
   variant: v = "default",
+  onClear,
 
   // HTMLInputProps
   className,
   ...props
 } : InputProps) {
+  const size = uiConfig.sizes[s]
+  const variant = uiConfig.variants[v]
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(event)
     onChangeText?.(event.target.value)
@@ -56,16 +57,19 @@ export default function Input({
       rightIcon={rightIcon}
       rightIconOnClick={rightIconOnClick}
       rightText={rightText}
-      clearable={clearable && !!value}
+      disabled={props.disabled}
+      clearable={onClear && !!value}
       size={s}
       variant={v}
-      onClear={() => handleChange({ target: { value: "" } } as any)}
+      onClear={onClear}
     >
       <input
         value={value}
         onChange={handleChange}
         className={clsx(
           "h-full w-full bg-transparent outline-none focus:ring-0",
+          size.text,
+          props.disabled ? variant.textLessContrast : variant.text,
           className,
         )}
         {...props}

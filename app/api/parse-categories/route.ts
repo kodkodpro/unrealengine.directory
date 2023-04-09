@@ -1,5 +1,5 @@
-import parseCategories from "@/utils/parsers/parseCategories"
 import { NextResponse } from "next/server"
+import parseCategories from "@/utils/parsers/parseCategories"
 
 export async function POST() {
   const categories = await parseCategories()
