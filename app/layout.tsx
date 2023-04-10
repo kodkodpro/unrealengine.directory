@@ -1,12 +1,12 @@
-import { ReactNode } from "react"
-import "./globals.css"
-import Header from "@/components/layout/Header"
-import { Inter } from "next/font/google"
 import clsx from "clsx"
-import "@total-typescript/ts-reset"
-import Footer from "@/components/layout/Footer"
-import ScrollToTop from "@/components/layout/ScrollToTop"
 import { Metadata } from "next"
+import { Inter } from "next/font/google"
+import { ReactNode } from "react"
+import Footer from "@/components/layout/Footer"
+import Header from "@/components/layout/Header"
+import ScrollToTop from "@/components/layout/ScrollToTop"
+import "@total-typescript/ts-reset"
+import "./globals.css"
 
 const inter = Inter({
   preload: true,
