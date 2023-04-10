@@ -27,8 +27,6 @@ export default async function parseCollection({ collectionUrl, skip = 0, take = 
   const totalText = parser.getText("li.rc-pagination-total-text")
   const totalResults = parseInt(totalText.match(/\d+/g)?.pop() || "100")
 
-  console.log(skip, take, totalResults)
-
   let start = skip
 
   // Get all pages urls
