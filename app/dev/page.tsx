@@ -36,7 +36,7 @@ export default function Dev() {
   }
 
   return (
-    <div className="flex-1 flex flex-col w-full max-w-3xlitems-center justify-center gap-4 p-24 mx-auto">
+    <div className="flex-1 flex flex-col w-full max-w-4xl items-center justify-center gap-4 p-24 mx-auto">
       <Input
         label="API Key"
         value={apiKey}
@@ -72,7 +72,7 @@ export default function Dev() {
 
         <Button
           type="button"
-          onClick={() => performRequest("/api/parse-asset", { assetUrl })}
+          onClick={() => performRequest("/api/parse-asset", { assetUrl, force: true })}
         >
           Parse Asset
         </Button>

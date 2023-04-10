@@ -9,8 +9,8 @@ const dataSchema = z.object({
 
 export async function POST(request: NextRequest) {
   return await apiWrapper(request, async () => {
-    const { pageUrl } = dataSchema.parse(await request.json())
-    const result = await parseCollectionPage({ pageUrl })
+    const data = dataSchema.parse(await request.json())
+    const result = await parseCollectionPage(data)
 
     return NextResponse.json(result)
   })

@@ -24,7 +24,7 @@ export class Parser {
 
     const response = await fetch(url, { agent })
 
-    if (!response.ok) throw new Error(`Failed to fetch ${url}. Status: ${response.status}`)
+    if (!response.ok) throw new Error(`Failed to fetch ${url}. Status: ${response.statusText}`)
 
     this.html = await response.text()
     this.jsdom = new JSDOM(this.html)

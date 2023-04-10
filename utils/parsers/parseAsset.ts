@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client"
+import * as Sentry from "@sentry/nextjs"
 import { isValidUrl } from "@/utils/helpers/string"
 import { Parser } from "@/utils/parsers/parser"
 import prisma from "@/utils/prisma"
@@ -8,11 +9,31 @@ const RemoveFromTextRegex = /https:\/\/redirect.epicgames.com\/\?redirectTo=/g
 
 export type Data = {
   assetUrl: string
+  force?: boolean
 }
 
-export default async function parseAsset({ assetUrl }: Data) {
+export default async function parseAsset({ assetUrl, force }: Data) {
   if (!isValidUrl(assetUrl)) {
     throw new Error("The function must be called with a valid URL")
+  }
+
+  const asset = await prisma.asset.findUnique({
+    select: {
+      updatedAt: true,
+    },
+    where: {
+      url: assetUrl,
+    },
+  })
+
+  if (asset && !force) {
+    const now = new Date()
+    const diff = now.getTime() - asset.updatedAt.getTime()
+    const diffInHours = Math.floor(diff / 1000 / 60 / 60)
+
+    if (diffInHours < 24) {
+      return { success: false, message: "Asset was already parsed in the last 24 hours" }
+    }
   }
 
   try {
@@ -205,6 +226,15 @@ export default async function parseAsset({ assetUrl }: Data) {
     console.error(`Failed to scrape asset: ${assetUrl}`)
     console.error(error)
 
-    return { success: false, error }
+    if (error instanceof Error) {
+      Sentry.captureException(error)
+
+      return { success: false, error: error.message }
+    } else {
+      const stringifiedError = JSON.stringify(error)
+      Sentry.captureMessage(`Failed to scrape asset: ${assetUrl}. Error: ${stringifiedError}`)
+
+      return { success: false, error: stringifiedError }
+    }
   }
 }
