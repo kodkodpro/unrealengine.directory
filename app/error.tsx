@@ -15,7 +15,7 @@ export default function Error({ error, reset }: ErrorBoundaryProps) {
   }, [error])
 
   return (
-    <div className="flex flex-row items-center justify-center flex-1 space-y-2">
+    <div className="flex flex-col items-center justify-center flex-1 gap-2">
       <h1 className="text-2xl font-semibold tracking-tight text-white">Error</h1>
       <p className="font-medium text-neutral-300">{error.message}</p>
       <Button onClick={reset}>Retry</Button>
