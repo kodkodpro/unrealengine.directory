@@ -47,7 +47,7 @@ export default function AssetPrice({
         <span
           className="ml-1 text-sm inline-block px-1 py-0.5 bg-red-500 rounded-md translate-y-[-3px] text-neutral-100"
         >
-          -{Math.round(asset.discount / asset.price * 100)}%
+          -{Math.round(asset.discount / (asset.discount + asset.price) * 100)}%
         </span>
       )}
     </>
