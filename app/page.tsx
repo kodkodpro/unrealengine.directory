@@ -1,4 +1,3 @@
-import Image from "next/image"
 import {
   getAssets,
   getAssetsCount,
@@ -11,6 +10,7 @@ import {
 import AssetsFiltersForm, { FiltersQuery } from "@/components/assets/AssetsFiltersForm"
 import AssetsList from "@/components/assets/AssetsList"
 import AssetsListSort from "@/components/assets/AssetsListSort"
+import KittenSays from "@/components/content/KittenSays"
 import Pagination from "@/components/content/Pagination"
 import Sticky from "@/components/layout/Sticky"
 
@@ -60,22 +60,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       ) : (
         <div className="py-8 xl:py-24 flex-1">
-          <Image
-            src={`https://placekitten.com/640/360?image=${Math.round(Math.random() * 15 + 1)}`}
-            width={640}
-            height={360}
-            className="mx-auto mb-4 rounded"
-            alt="Picture of a cat"
-            unoptimized
-          />
-          <p className="text-center text-2xl md:text-3xl xl:text-4xl font-semibold mb-1">
-            <span className="text-neutral-600">&ldquo;</span>
-            No results found
-            <span className="text-neutral-600">&rdquo;</span>
-          </p>
-          <p className="text-center font-medium text-neutral-300 md:text-lg">
-            &mdash; Kitten
-          </p>
+          <KittenSays text="No results found" />
         </div>
       )}
     </div>

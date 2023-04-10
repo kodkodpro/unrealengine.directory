@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header"
 import ScrollToTop from "@/components/layout/ScrollToTop"
 import "@total-typescript/ts-reset"
 import "./globals.css"
+import { getBaseURL } from "@/utils/helpers/string"
 
 const inter = Inter({
   preload: true,
@@ -17,8 +18,11 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "UEDirectory",
-  description: "A convenient directory of Unreal Engine plugins and assets",
+  title: "Unreal Engine Directory",
+  description: "🚀 A directory of Unreal Engine plugins and assets. Like Unreal Marketplace, but better.",
+  manifest: "/manifest.json",
+  themeColor: "#ffffff",
+  applicationName: "Unreal Engine Directory",
   icons: {
     apple: "/apple-touch-icon.png",
     icon: [
@@ -28,9 +32,11 @@ export const metadata: Metadata = {
       { url: "/favicon-dark-16x16.png", sizes: "16x16", type: "image/png", media: "(prefers-color-scheme: dark)" },
     ],
   },
-  themeColor: "#ffffff",
-  manifest: "/manifest.json",
-  applicationName: "UE Directory",
+  openGraph: {
+    url: getBaseURL(),
+    type: "website",
+    locale: "en_US",
+  },
 }
 
 export default function RootLayout({
