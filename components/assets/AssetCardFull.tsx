@@ -1,6 +1,8 @@
 "use client"
 
 import Image from "next/image"
+import { ReactNode, useEffect, useRef } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import ReactMarkdown from "react-markdown"
 import { Carousel } from "react-responsive-carousel"
 import AssetInfoTags from "@/components/assets/AssetInfoTags"
@@ -13,13 +15,27 @@ import { makeMarketplaceURL, titleize } from "@/utils/helpers/string"
 
 export type AssetCardFullProps = {
   asset: AssetFull
+  sidebarText?: ReactNode
 }
 
-export default function AssetCardFull({ asset } : AssetCardFullProps) {
+export default function AssetCardFull({ asset, sidebarText } : AssetCardFullProps) {
+  const carouselRef = useRef<Carousel>(null)
+
+  useHotkeys("left", () => carouselRef.current?.decrement())
+  useHotkeys("right", () => carouselRef.current?.increment())
+
+  useEffect(() => {
+    carouselRef.current?.moveTo(0)
+  }, [asset])
+
   return (
     <div className="xl:grid xl:grid-cols-3 xl:gap-8">
       <div className="xl:col-span-2 mb-8 xl:mb-0">
-        <Carousel showStatus={false} className="h-fit">
+        <Carousel
+          ref={carouselRef}
+          showStatus={false}
+          className="h-fit"
+        >
           {asset.images.map((image) => (
             <div
               key={image}
@@ -64,6 +80,7 @@ export default function AssetCardFull({ asset } : AssetCardFullProps) {
                 asset={asset}
                 colors={{
                   free: "text-white",
+                  price: "text-white",
                 }}
                 showDiscountPercentage
               />
@@ -102,6 +119,8 @@ export default function AssetCardFull({ asset } : AssetCardFullProps) {
             ))}
           </div>
         </div>
+
+        {sidebarText}
       </div>
     </div>
   )
