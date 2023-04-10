@@ -1,13 +1,16 @@
 import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 import { Parser } from "@/utils/parsers/parser"
 
+export const MaxResults = 1000000
+export const MaxResultsPerPage = 100
+
 export type Data = {
   collectionUrl: string
   skip: number
   take: number
 }
 
-export default async function parseCollection({ collectionUrl, skip = 0, take = 1000000 }: Data) {
+export default async function parseCollection({ collectionUrl, skip = 0, take = MaxResults }: Data) {
   if (!isValidUrl(collectionUrl)) {
     throw new Error("The function must be called with a valid URL")
   }
@@ -15,7 +18,7 @@ export default async function parseCollection({ collectionUrl, skip = 0, take = 
   // Set pagination params
   const url = new URL(collectionUrl)
   url.searchParams.set("start", "0")
-  url.searchParams.set("count", "100")
+  url.searchParams.set("count", MaxResultsPerPage.toString())
   url.searchParams.set("sortBy", "effectiveDate")
   url.searchParams.set("sortDir", "DESC")
 
@@ -25,7 +28,7 @@ export default async function parseCollection({ collectionUrl, skip = 0, take = 
   // Get content from "li.rc-pagination-total-text"
   // Example: Showing 1 - 20 of 1140 results
   const totalText = parser.getText("li.rc-pagination-total-text")
-  const totalResults = parseInt(totalText.match(/\d+/g)?.pop() || "100")
+  const totalResults = parseInt(totalText.match(/\d+/g)?.pop() || MaxResultsPerPage.toString())
 
   let start = skip
 
