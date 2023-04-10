@@ -5,8 +5,8 @@ import { useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import AssetCard, { AssetCardProps } from "@/components/assets/AssetCard"
 import AssetCardFull from "@/components/assets/AssetCardFull"
+import Modal from "@/components/content/Modal"
 import Label from "@/components/form/Label"
-import Modal from "@/components/Modal"
 
 type Asset = AssetCardProps["asset"]
 

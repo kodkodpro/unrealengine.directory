@@ -29,6 +29,35 @@ const uiConfig = {
       bgAccentMoreContrast: "bg-blue-600",
     },
 
+    dark: {
+      text: "text-neutral-200",
+      textLessContrast: "text-neutral-500",
+      textMoreContrast: "text-neutral-100",
+
+      bg: "bg-neutral-900",
+      bgLessContrast: "bg-neutral-800",
+      bgMoreContrast: "bg-neutral-950",
+
+      bgHover: "hover:bg-neutral-800",
+      bgHoverLessContrast: "hover:bg-neutral-700",
+      bgHoverMoreContrast: "hover:bg-neutral-900",
+
+      bgActive: "active:bg-neutral-700",
+      bgActiveLessContrast: "active:bg-neutral-600",
+      bgActiveMoreContrast: "active:bg-neutral-800",
+
+      border: "border border-neutral-800",
+      borderLessContrast: "border border-neutral-700",
+      borderMoreContrast: "border border-neutral-900",
+
+      focus: "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+
+      accent: "accent-blue-500",
+      bgAccent: "bg-blue-500",
+      bgAccentLessContrast: "bg-blue-400",
+      bgAccentMoreContrast: "bg-blue-600",
+    },
+
     primary: {
       text: "text-blue-100",
       textLessContrast: "text-blue-400",

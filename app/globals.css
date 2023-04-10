@@ -8,6 +8,7 @@
  * Typography
  */
 
+/* ReactMarkdown generates redundant "p" tag inside of "li" */
 .prose li p {
   margin: 0;
 }

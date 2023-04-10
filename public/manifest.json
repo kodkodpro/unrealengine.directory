@@ -1,0 +1,26 @@
+{
+  "name": "UE Directory",
+  "short_name": "UE Directory",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png?v=xQdXpAz40w",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-256x256.png?v=xQdXpAz40w",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png?v=xQdXpAz40w",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "browser",
+  "scope": "/",
+  "start_url": "/"
+}

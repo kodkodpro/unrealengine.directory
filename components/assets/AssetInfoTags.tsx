@@ -59,6 +59,11 @@ export default function AssetInfoTags({
 
   if (filteredItems.length === 0) return null
 
+  const handleTagClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation()
+    window.open(event.currentTarget.href, "_self")
+  }
+
   return (
     <div className={clsx(
       "flex",
@@ -74,7 +79,11 @@ export default function AssetInfoTags({
               className: "inline-block h-4 w-4 text-neutral-600 shrink-0",
             })}
 
-            <a href={href} className="font-medium text-amber-500 hover:text-amber-600">
+            <a
+              href={href}
+              className="font-medium text-amber-500 hover:text-amber-600"
+              onClick={handleTagClick}
+            >
               {text}
             </a>
           </div>

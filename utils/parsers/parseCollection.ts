@@ -1,5 +1,5 @@
-import { JSDOM } from "jsdom"
 import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
+import { Parser } from "@/utils/parsers/parser"
 
 export type Data = {
   collectionUrl: string
@@ -10,34 +10,28 @@ export default async function parseCollection({ collectionUrl }: Data) {
     throw new Error("The function must be called with a valid URL")
   }
 
-  // If url contains count param, replace it with 100
-  // If not, add it with value 100
+  // Set pagination params
   const url = new URL(collectionUrl)
+  url.searchParams.set("start", "0")
   url.searchParams.set("count", "100")
+  url.searchParams.set("sortBy", "effectiveDate")
+  url.searchParams.set("sortDir", "DESC")
 
-  // Get page source using fetch
-  const response = await fetch(url.toString())
-  const html = await response.text()
+  const parser = new Parser()
+  await parser.parse(url)
 
-  // Parse page source using JSDOM
-  const { window } = new JSDOM(html)
-
-  // Get content from "li.rc-pagination-total-text" (element may not exist)
-  const totalText = window.document.querySelector("li.rc-pagination-total-text")?.textContent || ""
+  // Get content from "li.rc-pagination-total-text"
+  const totalText = parser.getText("li.rc-pagination-total-text")
   const totalResults = parseInt((totalText.match(/of\s(\d+)/) || []).pop() || "") || 100
 
-  const pagesUrls = []
   let start = 0
 
   // Get all pages urls
   while (start < totalResults) {
     url.searchParams.set("start", start.toString())
-    pagesUrls.push(url.toString())
-    start += 100
-  }
+    const pageUrl = url.toString()
 
-  for (const pageUrl of pagesUrls) {
-    fetch(`${getBaseURL()}/api/parse-collection-page`, {
+    await fetch(`${getBaseURL()}/api/parse-collection-page`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +40,8 @@ export default async function parseCollection({ collectionUrl }: Data) {
       body: JSON.stringify({ pageUrl: makeMarketplaceURL(pageUrl) }),
     })
 
-    await new Promise((resolve) => setTimeout(resolve, 10000))
+    start += 100
+    console.log(`[${new Date().toISOString()}] Parsed page ${start / 100}`)
   }
 
   return { success: true }

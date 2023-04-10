@@ -6,21 +6,25 @@ export default function Footer() {
       <Waves wavesColor="fill-neutral-800" bgColor="bg-neutral-900" />
 
       <div className="py-12 bg-neutral-800">
-        <div className="mx-4 md:mx-12 text-sm space-y-0.5">
+        <div className="mx-4 md:mx-12 text-sm space-y-1">
           <p>
             Created by{" "}
-            <a href="mailto:andrew@kodkod.me" className="font-medium text-neutral-100 mt-1 hover:text-neutral-200">
+            <a
+              href="mailto:andrew@kodkod.me"
+              className="font-semibold text-white hover:text-neutral-100 hover:underline"
+            >
               Andrew Kodkod
             </a>
-          </p>
-          <p>
-            This is an Open Source project &rarr;{" "}
+            {" "}as an Open Source project &rarr;{" "}
             <a
               href="https://github.com/kodkod-productions/uedirectory.com"
-              className="font-medium text-neutral-100 mt-1 hover:text-neutral-200"
+              className="font-semibold text-white hover:text-neutral-100 hover:underline"
             >
               View on GitHub
             </a>
+          </p>
+          <p>
+            This website is not affiliated with the Epic Games Store or Epic Games, Inc.
           </p>
         </div>
       </div>

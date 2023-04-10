@@ -19,7 +19,10 @@ export default function AssetCard({ asset, onClick }: AssetCardProps) {
       )}
       onClick={onClick}
     >
-      <div className="relative aspect-video overflow-hidden rounded-lg bg-neutral-800 group-hover:brightness-110">
+      <div className={clsx(
+        "relative aspect-video overflow-hidden rounded-lg bg-neutral-800",
+        "group-hover:brightness-110 transition-all",
+      )}>
         <Image
           src={asset.images[0]}
           alt={`Image of ${asset.name}`}

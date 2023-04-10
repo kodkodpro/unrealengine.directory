@@ -40,7 +40,7 @@ export default async function parseAsset({ assetUrl }: Data) {
     const releasedAt = new Date(releasedAtText)
 
     // Get author from "span.author-name a"
-    const authorName = parser.getText("span.seller-name a")
+    const authorName = parser.getText("span.seller-name a") || "Unknown Author"
 
     // Get category from "a.item-cat"
     const categoryName = parser.getText("a.item-cat")

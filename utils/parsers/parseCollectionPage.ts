@@ -1,6 +1,5 @@
 import { JSDOM } from "jsdom"
-import { isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
-import parseAsset from "@/utils/parsers/parseAsset"
+import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 
 export type Data = {
   pageUrl: string
@@ -26,9 +25,16 @@ export default async function parseCollectionPage({ pageUrl }: Data) {
   for (const assetUrl of assetUrls) {
     if (!assetUrl) continue
 
-    await parseAsset({ assetUrl: makeMarketplaceURL(assetUrl) })
+    await fetch(`${getBaseURL()}/api/parse-asset`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": process.env.API_KEY!,
+      },
+      body: JSON.stringify({ assetUrl: makeMarketplaceURL(assetUrl) }),
+    })
 
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   }
 
   return { success: true }

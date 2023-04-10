@@ -1,9 +1,12 @@
 "use client"
 
 import { Listbox } from "@headlessui/react"
+import { FunnelIcon } from "@heroicons/react/24/outline"
 import { CheckIcon } from "@heroicons/react/24/solid"
 import clsx from "clsx"
 import { useState } from "react"
+import { FixedSizeList } from "react-window"
+import Input from "@/components/form/Input"
 import InputWrapper, { InputWrapperProps } from "@/components/form/InputWrapper"
 import uiConfig from "@/ui.config"
 
@@ -26,6 +29,9 @@ export type MultiSelectProps<T = string> = {
   value?: T[]
   options?: readonly Option<T>[]
   renderSelectedOptions?: (options: Option<T>[]) => React.ReactNode
+  virtualized?: boolean
+  virtualizedHeight?: number
+  virtualizedItemHeight?: number
   onChange?: (value: T[]) => void
 
   size?: InputWrapperProps["size"]
@@ -38,6 +44,9 @@ export default function MultiSelect<T extends string | number>({
   value,
   options,
   renderSelectedOptions,
+  virtualized,
+  virtualizedHeight = 250,
+  virtualizedItemHeight = 44,
   onChange,
 
   // InputWrapperProps
@@ -64,6 +73,40 @@ export default function MultiSelect<T extends string | number>({
 
   const size = uiConfig.sizes[s]
   const variant = uiConfig.variants[v]
+
+  const renderVirtualListItem = ({ index, style }: { index: number, style: React.CSSProperties }) => (
+    <div style={style}>
+      <Listbox.Option
+        value={filteredOptions[index].value}
+        className={({ active, selected }) => clsx(
+          "flex cursor-pointer items-center",
+          size.textSmaller,
+          size.rounding,
+          size.paddingSmaller.all,
+          size.gapSmaller.x,
+          active
+            ? variant.bgLessContrast
+            : selected ? variant.bgMoreContrast : variant.bg,
+          active
+            ? variant.textMoreContrast
+            : variant.text,
+        )}
+      >
+        <span className={clsx(
+          size.heightSmallest,
+          size.widthSmallest,
+        )}>
+          {value?.includes(filteredOptions[index].value) && (
+            <CheckIcon className="w-full h-full" />
+          )}
+        </span>
+
+        <span className="flex-1">
+          {filteredOptions[index].label}
+        </span>
+      </Listbox.Option>
+    </div>
+  )
 
   return (
     <InputWrapper
@@ -104,19 +147,13 @@ export default function MultiSelect<T extends string | number>({
         )}>
           {!noOptions && (
             <li className={clsx(size.marginSmallest.bottom)}>
-              <input
+              <Input
+                leftIcon={FunnelIcon}
+                placeholder="Filter options"
+                size="sm"
+                variant="dark"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search..."
-                className={clsx(
-                  "w-full",
-                  size.textSmaller,
-                  size.heightSmall,
-                  size.rounding,
-                  size.paddingSmaller.x,
-                  variant.bgMoreContrast,
-                  variant.focus,
-                )}
+                onChangeText={setQuery}
               />
             </li>
           )}
@@ -132,38 +169,21 @@ export default function MultiSelect<T extends string | number>({
             </li>
           )}
 
-          {filteredOptions.map((option) => (
-            <Listbox.Option
-              key={option.value}
-              value={option.value}
-              className={({ active, selected }) => clsx(
-                "flex cursor-pointer items-center",
-                size.textSmaller,
-                size.rounding,
-                size.paddingSmaller.all,
-                size.gapSmaller.x,
-                active
-                  ? variant.bgLessContrast
-                  : selected ? variant.bgMoreContrast : variant.bg,
-                active
-                  ? variant.textMoreContrast
-                  : variant.text,
-              )}
+          {virtualized ? (
+            <FixedSizeList
+              height={virtualizedHeight}
+              itemSize={virtualizedItemHeight}
+              itemCount={filteredOptions.length}
+              width="100%"
+              className="scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent"
             >
-              <span className={clsx(
-                size.heightSmallest,
-                size.widthSmallest,
-              )}>
-                {value?.includes(option.value) && (
-                  <CheckIcon className="w-full h-full" />
-                )}
-              </span>
-
-              <span className="flex-1">
-                {option.label}
-              </span>
-            </Listbox.Option>
-          ))}
+              {renderVirtualListItem}
+            </FixedSizeList>
+          ) : (
+            Array.from({ length: filteredOptions.length }, (_, index) => (
+              renderVirtualListItem({ index, style: {} })
+            ))
+          )}
         </Listbox.Options>
       </Listbox>
     </InputWrapper>

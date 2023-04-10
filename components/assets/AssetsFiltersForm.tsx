@@ -13,7 +13,7 @@ import Label from "@/components/form/Label"
 import MultiSelect from "@/components/form/MultiSelect"
 import Range from "@/components/form/Range"
 import Select from "@/components/form/Select"
-import { getIdsFromSearchParams } from "@/utils/helpers/searchParams"
+import { getIdsFromQuery } from "@/utils/helpers/searchParams"
 import { formatMoney, titleize, toBoolean } from "@/utils/helpers/string"
 import { shrinkVersions, Version } from "@/utils/versions"
 
@@ -67,15 +67,15 @@ export default function AssetsFiltersForm({
   const [priceFrom, setPriceFrom] = useState(parseInt(searchParams.get("priceFrom") || "0"))
   const [priceTo, setPriceTo] = useState(parseInt(searchParams.get("priceTo") || "") || assetsMaxPrice)
   const [freeOnly, setFreeOnly] = useState(toBoolean(searchParams.get("freeOnly")))
-  const [releasePeriod, setReleasePeriod] = useState<string>(searchParams.get("releasePeriod") || "")
+  const [releasePeriod, setReleasePeriod] = useState(searchParams.get("releasePeriod") || "")
 
-  const [categoriesIds, setCategoriesIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "categoriesIds"))
-  const [tagsIds, setTagsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "tagsIds"))
-  const [engineVersionsIds, setEngineVersionsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "engineVersionsIds"))
-  const [authorsIds, setAuthorsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "authorsIds"))
+  const [categoriesIds, setCategoriesIds] = useState(getIdsFromQuery(searchParams, "categoriesIds"))
+  const [tagsIds, setTagsIds] = useState(getIdsFromQuery(searchParams, "tagsIds"))
+  const [engineVersionsIds, setEngineVersionsIds] = useState(getIdsFromQuery(searchParams, "engineVersionsIds"))
+  const [authorsIds, setAuthorsIds] = useState(getIdsFromQuery(searchParams, "authorsIds"))
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement> | null = null) => {
+    event?.preventDefault()
 
     const url = new URL(window.location.href)
     const searchParams = new URLSearchParams(url.search)
@@ -142,6 +142,7 @@ export default function AssetsFiltersForm({
       />
 
       <MultiSelect
+        virtualized
         label="Tags"
         placeholder="All"
         options={(tags || []).map((tag) => ({

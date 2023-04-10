@@ -21,7 +21,13 @@ export default function Dev() {
 
     if (!response.ok) {
       console.error(response)
-      console.error(await response.json())
+
+      try {
+        console.error(await response.json())
+      } catch (err) {
+        console.error(await response.text())
+      }
+
       return
     }
 
@@ -30,7 +36,7 @@ export default function Dev() {
   }
 
   return (
-    <div className="flex flex-col w-full max-w-3xl h-screen items-center justify-center gap-4 p-24 mx-auto">
+    <div className="flex-1 flex flex-col w-full max-w-3xlitems-center justify-center gap-4 p-24 mx-auto">
       <Input
         label="API Key"
         value={apiKey}

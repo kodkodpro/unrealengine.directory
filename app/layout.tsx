@@ -5,7 +5,8 @@ import { Inter } from "next/font/google"
 import clsx from "clsx"
 import "@total-typescript/ts-reset"
 import Footer from "@/components/layout/Footer"
-import ScrollToTop from "@/components/ScrollToTop"
+import ScrollToTop from "@/components/layout/ScrollToTop"
+import { Metadata } from "next"
 
 const inter = Inter({
   preload: true,
@@ -15,9 +16,21 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "UEDirectory",
   description: "A convenient directory of Unreal Engine plugins and assets",
+  icons: {
+    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png", media: "(prefers-color-scheme: light)" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png", media: "(prefers-color-scheme: light)" },
+      { url: "/favicon-dark-32x32.png", sizes: "32x32", type: "image/png", media: "(prefers-color-scheme: dark)" },
+      { url: "/favicon-dark-16x16.png", sizes: "16x16", type: "image/png", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
+  themeColor: "#ffffff",
+  manifest: "/manifest.json",
+  applicationName: "UE Directory",
 }
 
 export default function RootLayout({
@@ -29,14 +42,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(
         "bg-neutral-800 text-neutral-100 font-sans antialiased",
+        "flex flex-col min-h-screen",
         inter.variable,
       )}>
         <Header />
 
-        <div className="py-8 bg-neutral-900">
-          <div className="mx-4 md:mx-12">
-            {children}
-          </div>
+        <div className="py-8 px-4 md:px-12 bg-neutral-900 flex-1 flex flex-col">
+          {children}
         </div>
 
         <Footer />
