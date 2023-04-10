@@ -1,6 +1,5 @@
-import { isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 import { JSDOM } from "jsdom"
-import parseCollectionPage from "@/utils/parsers/parseCollectionPage"
+import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 
 export type Data = {
   collectionUrl: string
@@ -38,7 +37,18 @@ export default async function parseCollection({ collectionUrl }: Data) {
   }
 
   for (const pageUrl of pagesUrls) {
-    await parseCollectionPage({ pageUrl: makeMarketplaceURL(pageUrl) })
+    // await parseCollectionPage({ pageUrl: makeMarketplaceURL(pageUrl) })
+
+    fetch(`${getBaseURL()}/api/parse-collection-page`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": process.env.API_KEY!,
+      },
+      body: JSON.stringify({ pageUrl: makeMarketplaceURL(pageUrl) }),
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   }
 
   return { success: true }

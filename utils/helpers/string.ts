@@ -97,3 +97,20 @@ export const titleize = (string: string): string => {
 
   return titleizedWords.join(" ")
 }
+
+// Get base URL this function can be called from Node.js or browser
+export const getBaseURL = () => {
+  if (typeof window !== "undefined") {
+    return window.location.origin
+  }
+
+  if (process.env.NEXT_PUBLIC_BASE_URL) {
+    return process.env.NEXT_PUBLIC_BASE_URL
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+
+  throw new Error("Base URL is not defined")
+}

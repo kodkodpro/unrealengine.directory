@@ -57,7 +57,7 @@ export default function AssetsListSort({ assetsCount, className, ...props } : As
   return (
     <div
       className={clsx(
-        "flex flex-row justify-between items-center gap-2 mb-2",
+        "flex flex-row items-center justify-between gap-2 mb-2",
         className,
       )}
       {...props}
