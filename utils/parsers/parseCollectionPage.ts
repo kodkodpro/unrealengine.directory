@@ -27,6 +27,8 @@ export default async function parseCollectionPage({ pageUrl }: Data) {
     if (!assetUrl) continue
 
     await parseAsset({ assetUrl: makeMarketplaceURL(assetUrl) })
+
+    await new Promise((resolve) => setTimeout(resolve, 3000))
   }
 
   return { success: true }

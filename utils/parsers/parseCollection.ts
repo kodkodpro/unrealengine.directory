@@ -37,8 +37,6 @@ export default async function parseCollection({ collectionUrl }: Data) {
   }
 
   for (const pageUrl of pagesUrls) {
-    // await parseCollectionPage({ pageUrl: makeMarketplaceURL(pageUrl) })
-
     fetch(`${getBaseURL()}/api/parse-collection-page`, {
       method: "POST",
       headers: {
@@ -48,7 +46,7 @@ export default async function parseCollection({ collectionUrl }: Data) {
       body: JSON.stringify({ pageUrl: makeMarketplaceURL(pageUrl) }),
     })
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 10000))
   }
 
   return { success: true }
