@@ -62,6 +62,7 @@ export default function Input({
       size={s}
       variant={v}
       onClear={onClear}
+      className={className}
     >
       <input
         value={value}
@@ -70,7 +71,6 @@ export default function Input({
           "h-full w-full bg-transparent outline-none focus:ring-0",
           size.text,
           props.disabled ? variant.textLessContrast : variant.text,
-          className,
         )}
         {...props}
       />

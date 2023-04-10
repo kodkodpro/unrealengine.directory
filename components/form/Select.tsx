@@ -24,6 +24,7 @@ export type SelectProps<T = string> = {
   placeholder?: string
   value?: T
   options?: readonly Option<T>[]
+  openDirection?: `${"top" | "bottom"}-${"left" | "right"}`
   onChange?: (value: T) => void
 
   size?: InputWrapperProps["size"]
@@ -35,6 +36,7 @@ export default function Select<T extends string>({
   placeholder,
   value,
   options,
+  openDirection = "bottom-right",
   onChange,
 
   // InputWrapperProps
@@ -52,6 +54,13 @@ export default function Select<T extends string>({
 } : SelectProps<T>) {
   const selectedOption = options?.find((option) => option.value === value)
   const noOptions = !options || options.length === 0
+
+  const directionClasses = {
+    "top-left": "-top-2 right-0",
+    "top-right": "-top-2 left-0",
+    "bottom-left": "-bottom-2 right-0",
+    "bottom-right": "-bottom-2 left-0",
+  }
 
   const size = uiConfig.sizes[s]
   const variant = uiConfig.variants[v]
@@ -79,8 +88,9 @@ export default function Select<T extends string>({
         </Listbox.Button>
 
         <Listbox.Options className={clsx(
-          "absolute inset-x-0 -bottom-2 z-50 min-w-[250px] translate-y-full focus:outline-none focus:ring-0",
+          "absolute z-50 min-w-[250px] translate-y-full focus:outline-none focus:ring-0",
           "max-h-[66vh] overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent",
+          directionClasses[openDirection],
           size.text,
           size.rounding,
           size.paddingSmaller.all,

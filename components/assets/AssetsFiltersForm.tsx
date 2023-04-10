@@ -1,10 +1,11 @@
 "use client"
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
-import { Category, Tag, EngineVersion } from "@prisma/client"
+import { Category, Tag, EngineVersion, Author } from "@prisma/client"
 import clsx from "clsx"
 import { useRouter, useSearchParams } from "next/navigation"
 import { startTransition, useState } from "react"
+import { OrderBy } from "@/components/assets/AssetsListSort"
 import Button from "@/components/form/Button"
 import Checkbox from "@/components/form/Checkbox"
 import Input from "@/components/form/Input"
@@ -14,6 +15,7 @@ import Range from "@/components/form/Range"
 import Select from "@/components/form/Select"
 import { getIdsFromSearchParams } from "@/utils/helpers/searchParams"
 import { formatMoney, titleize, toBoolean } from "@/utils/helpers/string"
+import { shrinkVersions, Version } from "@/utils/versions"
 
 const ReleasePeriodOptions = [
   { label: "Last 7 days", value: "last-7-days" },
@@ -22,17 +24,7 @@ const ReleasePeriodOptions = [
   { label: "Last year", value: "last-year" },
 ] as const
 
-const OrderByOptions = [
-  { label: "Newest", value: "newest" },
-  { label: "Oldest", value: "oldest" },
-  { label: "Price: Low to High", value: "least-expensive" },
-  { label: "Price: High to Low", value: "most-expensive" },
-  { label: "Rating: Low to High", value: "least-popular" },
-  { label: "Rating: High to Low", value: "most-popular" },
-] as const
-
 export type ReleasePeriod = typeof ReleasePeriodOptions[number]["value"]
-export type OrderBy = typeof OrderByOptions[number]["value"]
 
 export type FiltersQuery = {
   q?: string,
@@ -46,6 +38,7 @@ export type FiltersQuery = {
   categoriesIds?: string,
   tagsIds?: string,
   engineVersionsIds?: string,
+  authorsIds?: string,
 }
 
 export type AssetsFiltersFormProps = {
@@ -53,6 +46,7 @@ export type AssetsFiltersFormProps = {
   categories: Pick<Category, "id" | "name">[]
   tags: Pick<Tag, "id" | "name">[],
   engineVersions: Pick<EngineVersion, "id" | "name">[]
+  authors: Pick<Author, "id" | "name">[]
 } & React.HTMLAttributes<HTMLFormElement>
 
 export default function AssetsFiltersForm({
@@ -60,6 +54,7 @@ export default function AssetsFiltersForm({
   categories,
   tags,
   engineVersions,
+  authors,
   className,
   ...props
 }: AssetsFiltersFormProps) {
@@ -73,11 +68,11 @@ export default function AssetsFiltersForm({
   const [priceTo, setPriceTo] = useState(parseInt(searchParams.get("priceTo") || "") || assetsMaxPrice)
   const [freeOnly, setFreeOnly] = useState(toBoolean(searchParams.get("freeOnly")))
   const [releasePeriod, setReleasePeriod] = useState<string>(searchParams.get("releasePeriod") || "")
-  const [orderBy, setOrderBy] = useState<string>(searchParams.get("orderBy") || OrderByOptions[0].value)
 
   const [categoriesIds, setCategoriesIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "categoriesIds"))
   const [tagsIds, setTagsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "tagsIds"))
   const [engineVersionsIds, setEngineVersionsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "engineVersionsIds"))
+  const [authorsIds, setAuthorsIds] = useState<number[]>(getIdsFromSearchParams(searchParams, "authorsIds"))
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -92,9 +87,10 @@ export default function AssetsFiltersForm({
       priceFrom: priceFrom.toString(),
       priceTo: priceTo.toString(),
       releasePeriod: releasePeriod as ReleasePeriod,
-      orderBy: orderBy as OrderBy,
       categoriesIds: categoriesIds.join(","),
       tagsIds: tagsIds.join(","),
+      engineVersionsIds: engineVersionsIds.join(","),
+      authorsIds: authorsIds.join(","),
       freeOnly: freeOnly ? "1" : "",
     }
 
@@ -164,9 +160,24 @@ export default function AssetsFiltersForm({
           value: engineVersion.id,
           label: engineVersion.name,
         }))}
+        renderSelectedOptions={(selectedOptions) => {
+          return shrinkVersions(selectedOptions.map((option) => option.label) as Version[])
+        }}
         value={engineVersionsIds}
         onChange={setEngineVersionsIds}
         onClear={() => setEngineVersionsIds([])}
+      />
+
+      <MultiSelect
+        label="Authors"
+        placeholder="All"
+        options={(authors || []).map((author) => ({
+          value: author.id,
+          label: author.name,
+        }))}
+        value={authorsIds}
+        onChange={setAuthorsIds}
+        onClear={() => setAuthorsIds([])}
       />
 
       <Select
@@ -178,49 +189,17 @@ export default function AssetsFiltersForm({
         onClear={() => setReleasePeriod("")}
       />
 
-      <Select
-        label="Sort results by"
-        options={OrderByOptions}
-        value={orderBy}
-        onChange={setOrderBy}
-      />
-
       <div>
-        <Label text="Rating" />
+        <div className="flex items-center justify-between mb-1">
+          <Label text="Price ($)" margin={false} />
 
-        <div className="flex items-center gap-2 mb-2">
-          <Input
-            value={ratingFrom.toString()}
-            onChangeText={(value) => setRatingFrom(parseInt(value) || 0)}
-            type="number"
-            min="0"
-            className="w-full text-center"
-          />
-
-          <span className="text-neutral-500">&ndash;</span>
-
-          <Input
-            value={ratingTo.toString()}
-            onChangeText={(value) => setRatingTo(parseInt(value) || assetsMaxPrice)}
-            type="number"
-            className="w-full text-center"
+          <Checkbox
+            label="Free only"
+            id="free-only"
+            value={freeOnly}
+            onToggle={setFreeOnly}
           />
         </div>
-
-        <Range
-          min={0}
-          max={5}
-          step={0.1}
-          value={[ratingFrom, ratingTo]}
-          onChange={(values) => {
-            setRatingFrom(values[0])
-            setRatingTo(values[1])
-          }}
-        />
-      </div>
-
-      <div>
-        <Label text="Price ($)" />
 
         <div className="flex items-center gap-2 mb-2">
           <Input
@@ -257,13 +236,42 @@ export default function AssetsFiltersForm({
         />
       </div>
 
-      <Checkbox
-        label="Free only"
-        id="free-only"
-        value={freeOnly}
-        onToggle={setFreeOnly}
-        toggle
-      />
+      <div>
+        <Label text="Rating" />
+
+        <div className="flex items-center gap-2 mb-2">
+          <Input
+            value={ratingFrom.toString()}
+            onChangeText={(value) => setRatingFrom(parseInt(value) || 0)}
+            type="number"
+            min="0"
+            step="0.1"
+            className="w-full text-center"
+          />
+
+          <span className="text-neutral-500">&ndash;</span>
+
+          <Input
+            value={ratingTo.toString()}
+            onChangeText={(value) => setRatingTo(parseInt(value) || assetsMaxPrice)}
+            type="number"
+            step="0.1"
+            max="5"
+            className="w-full text-center"
+          />
+        </div>
+
+        <Range
+          min={0}
+          max={5}
+          step={0.1}
+          value={[ratingFrom, ratingTo]}
+          onChange={(values) => {
+            setRatingFrom(values[0])
+            setRatingTo(values[1])
+          }}
+        />
+      </div>
 
       <hr className="border-neutral-800" />
 

@@ -24,9 +24,10 @@ export default function Range({
   const size = uiConfig.sizes[s]
   const variant = uiConfig.variants[v]
 
-  const renderTrack: ReactSliderProps<number[]>["renderTrack"] = (props, { index }) => (
+  const renderTrack: ReactSliderProps<number[]>["renderTrack"] = ({ key, ...props }, { index }) => (
     <div
       {...props}
+      key={key}
       className={clsx(
         "rounded-full",
         size.heightSmallest,
@@ -37,9 +38,10 @@ export default function Range({
     />
   )
 
-  const renderThumb: ReactSliderProps<number[]>["renderThumb"] = (props) => (
+  const renderThumb: ReactSliderProps<number[]>["renderThumb"] = ({ key, ...props }) => (
     <div
       {...props}
+      key={key}
       className={clsx(
         "box-border rounded-full -mt-1",
         size.widthSmaller,

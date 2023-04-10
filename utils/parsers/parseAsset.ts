@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client"
 import { isValidUrl } from "@/utils/helpers/string"
 import { Parser } from "@/utils/parsers/parser"
 import prisma from "@/utils/prisma"
+import { generateRange, Version } from "@/utils/versions"
 
 const RemoveFromTextRegex = /https:\/\/redirect.epicgames.com\/\?redirectTo=/g
 
@@ -57,22 +58,21 @@ export default async function parseAsset({ assetUrl }: Data) {
     .filter(Boolean)
 
   // Get supported engine versions from "span.ue-version" and generate single versions from this text
-  // Example: "4.27, 5.0 - 5.2"
+  // Example #1: "4.27, 5.0 - 5.2" returns ["4.27", "5.0", "5.1", "5.2"]
+  // Example #2: "4.27, 5.0 - 5.2, 5.3 - 5.4" returns ["4.27", "5.0", "5.1", "5.2", "5.3", "5.4"]
+  // Example #3: "4.19 - 4.27" returns ["4.19", "4.20", "4.21", "4.22", "4.23", "4.24", "4.25", "4.26", "4.27"]
   const engineVersionsText = parser.getText("span.ue-version")
   const engineVersions = engineVersionsText
     .split(",")
     .map((version) => version.trim())
     .map((version) => {
-      if (version.includes("-")) {
-        const [start, end] = version.split("-").map((version) => version.trim())
+      const [start, end] = version.split("-").map((version) => version.trim())
 
-        return Array
-          .from({ length: parseFloat(end) - parseFloat(start) + 0.1 })
-          .map((_, index) => parseFloat(start) + index)
-          .map((version) => version.toString())
+      if (start && end) {
+        return generateRange(start as Version, end as Version)
       }
 
-      return [version]
+      return version
     })
     .flat()
 
@@ -117,6 +117,7 @@ export default async function parseAsset({ assetUrl }: Data) {
   }
 
   // Save or update asset and related records in Prisma
+  // Remove all existing tags and add new ones
   const author = await prisma.author.upsert({
     where: {
       name: authorName,
@@ -161,35 +162,50 @@ export default async function parseAsset({ assetUrl }: Data) {
         id: category.id,
       },
     },
-
-    tags: {
-      connectOrCreate: tags.map((tag) => ({
-        where: {
-          name: tag,
-        },
-        create: {
-          name: tag,
-        },
-      })),
-    },
-
-    engineVersions: {
-      connectOrCreate: engineVersions.map((version) => ({
-        where: {
-          name: version,
-        },
-        create: {
-          name: version,
-        },
-      })),
-    },
   }
 
-  return await prisma.asset.upsert({
+  const asset = await prisma.asset.upsert({
+    include: {
+      tags: true,
+      engineVersions: true,
+    },
     where: {
       url: assetUrl,
     },
     update: data,
     create: data,
   })
+
+  // Disconnect all existing tags and connect new ones
+  await prisma.asset.update({
+    where: {
+      id: asset.id,
+    },
+    data: {
+      tags: {
+        disconnect: asset.tags.map((tag) => ({ id: tag.id })),
+        connectOrCreate: tags.map((tag) => ({
+          where: {
+            name: tag,
+          },
+          create: {
+            name: tag,
+          },
+        })),
+      },
+      engineVersions: {
+        disconnect: asset.engineVersions.map((engineVersion) => ({ id: engineVersion.id })),
+        connectOrCreate: engineVersions.map((engineVersion) => ({
+          where: {
+            name: engineVersion,
+          },
+          create: {
+            name: engineVersion,
+          },
+        })),
+      },
+    },
+  })
+
+  return { success: true }
 }

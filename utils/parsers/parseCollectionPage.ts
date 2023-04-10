@@ -1,5 +1,5 @@
-import { isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 import { JSDOM } from "jsdom"
+import { isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 import parseAsset from "@/utils/parsers/parseAsset"
 
 export type Data = {
@@ -28,4 +28,6 @@ export default async function parseCollectionPage({ pageUrl }: Data) {
 
     await parseAsset({ assetUrl: makeMarketplaceURL(assetUrl) })
   }
+
+  return { success: true }
 }

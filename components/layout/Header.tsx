@@ -1,18 +1,25 @@
 import Link from "next/link"
+import Waves from "@/components/layout/Waves"
+import UELogo from "@/components/UELogo"
 
 export default function Header() {
   return (
-    <div className="py-12 text-center">
-      <Link
-        href="/"
-        className="text-4xl font-extrabold tracking-tighter"
-      >
-        Unreal Engine Directory
+    <div>
+      <div className="py-12 text-center bg-neutral-800">
+        <Link
+          href="/"
+          className="text-4xl font-extrabold tracking-tighter text-white hover:text-neutral-100"
+        >
+          <UELogo className="w-12 h-12 inline-block mx-auto mb-4" />
+          <br />
+          Unreal Engine Directory
+        </Link>
+        <p className="font-medium text-neutral-300 mt-1">
+          Like Unreal Engine Marketplace, but better
+        </p>
+      </div>
 
-        <sup className="ml-1 inline-block -translate-y-2 rounded bg-blue-500 px-1.5 py-0.5 text-sm tracking-normal text-neutral-100">
-          BETA
-        </sup>
-      </Link>
+      <Waves wavesColor="fill-neutral-800" bgColor="bg-neutral-900" flip />
     </div>
   )
 }

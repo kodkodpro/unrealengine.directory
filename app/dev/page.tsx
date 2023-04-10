@@ -5,6 +5,8 @@ import Button from "@/components/form/Button"
 import Input from "@/components/form/Input"
 
 export default function Dev() {
+  const [apiKey, setApiKey] = useState<string>("")
+  const [assetUrl, setAssetUrl] = useState<string>("")
   const [collectionUrl, setCollectionUrl] = useState<string>("")
 
   const performRequest = async (url: string, data: any = {}) => {
@@ -12,12 +14,14 @@ export default function Dev() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-API-Key": apiKey,
       },
       body: JSON.stringify(data),
     })
 
     if (!response.ok) {
       console.error(response)
+      console.error(await response.json())
       return
     }
 
@@ -26,18 +30,22 @@ export default function Dev() {
   }
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center gap-8 p-24">
-      <Button
-        type="button"
-        onClick={() => performRequest("/api/parse-categories")}
-      >
-        Parse Categories
-      </Button>
+    <div className="flex flex-col w-full max-w-3xl h-screen items-center justify-center gap-4 p-24 mx-auto">
+      <Input
+        label="API Key"
+        value={apiKey}
+        onChangeText={setApiKey}
+        className="w-full"
+      />
 
-      <div className="flex flex-row gap-2">
+      <hr className="border-neutral-800 w-full" />
+
+      <div className="w-full grid grid-cols-3 gap-2">
         <Input
+          placeholder="URL"
           value={collectionUrl}
           onChangeText={setCollectionUrl}
+          className="col-span-2"
         />
 
         <Button
@@ -45,6 +53,22 @@ export default function Dev() {
           onClick={() => performRequest("/api/parse-collection", { collectionUrl })}
         >
           Parse Collection
+        </Button>
+      </div>
+
+      <div className="w-full grid grid-cols-3 gap-2">
+        <Input
+          placeholder="URL"
+          value={assetUrl}
+          onChangeText={setAssetUrl}
+          className="col-span-2"
+        />
+
+        <Button
+          type="button"
+          onClick={() => performRequest("/api/parse-asset", { assetUrl })}
+        >
+          Parse Asset
         </Button>
       </div>
     </div>

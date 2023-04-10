@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { apiWrapper } from "@/utils/api"
-import parseCollection from "@/utils/parsers/parseCollection"
+import parseAsset from "@/utils/parsers/parseAsset"
 
 const dataSchema = z.object({
-  collectionUrl: z.string().url(),
+  assetUrl: z.string().url(),
 })
 
 export async function POST(request: NextRequest) {
   return await apiWrapper(request, async () => {
-    const { collectionUrl } = dataSchema.parse(await request.json())
-    const result = await parseCollection({ collectionUrl })
+    const { assetUrl } = dataSchema.parse(await request.json())
+    const result = await parseAsset({ assetUrl })
 
     return NextResponse.json(result)
   })

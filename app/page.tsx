@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client"
-import AssetsFiltersForm, { FiltersQuery, OrderBy } from "@/components/assets/AssetsFiltersForm"
+import AssetsFiltersForm, { FiltersQuery } from "@/components/assets/AssetsFiltersForm"
 import AssetsList from "@/components/assets/AssetsList"
-import AssetsListSort from "@/components/assets/AssetsListSort"
+import AssetsListSort, { OrderBy } from "@/components/assets/AssetsListSort"
 import Pagination from "@/components/Pagination"
 import Sticky from "@/components/Sticky"
 import {
@@ -11,11 +11,13 @@ import {
   AssetFullTagsSelect,
   AssetFullEngineVersionsSelect,
 } from "@/types/AssetFull"
-import { pluralize, toBoolean } from "@/utils/helpers/string"
+import { toBoolean } from "@/utils/helpers/string"
 import prisma from "@/utils/prisma"
 
 function getFilters(searchParams: HomeProps["searchParams"]) {
   const where: Prisma.AssetWhereInput = {}
+  const ratingScore: Prisma.AssetWhereInput["ratingScore"] = {}
+  const price: Prisma.AssetWhereInput["price"] = {}
   const freeOnly = toBoolean(searchParams.freeOnly)
 
   if (searchParams.q) {
@@ -26,33 +28,31 @@ function getFilters(searchParams: HomeProps["searchParams"]) {
   }
 
   if (searchParams.ratingFrom) {
-    where["ratingScore"] = {
-      gte: +searchParams.ratingFrom,
-    }
+    ratingScore["gte"] = +searchParams.ratingFrom
   }
 
   if (searchParams.ratingTo) {
-    where["ratingScore"] = {
-      lte: +searchParams.ratingTo,
-    }
+    ratingScore["lte"] = +searchParams.ratingTo
+  }
+
+  if (Object.keys(ratingScore).length) {
+    where["ratingScore"] = ratingScore
   }
 
   if (searchParams.priceFrom && !freeOnly) {
-    where["price"] = {
-      gte: +searchParams.priceFrom,
-    }
+    price["gte"] = +searchParams.priceFrom
   }
 
   if (searchParams.priceTo && !freeOnly) {
-    where["price"] = {
-      lte: +searchParams.priceTo,
-    }
+    price["lte"] = +searchParams.priceTo
   }
 
   if (freeOnly) {
     where["price"] = {
       equals: 0,
     }
+  } else if (Object.keys(price).length) {
+    where["price"] = price
   }
 
   if (searchParams.releasePeriod) {
@@ -100,6 +100,14 @@ function getFilters(searchParams: HomeProps["searchParams"]) {
         id: {
           in: searchParams.engineVersionsIds.split(",").map((id) => parseInt(id)),
         },
+      },
+    }
+  }
+
+  if (searchParams.authorsIds) {
+    where["author"] = {
+      id: {
+        in: searchParams.authorsIds.split(",").map((id) => parseInt(id)),
       },
     }
   }
@@ -214,6 +222,18 @@ async function getEngineVersions() {
   })
 }
 
+async function getAuthors() {
+  return await prisma.author.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    orderBy: {
+      name: "asc",
+    },
+  })
+}
+
 type HomeProps = {
   searchParams: FiltersQuery & {
     page?: string,
@@ -222,13 +242,14 @@ type HomeProps = {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const [assets, assetsCount, assetsMaxPrice, categories, tags, engineVersions] = await Promise.all([
+  const [assets, assetsCount, assetsMaxPrice, categories, tags, engineVersions, authors] = await Promise.all([
     getAssets(searchParams),
     getAssetsCount(searchParams),
     getAssetsMaxPrice(),
     getCategories(),
     getTags(),
     getEngineVersions(),
+    getAuthors(),
   ])
 
   return (
@@ -240,14 +261,9 @@ export default async function Home({ searchParams }: HomeProps) {
             categories={categories}
             tags={tags}
             engineVersions={engineVersions}
+            authors={authors}
             className="mb-4"
           />
-
-          {assetsCount > 0 && (
-            <p className="text-center text-base">
-              Found {assetsCount} {pluralize(assetsCount, "asset", "assets")}
-            </p>
-          )}
         </Sticky>
       </div>
 

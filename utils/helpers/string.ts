@@ -48,6 +48,9 @@ export const pluralize = (count: number, singular: string, plural: string) => {
 }
 
 const titleizeExceptions = [
+  "UE",
+  "UE4",
+  "UE5",
   "2D",
   "3D",
   "4K",
@@ -71,6 +74,7 @@ const titleizeExceptions = [
   "RTS",
   "TV",
   "UMG",
+  "NoAI",
 ]
 
 const titleizeReplacements: Record<string, string> = {

@@ -25,6 +25,7 @@ export type MultiSelectProps<T = string> = {
   placeholder?: string
   value?: T[]
   options?: readonly Option<T>[]
+  renderSelectedOptions?: (options: Option<T>[]) => React.ReactNode
   onChange?: (value: T[]) => void
 
   size?: InputWrapperProps["size"]
@@ -36,6 +37,7 @@ export default function MultiSelect<T extends string | number>({
   placeholder,
   value,
   options,
+  renderSelectedOptions,
   onChange,
 
   // InputWrapperProps
@@ -83,7 +85,10 @@ export default function MultiSelect<T extends string | number>({
           size.textSmaller,
           noSelectedOptions ? variant.textLessContrast : variant.text,
         )}>
-          {noSelectedOptions ? placeholder : selectedOptions.map((option) => option.label).join(", ")}
+          {noSelectedOptions
+            ? placeholder
+            : renderSelectedOptions?.(selectedOptions) ?? selectedOptions.map((option) => option.label).join(", ")
+          }
         </Listbox.Button>
 
         <Listbox.Options className={clsx(

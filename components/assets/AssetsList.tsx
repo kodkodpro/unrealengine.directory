@@ -44,12 +44,16 @@ export default function AssetsList({ assets }: AssetsListProps) {
 
       <AnimatePresence mode="wait">
         {selectedAssetIndex !== null && (
-          <Modal onClose={() => setSelectedAssetIndex(null)}>
+          <Modal
+            title={assets[selectedAssetIndex].name}
+            onClose={() => setSelectedAssetIndex(null)}
+            wide
+          >
             <AssetCardFull
               asset={assets[selectedAssetIndex]}
             />
 
-            <div className="text-center mt-4 text-xs text-neutral-300">
+            <div className="text-center mt-8 text-xs text-neutral-300">
               <p className="mb-1">
                 Use the <span className="font-semibold text-neutral-100">left</span>{" "}
                 and <span className="font-semibold text-neutral-100">right</span>{" "}

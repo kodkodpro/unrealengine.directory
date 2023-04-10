@@ -70,7 +70,7 @@ export default function InputWrapper({
 
         <div className={clsx(
           "flex-1",
-          size.paddingSmaller.y,
+          resizable && size.paddingSmaller.y,
           resizable ? size.minHeight : size.height,
           !leftIcon && size.padding.left,
           !rightIcon && size.padding.right,
