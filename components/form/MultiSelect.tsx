@@ -75,7 +75,7 @@ export default function MultiSelect<T extends string | number>({
   const variant = uiConfig.variants[v]
 
   const renderVirtualListItem = ({ index, style }: { index: number, style: React.CSSProperties }) => (
-    <div style={style}>
+    <div key={filteredOptions[index].value} style={style}>
       <Listbox.Option
         value={filteredOptions[index].value}
         className={({ active, selected }) => clsx(

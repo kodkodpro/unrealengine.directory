@@ -1,3 +1,4 @@
+import Image from "next/image"
 import {
   getAssets,
   getAssetsCount,
@@ -46,15 +47,37 @@ export default async function Home({ searchParams }: HomeProps) {
         </Sticky>
       </div>
 
-      <div className="flex-1 pb-8">
-        <AssetsListSort assetsCount={assetsCount} className="mb-2" />
-        <AssetsList assets={assets} />
 
-        <Pagination
-          totalRecords={assetsCount}
-          className="mt-8"
-        />
-      </div>
+      {assetsCount > 0 ? (
+        <div className="flex-1 pb-8">
+          <AssetsListSort assetsCount={assetsCount} className="mb-2" />
+          <AssetsList assets={assets} />
+
+          <Pagination
+            totalRecords={assetsCount}
+            className="mt-8"
+          />
+        </div>
+      ) : (
+        <div className="py-8 xl:py-24 flex-1">
+          <Image
+            src={`https://placekitten.com/640/360?image=${Math.round(Math.random() * 15 + 1)}`}
+            width={640}
+            height={360}
+            className="mx-auto mb-4 rounded"
+            alt="Picture of a cat"
+            unoptimized
+          />
+          <p className="text-center text-2xl md:text-3xl xl:text-4xl font-semibold mb-1">
+            <span className="text-neutral-600">&ldquo;</span>
+            No results found
+            <span className="text-neutral-600">&rdquo;</span>
+          </p>
+          <p className="text-center font-medium text-neutral-300 md:text-lg">
+            &mdash; Kitten
+          </p>
+        </div>
+      )}
     </div>
   )
 }
