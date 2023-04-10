@@ -3,9 +3,11 @@ import { Parser } from "@/utils/parsers/parser"
 
 export type Data = {
   collectionUrl: string
+  skip: number
+  take: number
 }
 
-export default async function parseCollection({ collectionUrl }: Data) {
+export default async function parseCollection({ collectionUrl, skip = 0, take = 1000000 }: Data) {
   if (!isValidUrl(collectionUrl)) {
     throw new Error("The function must be called with a valid URL")
   }
@@ -21,13 +23,16 @@ export default async function parseCollection({ collectionUrl }: Data) {
   await parser.parse(url)
 
   // Get content from "li.rc-pagination-total-text"
+  // Example: Showing 1 - 20 of 1140 results
   const totalText = parser.getText("li.rc-pagination-total-text")
-  const totalResults = parseInt((totalText.match(/of\s(\d+)/) || []).pop() || "") || 100
+  const totalResults = parseInt(totalText.match(/\d+/g)?.pop() || "100")
 
-  let start = 0
+  console.log(skip, take, totalResults)
+
+  let start = skip
 
   // Get all pages urls
-  while (start < totalResults) {
+  while (start < totalResults && (start - skip) < take) {
     url.searchParams.set("start", start.toString())
     const pageUrl = url.toString()
 
