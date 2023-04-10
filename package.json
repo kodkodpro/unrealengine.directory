@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.17",
     "@prisma/client": "^4.12.0",
+    "@sentry/nextjs": "^7.47.0",
     "@tailwindcss/typography": "^0.5.9",
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/jsdom": "^21.1.1",

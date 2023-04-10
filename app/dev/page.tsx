@@ -77,6 +77,15 @@ export default function Dev() {
           Parse Asset
         </Button>
       </div>
+
+      <Button
+        type="button"
+        onClick={() => {
+          throw new Error("Test Error")
+        }}
+      >
+        Send test error to Sentry
+      </Button>
     </div>
   )
 }
