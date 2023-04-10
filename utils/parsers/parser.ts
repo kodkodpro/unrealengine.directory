@@ -31,7 +31,7 @@ export class Parser {
   }
 
   getText(selector: string) {
-    return this.jsdom?.window.document.querySelector(selector)?.textContent || ""
+    return this.jsdom?.window.document.querySelector(selector)?.textContent?.trim() || ""
   }
 
   getHtml(selector: string) {

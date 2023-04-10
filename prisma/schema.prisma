@@ -11,40 +11,40 @@ datasource db {
 }
 
 model Category {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   assets    Asset[]
 }
 
 model Tag {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   assets    Asset[]
 }
 
 model Author {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   assets    Asset[]
 }
 
 model EngineVersion {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   assets    Asset[]
 }
 
 model Asset {
-  id               Int       @id @default(autoincrement())
-  url              String    @unique
+  id               Int             @id @default(autoincrement())
+  url              String          @unique
   name             String
   images           String[]
   shortDescription String
@@ -55,12 +55,17 @@ model Asset {
   ratingScore      Float
   ratingCount      Int
   releasedAt       DateTime
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  author           Author    @relation(fields: [authorId], references: [id])
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  author           Author          @relation(fields: [authorId], references: [id])
   authorId         Int
-  category         Category  @relation(fields: [categoryId], references: [id])
+  category         Category        @relation(fields: [categoryId], references: [id])
   categoryId       Int
   tags             Tag[]
   engineVersions   EngineVersion[]
+  plainData        Json            @default("{}")
+
+  @@index([price])
+  @@index([ratingScore])
+  @@index([releasedAt])
 }

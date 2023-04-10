@@ -146,16 +146,34 @@ export default function MultiSelect<T extends string | number>({
           variant.border,
         )}>
           {!noOptions && (
-            <li className={clsx(size.marginSmallest.bottom)}>
-              <Input
-                leftIcon={FunnelIcon}
-                placeholder="Filter options"
-                size="sm"
-                variant="dark"
-                value={query}
-                onChangeText={setQuery}
-              />
-            </li>
+            <>
+              <li className={clsx(size.marginSmallest.bottom)}>
+                <Input
+                  leftIcon={FunnelIcon}
+                  placeholder="Filter options"
+                  size="sm"
+                  variant="dark"
+                  value={query}
+                  onChangeText={setQuery}
+                />
+              </li>
+
+              {virtualized ? (
+                <FixedSizeList
+                  height={virtualizedHeight}
+                  itemSize={virtualizedItemHeight}
+                  itemCount={filteredOptions.length}
+                  width="100%"
+                  className="scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent"
+                >
+                  {renderVirtualListItem}
+                </FixedSizeList>
+              ) : (
+                Array.from({ length: filteredOptions.length }, (_, index) => (
+                  renderVirtualListItem({ index, style: {} })
+                ))
+              )}
+            </>
           )}
 
           {noFilteredOptions && (
@@ -167,22 +185,6 @@ export default function MultiSelect<T extends string | number>({
             )}>
               No options found
             </li>
-          )}
-
-          {virtualized ? (
-            <FixedSizeList
-              height={virtualizedHeight}
-              itemSize={virtualizedItemHeight}
-              itemCount={filteredOptions.length}
-              width="100%"
-              className="scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent"
-            >
-              {renderVirtualListItem}
-            </FixedSizeList>
-          ) : (
-            Array.from({ length: filteredOptions.length }, (_, index) => (
-              renderVirtualListItem({ index, style: {} })
-            ))
           )}
         </Listbox.Options>
       </Listbox>
