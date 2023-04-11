@@ -14,7 +14,7 @@ import MultiSelect from "@/components/form/MultiSelect"
 import Range from "@/components/form/Range"
 import Select from "@/components/form/Select"
 import { getIdsFromQuery } from "@/utils/helpers/searchParams"
-import { formatMoney, titleize, toBoolean } from "@/utils/helpers/string"
+import { titleize, toBoolean } from "@/utils/helpers/string"
 import { shrinkVersions, Version } from "@/utils/versions"
 
 const ReleasePeriodOptions = [
@@ -230,7 +230,6 @@ export default function AssetsFiltersForm({
           min={0}
           max={assetsMaxPrice}
           step={1}
-          formatValue={(value) => formatMoney(value, { maximumFractionDigits: 0 })}
           disabled={freeOnly}
           value={[priceFrom, priceTo]}
           onChange={(values) => {
