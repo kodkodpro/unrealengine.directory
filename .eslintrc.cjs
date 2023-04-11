@@ -12,6 +12,7 @@ module.exports = {
     "next/core-web-vitals",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:tailwindcss/recommended",
     "plugin:@typescript-eslint/recommended",
   ],
 

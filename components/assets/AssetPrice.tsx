@@ -25,7 +25,7 @@ export default function AssetPrice({
       {!showDiscountPercentage && asset.discount > 0 && (
         <span
           className={clsx(
-            "line-through font-medium text-base mr-1",
+            "mr-1 text-base font-medium line-through",
             colors.discount ?? "text-neutral-400",
           )}
         >
@@ -45,7 +45,7 @@ export default function AssetPrice({
 
       {showDiscountPercentage && asset.discount > 0 && (
         <span
-          className="ml-1 text-sm inline-block px-1 py-0.5 bg-red-500 rounded-md translate-y-[-3px] text-neutral-100"
+          className="ml-1 inline-block translate-y-[-3px] rounded-md bg-red-500 px-1 py-0.5 text-sm text-neutral-100"
         >
           -{Math.round(asset.discount / (asset.discount + asset.price) * 100)}%
         </span>

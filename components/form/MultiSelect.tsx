@@ -97,7 +97,7 @@ export default function MultiSelect<T extends string | number>({
           size.widthSmallest,
         )}>
           {value?.includes(filteredOptions[index].value) && (
-            <CheckIcon className="w-full h-full" />
+            <CheckIcon className="h-full w-full" />
           )}
         </span>
 
@@ -124,7 +124,7 @@ export default function MultiSelect<T extends string | number>({
     >
       <Listbox value={value} onChange={onChange} multiple>
         <Listbox.Button className={clsx(
-          "h-full flex-1 bg-transparent text-left focus:outline-none focus:ring-0 w-full",
+          "h-full w-full flex-1 bg-transparent text-left focus:outline-none focus:ring-0",
           size.textSmaller,
           noSelectedOptions ? variant.textLessContrast : variant.text,
         )}>
@@ -136,7 +136,7 @@ export default function MultiSelect<T extends string | number>({
 
         <Listbox.Options className={clsx(
           "absolute inset-x-0 -bottom-2 z-50 min-w-[250px] translate-y-full focus:outline-none focus:ring-0",
-          "max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent",
+          "max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-neutral-500",
           size.text,
           size.rounding,
           size.paddingSmaller.all,
@@ -164,7 +164,7 @@ export default function MultiSelect<T extends string | number>({
                   itemSize={virtualizedItemHeight}
                   itemCount={filteredOptions.length}
                   width="100%"
-                  className="scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent"
+                  className="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-neutral-500"
                 >
                   {renderVirtualListItem}
                 </FixedSizeList>

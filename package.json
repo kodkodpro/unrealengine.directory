@@ -33,6 +33,7 @@
     "eslint-config-next": "13.3.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-tailwindcss": "^3.11.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "framer-motion": "^10.11.2",
     "https-proxy-agent": "^5.0.1",

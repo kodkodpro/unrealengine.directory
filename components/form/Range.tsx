@@ -41,7 +41,7 @@ export default function Range({
       {...props}
       key={key}
       className={clsx(
-        "box-border rounded-full -mt-1",
+        "-mt-1 box-border rounded-full",
         size.widthSmaller,
         size.heightSmaller,
         !disabled && variant.focus,
@@ -54,7 +54,7 @@ export default function Range({
     <div className={className}>
       {label && <Label text={label} />}
 
-      <div className={clsx("pt-1 pb-1", className)}>
+      <div className={clsx("py-1", className)}>
         <ReactSlider
           renderTrack={renderTrack}
           renderThumb={renderThumb}

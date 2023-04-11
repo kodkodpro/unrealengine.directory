@@ -9,7 +9,7 @@ export type WavesProps = {
 export default function Waves({ wavesColor, bgColor, flip = false } : WavesProps) {
   return (
     <svg
-      className={`h-[36px] md:h-[72px] w-full relative ${wavesColor} ${bgColor} ${flip && "rotate-180"}`}
+      className={`relative h-[36px] w-full md:h-[72px] ${wavesColor} ${bgColor} ${flip && "rotate-180"}`}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 24 144 28"

@@ -67,7 +67,7 @@ export default function AssetInfoTags({
   return (
     <div className={clsx(
       "flex",
-      asList ? "flex-col gap-4" : "flex-row items-center flex-wrap gap-y-0.5 gap-x-2",
+      asList ? "flex-col gap-4" : "flex-row flex-wrap items-center gap-x-2 gap-y-0.5",
       className,
     )} {...props}>
       {filteredItems.map(({ key, icon, href, label, text }) => (

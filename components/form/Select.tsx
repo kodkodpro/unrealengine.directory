@@ -80,7 +80,7 @@ export default function Select<T extends string>({
     >
       <Listbox value={value} onChange={onChange}>
         <Listbox.Button className={clsx(
-          "h-full flex-1 bg-transparent text-left focus:outline-none focus:ring-0 w-full",
+          "h-full w-full flex-1 bg-transparent text-left focus:outline-none focus:ring-0",
           size.textSmaller,
           !selectedOption ? variant.textLessContrast : variant.text,
         )}>
@@ -89,7 +89,7 @@ export default function Select<T extends string>({
 
         <Listbox.Options className={clsx(
           "absolute z-50 min-w-[250px] translate-y-full focus:outline-none focus:ring-0",
-          "max-h-[66vh] overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent",
+          "max-h-[66vh] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-neutral-500",
           directionClasses[openDirection],
           size.text,
           size.rounding,

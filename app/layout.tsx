@@ -45,13 +45,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={clsx(
-        "bg-neutral-800 text-neutral-100 font-sans antialiased",
-        "flex flex-col min-h-screen",
+        "bg-neutral-800 font-sans text-neutral-100 antialiased",
+        "flex min-h-screen flex-col",
         inter.variable,
       )}>
         <Header />
 
-        <div className="py-8 px-4 md:px-12 bg-neutral-900 flex-1 flex flex-col">
+        <div className="flex flex-1 flex-col bg-neutral-900 px-4 py-8 md:px-12">
           {children}
         </div>
 

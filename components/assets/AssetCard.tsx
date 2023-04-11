@@ -21,7 +21,7 @@ export default function AssetCard({ asset, onClick }: AssetCardProps) {
     >
       <div className={clsx(
         "relative aspect-video overflow-hidden rounded-lg bg-neutral-800",
-        "group-hover:brightness-110 transition-all",
+        "transition-all group-hover:brightness-110",
       )}>
         <Image
           src={asset.images[0].replace("w=1920", "w=768")}
@@ -59,7 +59,7 @@ export default function AssetCard({ asset, onClick }: AssetCardProps) {
             className="text-sm"
           />
 
-          <div className="text-lg font-semibold translate-y-[-2px]">
+          <div className="translate-y-[-2px] text-lg font-semibold">
             <AssetPrice asset={asset} />
           </div>
         </div>

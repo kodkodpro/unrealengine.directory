@@ -15,7 +15,7 @@ export default function KittenSays({} : KittenSaysProps) {
         className="mx-auto mb-4 rounded bg-neutral-800"
       />
 
-      <p className="text-center text-2xl md:text-3xl xl:text-4xl font-semibold mb-1">
+      <p className="mb-1 text-center text-2xl font-semibold md:text-3xl xl:text-4xl">
         <span className="text-neutral-600">&ldquo;</span>
         No results found
         <span className="text-neutral-600">&rdquo;</span>

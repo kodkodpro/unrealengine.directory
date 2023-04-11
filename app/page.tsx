@@ -58,7 +58,7 @@ export default async function Home({ searchParams }: HomeProps) {
           />
         </div>
       ) : (
-        <div className="py-8 xl:py-24 flex-1">
+        <div className="flex-1 py-8 xl:py-24">
           <KittenSays text="No results found" />
         </div>
       )}

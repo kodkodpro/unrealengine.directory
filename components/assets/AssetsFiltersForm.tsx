@@ -194,7 +194,7 @@ export default function AssetsFiltersForm({
       />
 
       <div>
-        <div className="flex items-center justify-between mb-1">
+        <div className="mb-1 flex items-center justify-between">
           <Label text="Price ($)" margin={false} />
 
           <Checkbox
@@ -205,7 +205,7 @@ export default function AssetsFiltersForm({
           />
         </div>
 
-        <div className="flex items-center gap-2 mb-2">
+        <div className="mb-2 flex items-center gap-2">
           <Input
             value={priceFrom.toString()}
             onChangeText={(value) => setPriceFrom(parseInt(value) || 0)}
@@ -243,7 +243,7 @@ export default function AssetsFiltersForm({
       <div>
         <Label text="Rating" />
 
-        <div className="flex items-center gap-2 mb-2">
+        <div className="mb-2 flex items-center gap-2">
           <Input
             value={ratingFrom.toString()}
             onChangeText={(value) => setRatingFrom(parseInt(value) || 0)}

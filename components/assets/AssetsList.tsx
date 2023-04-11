@@ -61,7 +61,7 @@ export default function AssetsList({ assets }: AssetsListProps) {
               asset={assets[selectedAssetIndex]}
               sidebarText={(
                 <>
-                  <hr className="border-neutral-800 block md:hidden" />
+                  <hr className="block border-neutral-800 md:hidden" />
 
                   <div className="flex gap-2 md:hidden">
                     <Button
@@ -69,7 +69,7 @@ export default function AssetsList({ assets }: AssetsListProps) {
                       className="w-full"
                       onClick={prevAsset}
                     >
-                      <ArrowLongLeftIcon className="w-5 h-5 inline-block mr-1" />
+                      <ArrowLongLeftIcon className="mr-1 inline-block h-5 w-5" />
                       <span>Previous</span>
                     </Button>
                     <Button
@@ -78,11 +78,11 @@ export default function AssetsList({ assets }: AssetsListProps) {
                       onClick={nextAsset}
                     >
                       <span>Next</span>
-                      <ArrowLongRightIcon className="w-5 h-5 inline-block ml-1" />
+                      <ArrowLongRightIcon className="ml-1 inline-block h-5 w-5" />
                     </Button>
                   </div>
 
-                  <div className="mt-8 text-xs text-neutral-300 space-y-2 hidden md:block">
+                  <div className="mt-8 hidden space-y-2 text-xs text-neutral-300 md:block">
                     <Label text="Hotkeys" />
 
                     <p>

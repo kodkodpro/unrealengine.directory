@@ -30,7 +30,7 @@ export default function AssetCardFull({ asset, sidebarText } : AssetCardFullProp
 
   return (
     <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-      <div className="xl:col-span-2 mb-8 xl:mb-0">
+      <div className="mb-8 xl:col-span-2 xl:mb-0">
         <Carousel
           ref={carouselRef}
           showStatus={false}
@@ -39,7 +39,7 @@ export default function AssetCardFull({ asset, sidebarText } : AssetCardFullProp
           {asset.images.map((image) => (
             <div
               key={image}
-              className="aspect-video rounded-lg overflow-hidden"
+              className="aspect-video overflow-hidden rounded-lg"
             >
               <Image
                 src={image}
@@ -75,7 +75,7 @@ export default function AssetCardFull({ asset, sidebarText } : AssetCardFullProp
           resizable
         >
           <span>
-            <span className="font-semibold text-xl">
+            <span className="text-xl font-semibold">
               <AssetPrice
                 asset={asset}
                 colors={{
@@ -112,7 +112,7 @@ export default function AssetCardFull({ asset, sidebarText } : AssetCardFullProp
               <a
                 key={tag.name}
                 href={`/?tagsIds=${tag.id}`}
-                className="text-amber-500 hover:text-amber-600 text-sm font-medium px-2 py-1 rounded-md bg-neutral-800"
+                className="rounded-md bg-neutral-800 px-2 py-1 text-sm font-medium text-amber-500 hover:text-amber-600"
               >
                 {titleize(tag.name)}
               </a>

@@ -35,7 +35,7 @@ export default function Modal({ title, wide, onClose, children } : ModalProps) {
           >
             <m.div
               className={clsx(
-                "w-full p-8 xl:p-12 mx-auto bg-neutral-900 shadow-xl",
+                "mx-auto w-full bg-neutral-900 p-8 shadow-xl xl:p-12",
                 wide ? "max-w-7xl xl:rounded-lg" : "max-w-3xl md:rounded-lg",
               )}
               initial={{ scale: 0, opacity: 0 }}
@@ -44,18 +44,18 @@ export default function Modal({ title, wide, onClose, children } : ModalProps) {
               onClick={(event) => event.stopPropagation()}
             >
               {title && (
-                <div className="flex items-center justify-between gap-4 mb-4">
+                <div className="mb-4 flex items-center justify-between gap-4">
                   <h3 className="text-3xl font-semibold tracking-tighter">
                     {title}
                   </h3>
                   <button
                     className={clsx(
-                      "text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors duration-200",
-                      "p-2 rounded-md",
+                      "text-neutral-400 transition-colors duration-200 hover:bg-neutral-800 hover:text-neutral-100",
+                      "rounded-md p-2",
                     )}
                     onClick={onClose}
                   >
-                    <XMarkIcon className="w-6 h-6" />
+                    <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
               )}

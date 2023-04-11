@@ -39,7 +39,7 @@ export default function Dev() {
   }
 
   return (
-    <div className="flex-1 flex flex-col w-full max-w-4xl items-center justify-center gap-4 p-24 mx-auto">
+    <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center gap-4 p-24">
       <Input
         label="API Key"
         value={apiKey}
@@ -47,7 +47,7 @@ export default function Dev() {
         className="w-full"
       />
 
-      <hr className="border-neutral-800 w-full" />
+      <hr className="w-full border-neutral-800" />
 
       <div className="w-full">
         <Input
@@ -58,7 +58,7 @@ export default function Dev() {
           className="mb-2"
         />
 
-        <div className="w-full grid grid-cols-3 gap-2">
+        <div className="grid w-full grid-cols-3 gap-2">
           <Input
             placeholder="Skip (optional)"
             type="number"
@@ -88,7 +88,7 @@ export default function Dev() {
         </div>
       </div>
 
-      <hr className="border-neutral-800 w-full" />
+      <hr className="w-full border-neutral-800" />
 
       <div className="w-full">
         <Input
@@ -108,7 +108,7 @@ export default function Dev() {
         </Button>
       </div>
 
-      <hr className="border-neutral-800 w-full" />
+      <hr className="w-full border-neutral-800" />
 
       <Button
         type="button"
