@@ -64,9 +64,17 @@
 }
 
 .carousel.carousel-slider .control-arrow {
-  padding: 25px 60px;
+  padding: 25px;
   transition-duration: 0.2s;
   opacity: 0;
+}
+
+/* Change padding of button for desktop devices */
+@media screen(md) {
+  .carousel.carousel-slider .control-arrow {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
 }
 
 .carousel.carousel-slider .control-arrow:before {

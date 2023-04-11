@@ -10,6 +10,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "cdn1.epicgames.com",
+      },
+      {
+        protocol: "https",
         hostname: "placekitten.com",
       },
     ],
