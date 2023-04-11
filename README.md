@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Unreal Engine Directory 🎮
+_* This project is not affiliated with Epic Games, Inc. in any way. All trademarks are property of their respective owners in the US and other countries. All other trademarks are property of their respective owners._
+
+## About
+
+This is an open source, faster, and modern alternative to the Unreal Engine Marketplace, built with a focus on user experience. Find assets with ease using more filters and enjoy a better browsing experience.
+
+### Visit the site at [https://unrealengine.directory/](https://unrealengine.directory/)
+
+_You can find more Open Source projects at [https://github.com/kodkodpro](https://github.com/kodkodpro)_
+
+## Technologies
+
+* 🚀 Next.js 13.3 (App directory)
+* 🪄 Prisma
+* 🌊 TypeScript
+* 🎨 TailwindCSS
+* 📽️ Framer Motion
+* 🕷️ Web Scraping
+* 🚪 Proxying
+* 📝 Markdown
+* 🛡️ Zod
+* 🔍 ESLint
+* 🚧 Sentry
+* 📊 Google Analytics
+
+## Infrastructure
+
+* ☁️ Vercel
+* 🦾️ Supabase
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+* Node.js 18
+* PNPM
+* PostgreSQL
+
+### Installation
+
+1. Clone the repo
+
+```sh
+git clone https://github.com/kodkodpro/unrealengine.directory.git
+```
+
+2. Install NPM packages
+
+```sh
+pnpm install
+```
+
+3. Copy example environment file and fill in the values
+
+```sh
+cp .env.example .env
+```
+
+4. Run the development server
+
+```sh
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+6. Scrape the Unreal Engine Marketplace
+ 
+    6.1. Visit [http://localhost:3000/dev](http://localhost:3000/dev)
 
-[http://localhost:3000/api/hello](http://localhost:3000/api/hello) is an endpoint that uses [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers). This endpoint can be edited in `app/api/hello/route.ts`.
+    6.2. Fill in "API Key" that you specified in the `.env` file
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+    6.3. Fill in "URL" under "Parse Collection" (e.g. https://www.unrealengine.com/marketplace/en-US/showcase)
 
-## Learn More
+    6.4. Click "Parse Collection"
 
-To learn more about Next.js, take a look at the following resources:
+    6.5. Wait for the scraping to finish (check Network tab in DevTools to see when it's done)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+7. Clap your hands and say "Yay!"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## ❤️ Show your support
 
-## Deploy on Vercel
+Give a ⭐️ if this project helped you!
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Contributions, issues and feature requests are welcome!
+
+## 🧑‍💻 Author
+
+**Andrew Kodkod** – [GitHub](https://github.com/akodkod) – [Twitter](https://twitter.com/AndrewKodkod)
+
+## 📝 License
+
+This project is [MIT](/LICENSE) licensed.
+
+
