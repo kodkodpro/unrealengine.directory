@@ -8,6 +8,9 @@ import { generateRange, Version } from "@/utils/versions"
 
 const RemoveFromTextRegex = /https:\/\/redirect.epicgames.com\/\?redirectTo=/g
 
+// Generate valid URL regexp (including en-US locale)
+const ValidMarketplaceUrlRegexp = /^https:\/\/www\.unrealengine\.com\/marketplace\/en-US\/product\/[a-z0-9-]+$/i
+
 type AssetPlainData = {
   description?: string
   technicalDetails?: string
@@ -24,8 +27,17 @@ export type Data = {
 }
 
 export default async function parseAsset({ assetUrl, force }: Data): Promise<ParserResponse> {
+  // Force "en-US" locale in URL
+  // Example #1: https://www.unrealengine.com/marketplace/zh-CN/product/chinesemonochromes
+  // Example #2: https://www.unrealengine.com/marketplace/en-US/product/chinesemonochromes
+  assetUrl = assetUrl.replace(/\/marketplace\/[a-z]{2}-[A-Z]{2}\//, "/marketplace/en-US/")
+
   if (!isValidUrl(assetUrl)) {
-    throw new Error("The function must be called with a valid URL")
+    return { status: "error", errorMessage: "assetUrl must be a valid URL" }
+  }
+
+  if (!ValidMarketplaceUrlRegexp.test(assetUrl)) {
+    return { status: "error", errorMessage: "assetUrl must be a valid Unreal Engine Marketplace URL" }
   }
 
   const asset = await prisma.asset.findUnique({
