@@ -43,9 +43,6 @@ dependencies:
   '@types/react-window':
     specifier: ^1.8.5
     version: 1.8.5
-  '@types/turndown':
-    specifier: ^5.0.1
-    version: 5.0.1
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.58.0
     version: 5.58.0(@typescript-eslint/parser@5.58.0)(eslint@8.37.0)(typescript@5.0.3)
@@ -112,9 +109,6 @@ dependencies:
   react-markdown:
     specifier: ^8.0.6
     version: 8.0.6(@types/react@18.0.33)(react@18.2.0)
-  react-range:
-    specifier: ^1.8.14
-    version: 1.8.14(react-dom@18.2.0)(react@18.2.0)
   react-responsive-carousel:
     specifier: ^3.2.23
     version: 3.2.23
@@ -748,10 +742,6 @@ packages:
 
   /@types/tough-cookie@4.0.2:
     resolution: {integrity: sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==}
-    dev: false
-
-  /@types/turndown@5.0.1:
-    resolution: {integrity: sha512-N8Ad4e3oJxh9n9BiZx9cbe/0M3kqDpOTm2wzj13wdDUxDPjfjloWIJaquZzWE1cYTAHpjOH3rcTnXQdpEfS/SQ==}
     dev: false
 
   /@types/unist@2.0.6:
@@ -3520,16 +3510,6 @@ packages:
       vfile: 5.3.7
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /react-range@1.8.14(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-v2nyD5106rHf9dwHzq+WRlhCes83h1wJRHIMFjbZsYYsO6LF4mG/mR3cH7Cf+dkeHq65DItuqIbLn/3jjYjsHg==}
-    peerDependencies:
-      react: ^16.8.0-0 || ^17.0.0-0 || ^18.0.0-0
-      react-dom: ^16.8.0-0 || ^17.0.0-0 || ^18.0.0-0
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-responsive-carousel@3.2.23:
