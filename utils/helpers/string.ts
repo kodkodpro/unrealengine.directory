@@ -75,6 +75,7 @@ const titleizeExceptions = [
   "TV",
   "UMG",
   "NoAI",
+  "BP",
 ]
 
 const titleizeReplacements: Record<string, string> = {
@@ -92,7 +93,11 @@ export const titleize = (string: string): string => {
       return titleizeReplacements[word]
     }
 
-    return word[0].toUpperCase() + word.slice(1).toLowerCase()
+    try {
+      return word[0].toUpperCase() + word.slice(1).toLowerCase()
+    } catch (error) {
+      return word
+    }
   })
 
   return titleizedWords.join(" ")
