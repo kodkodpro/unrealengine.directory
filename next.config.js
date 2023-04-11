@@ -7,15 +7,9 @@ const nextConfig = {
   },
 
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cdn1.epicgames.com",
-      },
-      {
-        protocol: "https",
-        hostname: "placekitten.com",
-      },
+    domains: [
+      "cdn1.epicgames.com",
+      "placekitten.com",
     ],
   },
 }

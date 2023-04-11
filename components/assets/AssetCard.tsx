@@ -26,7 +26,6 @@ export default function AssetCard({ asset, onClick }: AssetCardProps) {
         <Image
           src={asset.images[0].replace("w=1920", "w=768")}
           alt={`Image of ${asset.name}`}
-          priority
           fill
         />
 
