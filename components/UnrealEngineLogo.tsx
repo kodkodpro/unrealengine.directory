@@ -1,4 +1,4 @@
-export default function UELogo(props: React.SVGProps<SVGSVGElement>) {
+export default function UnrealEngineLogo(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       fill="currentColor"

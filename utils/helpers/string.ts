@@ -1,13 +1,9 @@
-export const makeSureAbsoluteURL = (url: string, baseUrl: string) => {
+export const makeMarketplaceURL = (url: string) => {
   if (url.startsWith("/")) {
-    return baseUrl + url
+    return "https://www.unrealengine.com" + url
   }
 
   return url
-}
-
-export const makeMarketplaceURL = (url: string) => {
-  return makeSureAbsoluteURL(url, "https://www.unrealengine.com")
 }
 
 export const parseMoney = (money: string) => {

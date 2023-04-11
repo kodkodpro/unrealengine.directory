@@ -17,7 +17,7 @@ export default function Footer() {
             </a>
             {" "}as an Open Source project &rarr;{" "}
             <a
-              href="https://github.com/kodkod-productions/uedirectory.com"
+              href="https://github.com/kodkodpro/unrealengine.directory"
               className="font-semibold text-white hover:text-neutral-100 hover:underline"
             >
               View on GitHub

@@ -22,8 +22,6 @@ export type HomeProps = {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  await new Promise((resolve) => setTimeout(resolve, 3000))
-
   const [assets, assetsCount, assetsMaxPrice, categories, tags, engineVersions, authors] = await Promise.all([
     getAssets(searchParams),
     getAssetsCount(searchParams),

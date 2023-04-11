@@ -5,7 +5,7 @@ _* This project is not affiliated with Epic Games, Inc. in any way. All trademar
 
 This is an open source, faster, and modern alternative to the Unreal Engine Marketplace, built with a focus on user experience. Find assets with ease using more filters and enjoy a better browsing experience.
 
-### Visit the site at [https://unrealengine.directory/](https://unrealengine.directory/)
+### Visit the site at [https://unrealengine.directory](https://unrealengine.directory)
 
 _You can find more Open Source projects at [https://github.com/kodkodpro](https://github.com/kodkodpro)_
 
@@ -86,6 +86,12 @@ Give a ⭐️ if this project helped you!
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!
+
+## 🛣️ Roadmap
+
+- [ ] Parse reviews and questions
+- [ ] Smarter search (using Elasticsearch or Algolia or something else)
+- [ ] Go crazy and add AI text request to search and recommend assets
 
 ## 🧑‍💻 Author
 

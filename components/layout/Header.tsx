@@ -1,16 +1,19 @@
 import Link from "next/link"
+import OpenSourceButton from "@/components/layout/OpenSourceButton"
 import Waves from "@/components/layout/Waves"
-import UELogo from "@/components/UELogo"
+import UnrealEngineLogo from "@/components/UnrealEngineLogo"
 
 export default function Header() {
   return (
-    <div>
+    <div className="relative">
+      <OpenSourceButton className="absolute right-8 top-8" />
+
       <div className="bg-neutral-800 py-12 text-center">
         <Link
           href="/"
           className="text-4xl font-extrabold tracking-tighter text-white hover:text-neutral-100"
         >
-          <UELogo className="mx-auto mb-4 inline-block h-12 w-12" />
+          <UnrealEngineLogo className="mx-auto mb-4 inline-block h-12 w-12" />
           <br />
           Unreal Engine Directory
         </Link>
