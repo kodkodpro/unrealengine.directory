@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { ReactNode } from "react"
+import Script from "next/script"
 import Footer from "@/components/layout/Footer"
 import Header from "@/components/layout/Header"
 import ScrollToTop from "@/components/layout/ScrollToTop"
@@ -39,11 +39,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+
   return (
     <html lang="en">
       <body className={clsx(
@@ -60,6 +58,21 @@ export default function RootLayout({
         <Footer />
         <ScrollToTop />
       </body>
+
+      {GA_MEASUREMENT_ID && (
+        <>
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
+          <Script id="google-analytics">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+  
+              gtag('config', '${GA_MEASUREMENT_ID}');
+            `}
+          </Script>
+        </>
+      )}
     </html>
   )
 }
