@@ -41,7 +41,7 @@ export default function ScrollToTop({ showAfter = 200 } : ScrollToTopProps) {
   return (
     <button
       className={clsx(
-        "fixed bottom-4 right-4 md:bottom-8 md:right-8 z-50",
+        "fixed bottom-4 right-4 md:bottom-8 md:right-8 z-30",
         "p-4 rounded-md bg-neutral-800 text-neutral-100 opacity-80 hover:opacity-100",
         "transition-opacity duration-200 ease-in-out",
       )}

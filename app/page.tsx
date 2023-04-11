@@ -34,7 +34,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <div className="flex-row gap-8 pb-24 xl:flex">
-      <div className="mb-16 xl:mb-0 xl:basis-96">
+      <div className="mb-16 xl:mb-0 xl:basis-80">
         <Sticky offsetTop={32} offsetBottom={32}>
           <AssetsFiltersForm
             assetsMaxPrice={Math.ceil(assetsMaxPrice || 0)}
@@ -46,7 +46,6 @@ export default async function Home({ searchParams }: HomeProps) {
           />
         </Sticky>
       </div>
-
 
       {assetsCount > 0 ? (
         <div className="flex-1 pb-8">
