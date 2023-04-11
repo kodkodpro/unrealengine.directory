@@ -80,9 +80,9 @@ export default function InputWrapper({
 
         {rightText && <InputWrapperText text={rightText} size={s} variant={v} />}
 
-        {(rightIcon || clearable) && (
+        {(clearable || rightIcon) && (
           <InputWrapperIcon
-            icon={clearable ? XMarkIcon : rightIcon!}
+            icon={clearable ? XMarkIcon : rightIcon!} // eslint-disable-line @typescript-eslint/no-non-null-assertion
             onClick={clearable ? onClear : rightIconOnClick}
             size={s}
             variant={v}

@@ -1,14 +1,18 @@
 module.exports = {
   "root": true,
 
+  "parser": "@typescript-eslint/parser",
+
   "plugins": [
     "unused-imports",
+    "@typescript-eslint",
   ],
 
   "extends": [
     "next/core-web-vitals",
     "plugin:import/recommended",
     "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended",
   ],
 
   "rules": {

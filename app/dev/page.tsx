@@ -12,7 +12,7 @@ export default function Dev() {
   const [collectionSkip, setCollectionSkip] = useState<string>("")
   const [collectionTake, setCollectionTake] = useState<string>("")
 
-  const performRequest = async (url: string, data: any = {}) => {
+  const performRequest = async (url: string, data: object = {}) => {
     const response = await fetch(url, {
       method: "POST",
       headers: {

@@ -5,7 +5,6 @@ import uiConfig, { Sizes, Variants } from "@/ui.config"
 
 export type RangeProps = {
   label?: string
-  formatValue?: (value: number) => string
   className?: string
   size?: Sizes,
   variant?: Variants
@@ -13,7 +12,6 @@ export type RangeProps = {
 
 export default function Range({
   label,
-  formatValue,
   size: s = "md",
   variant: v = "default",
   className,
