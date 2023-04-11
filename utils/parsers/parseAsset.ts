@@ -105,7 +105,7 @@ export default async function parseAsset({ assetUrl, force }: Data): Promise<Par
     // Example #1: "4.27, 5.0 - 5.2" returns ["4.27", "5.0", "5.1", "5.2"]
     // Example #2: "4.27, 5.0 - 5.2, 5.3 - 5.4" returns ["4.27", "5.0", "5.1", "5.2", "5.3", "5.4"]
     // Example #3: "4.19 - 4.27" returns ["4.19", "4.20", "4.21", "4.22", "4.23", "4.24", "4.25", "4.26", "4.27"]
-    const engineVersionsText = parser.getText("span.ue-version")
+    const engineVersionsText = parser.getText("span.ue-version") || "Unknown"
     plainData.engineVersions = engineVersionsText
 
     const engineVersions = engineVersionsText
