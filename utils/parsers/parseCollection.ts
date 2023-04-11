@@ -1,3 +1,4 @@
+import { ParserResponse } from "@/types/ParserResponse"
 import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 import { Parser } from "@/utils/parsers/parser"
 
@@ -10,7 +11,11 @@ export type Data = {
   take: number
 }
 
-export default async function parseCollection({ collectionUrl, skip = 0, take = MaxResults }: Data) {
+export default async function parseCollection({
+  collectionUrl,
+  skip = 0,
+  take = MaxResults,
+}: Data): Promise<ParserResponse> {
   if (!isValidUrl(collectionUrl)) {
     throw new Error("The function must be called with a valid URL")
   }
@@ -48,7 +53,10 @@ export default async function parseCollection({ collectionUrl, skip = 0, take = 
 
     start += 100
     console.log(`[${new Date().toISOString()}] Parsed page ${start / 100}`)
+
+    // Sleep a bit, rest doesn't hurt anyone
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   }
 
-  return { success: true }
+  return { status: "success" }
 }

@@ -1,11 +1,12 @@
 import { JSDOM } from "jsdom"
+import { ParserResponse } from "@/types/ParserResponse"
 import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
 
 export type Data = {
   pageUrl: string
 }
 
-export default async function parseCollectionPage({ pageUrl }: Data) {
+export default async function parseCollectionPage({ pageUrl }: Data): Promise<ParserResponse> {
   if (!isValidUrl(pageUrl)) {
     throw new Error("The function must be called with a valid URL")
   }
@@ -25,7 +26,7 @@ export default async function parseCollectionPage({ pageUrl }: Data) {
   for (const assetUrl of assetUrls) {
     if (!assetUrl) continue
 
-    await fetch(`${getBaseURL()}/api/parse-asset`, {
+    const response = await fetch(`${getBaseURL()}/api/parse-asset`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,8 +35,14 @@ export default async function parseCollectionPage({ pageUrl }: Data) {
       body: JSON.stringify({ assetUrl: makeMarketplaceURL(assetUrl) }),
     })
 
+    // Don't sleep if the asset was skipped
+    if (response.ok) {
+      const parserResponse = await response.json() as ParserResponse
+      if (parserResponse.status === "skipped") continue
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 1000))
   }
 
-  return { success: true }
+  return { status: "success" }
 }

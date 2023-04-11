@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client"
 import * as Sentry from "@sentry/nextjs"
+import { ParserResponse } from "@/types/ParserResponse"
 import { isValidUrl } from "@/utils/helpers/string"
 import { Parser } from "@/utils/parsers/parser"
 import prisma from "@/utils/prisma"
@@ -22,7 +23,7 @@ export type Data = {
   force?: boolean
 }
 
-export default async function parseAsset({ assetUrl, force }: Data) {
+export default async function parseAsset({ assetUrl, force }: Data): Promise<ParserResponse> {
   if (!isValidUrl(assetUrl)) {
     throw new Error("The function must be called with a valid URL")
   }
@@ -42,7 +43,9 @@ export default async function parseAsset({ assetUrl, force }: Data) {
     const diffInHours = Math.floor(diff / 1000 / 60 / 60)
 
     if (diffInHours < 24) {
-      return { success: false, message: "Asset was already parsed in the last 24 hours" }
+      console.log(`Asset ${assetUrl} was parsed less than 24 hours ago, skipping...`)
+
+      return { status: "skipped" }
     }
   }
 
@@ -243,7 +246,7 @@ export default async function parseAsset({ assetUrl, force }: Data) {
       },
     })
 
-    return { success: true }
+    return { status: "success" }
   } catch (error) {
     console.error(`Failed to scrape asset: ${assetUrl}`)
     console.error(error)
@@ -251,12 +254,17 @@ export default async function parseAsset({ assetUrl, force }: Data) {
     if (error instanceof Error) {
       Sentry.captureException(error)
 
-      return { success: false, error: error.message }
+      const errorMessage = `Failed to scrape asset: ${assetUrl}. Error: ${error.message}`
+      console.error(errorMessage)
+
+      return { status: "error", error: error, errorMessage }
     } else {
       const stringifiedError = JSON.stringify(error)
-      Sentry.captureMessage(`Failed to scrape asset: ${assetUrl}. Error: ${stringifiedError}`)
+      const errorMessage = `Failed to scrape asset: ${assetUrl}. Error: ${stringifiedError}`
 
-      return { success: false, error: stringifiedError }
+      Sentry.captureMessage(errorMessage)
+
+      return { status: "error", errorMessage }
     }
   }
 }
