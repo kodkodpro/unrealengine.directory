@@ -74,6 +74,8 @@ export default function AssetsFiltersForm({
   const [engineVersionsIds, setEngineVersionsIds] = useState(getIdsFromQuery(searchParams, "engineVersionsIds"))
   const [authorsIds, setAuthorsIds] = useState(getIdsFromQuery(searchParams, "authorsIds"))
 
+  const engineVersionsSorted = engineVersions.sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }))
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement> | null = null) => {
     event?.preventDefault()
 
@@ -132,7 +134,7 @@ export default function AssetsFiltersForm({
       <MultiSelect
         label="Categories"
         placeholder="All"
-        options={(categories || []).map((category) => ({
+        options={categories.map((category) => ({
           value: category.id,
           label: category.name,
         }))}
@@ -145,7 +147,7 @@ export default function AssetsFiltersForm({
         virtualized
         label="Tags"
         placeholder="All"
-        options={(tags || []).map((tag) => ({
+        options={tags.map((tag) => ({
           value: tag.id,
           label: titleize(tag.name),
         }))}
@@ -157,7 +159,7 @@ export default function AssetsFiltersForm({
       <MultiSelect
         label="Engine Versions"
         placeholder="All"
-        options={(engineVersions || []).map((engineVersion) => ({
+        options={engineVersionsSorted.map((engineVersion) => ({
           value: engineVersion.id,
           label: engineVersion.name,
         }))}
@@ -170,9 +172,10 @@ export default function AssetsFiltersForm({
       />
 
       <MultiSelect
+        virtualized
         label="Authors"
         placeholder="All"
-        options={(authors || []).map((author) => ({
+        options={authors.map((author) => ({
           value: author.id,
           label: author.name,
         }))}

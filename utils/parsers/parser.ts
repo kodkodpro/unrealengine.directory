@@ -40,10 +40,6 @@ export class Parser {
 
   getMarkdown(selector: string) {
     const html = this.getHtml(selector)
-      .replace(/>\s+</g, "><") // Remove whitespaces between tags
-      .replace(/>\s+/g, ">") // Remove whitespaces after tag opening
-      .replace(/\s+</g, "<")  // Remove whitespaces before tag closing
-
     return NodeHtmlMarkdown.translate(html)
   }
 

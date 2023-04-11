@@ -136,7 +136,7 @@ export default function MultiSelect<T extends string | number>({
 
         <Listbox.Options className={clsx(
           "absolute inset-x-0 -bottom-2 z-50 min-w-[250px] translate-y-full focus:outline-none focus:ring-0",
-          "max-h-[66vh] overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent",
+          "max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-500 scrollbar-track-transparent",
           size.text,
           size.rounding,
           size.paddingSmaller.all,

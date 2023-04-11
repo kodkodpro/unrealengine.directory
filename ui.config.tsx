@@ -1,3 +1,7 @@
+// This is an experimental approach to build a UI
+// Ideally we need to create function to generate it automatically
+// But Tailwind requires all classes to be defined in the project
+
 const uiConfig = {
   variants: {
     default: {

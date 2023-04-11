@@ -53,7 +53,9 @@ const titleizeExceptions = [
   "UE5",
   "2D",
   "3D",
+  "2K",
   "4K",
+  "8K",
   "UI",
   "SFX",
   "VFX",
@@ -103,7 +105,6 @@ export const titleize = (string: string): string => {
   return titleizedWords.join(" ")
 }
 
-// Get base URL this function can be called from Node.js or browser
 export const getBaseURL = () => {
   if (typeof window !== "undefined") {
     return window.location.origin

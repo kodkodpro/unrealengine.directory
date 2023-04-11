@@ -1,11 +1,13 @@
 "use client"
 
+import { ArrowLongRightIcon, ArrowLongLeftIcon } from "@heroicons/react/20/solid"
 import { AnimatePresence } from "framer-motion"
 import { useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import AssetCard, { AssetCardProps } from "@/components/assets/AssetCard"
 import AssetCardFull from "@/components/assets/AssetCardFull"
 import Modal from "@/components/content/Modal"
+import Button from "@/components/form/Button"
 import Label from "@/components/form/Label"
 
 type Asset = AssetCardProps["asset"]
@@ -17,19 +19,23 @@ export type AssetsListProps = {
 export default function AssetsList({ assets }: AssetsListProps) {
   const [selectedAssetIndex, setSelectedAssetIndex] = useState<number | null>(null)
 
-  useHotkeys("alt+right", () => {
-    setSelectedAssetIndex((index) => {
-      if (index === null) return null
-      return (index + 1) % assets.length
-    })
-  })
-
-  useHotkeys("alt+left", () => {
+  const prevAsset = () => {
     setSelectedAssetIndex((index) => {
       if (index === null) return null
       return (index - 1 + assets.length) % assets.length
     })
-  })
+  }
+
+  const nextAsset = () => {
+    setSelectedAssetIndex((index) => {
+      if (index === null) return null
+      return (index + 1) % assets.length
+    })
+  }
+
+  // TODO: Scroll modal window to top when navigating between assets
+  useHotkeys("alt+left", prevAsset)
+  useHotkeys("alt+right", nextAsset)
 
   return (
     <>
@@ -54,23 +60,46 @@ export default function AssetsList({ assets }: AssetsListProps) {
               key={assets[selectedAssetIndex].id}
               asset={assets[selectedAssetIndex]}
               sidebarText={(
-                <div className="mt-8 text-xs text-neutral-300 space-y-2">
-                  <Label text="Hotkeys" />
+                <>
+                  <hr className="border-neutral-800 block md:hidden" />
 
-                  <p>
-                    Use the <span className="font-semibold text-neutral-100">&larr;</span>{" "}
-                    and <span className="font-semibold text-neutral-100">&rarr;</span>{" "}
-                    keys to scroll through images
-                  </p>
+                  <div className="flex gap-2 md:hidden">
+                    <Button
+                      variant="dark"
+                      className="w-full"
+                      onClick={prevAsset}
+                    >
+                      <ArrowLongLeftIcon className="w-5 h-5 inline-block mr-1" />
+                      <span>Previous</span>
+                    </Button>
+                    <Button
+                      variant="dark"
+                      className="w-full"
+                      onClick={nextAsset}
+                    >
+                      <span>Next</span>
+                      <ArrowLongRightIcon className="w-5 h-5 inline-block ml-1" />
+                    </Button>
+                  </div>
 
-                  <p>
-                    Use the <span className="font-semibold text-neutral-100">Alt + &larr;</span>{" "}
-                    and <span className="font-semibold text-neutral-100">Alt + &rarr;</span>{" "}
-                    keys to navigate between assets
-                  </p>
+                  <div className="mt-8 text-xs text-neutral-300 space-y-2 hidden md:block">
+                    <Label text="Hotkeys" />
 
-                  <p>Press <span className="font-semibold text-neutral-100">Esc</span> to close this asset</p>
-                </div>
+                    <p>
+                      Use the <span className="font-semibold text-neutral-100">&larr;</span>{" "}
+                      and <span className="font-semibold text-neutral-100">&rarr;</span>{" "}
+                      keys to scroll through images
+                    </p>
+
+                    <p>
+                      Use the <span className="font-semibold text-neutral-100">Alt + &larr;</span>{" "}
+                      and <span className="font-semibold text-neutral-100">Alt + &rarr;</span>{" "}
+                      keys to navigate between assets
+                    </p>
+
+                    <p>Press <span className="font-semibold text-neutral-100">Esc</span> to close this asset</p>
+                  </div>
+                </>
               )}
             />
           </Modal>
