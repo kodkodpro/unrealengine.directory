@@ -1,8 +1,7 @@
-// Generate a range of versions from a start and end version
-// Example: "4.19 - 4.27" returns ["4.19", "4.20", "4.21", "4.22", "4.23", "4.24", "4.25", "4.26", "4.27"]
-
 export type Version = `${number}.${number}`
 
+// Generate a range of versions from a start and end version
+// Example: "4.19 - 4.27" returns ["4.19", "4.20", "4.21", "4.22", "4.23", "4.24", "4.25", "4.26", "4.27"]
 export const generateRange = (start: Version, end: Version) => {
   const [startMajor, startMinor] = start.split(".").map((version) => parseInt(version))
   const [endMajor, endMinor] = end.split(".").map((version) => parseInt(version))
