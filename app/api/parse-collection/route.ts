@@ -3,8 +3,6 @@ import { z } from "zod"
 import { apiWrapper } from "@/utils/api"
 import parseCollection, { MaxResults } from "@/utils/parsers/parseCollection"
 
-export const runtime = "edge"
-
 const dataSchema = z.object({
   collectionUrl: z.string().url(),
   skip: z.number().min(0).default(0),
