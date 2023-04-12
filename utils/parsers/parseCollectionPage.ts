@@ -1,6 +1,11 @@
-import { JSDOM } from "jsdom"
+import { ParseAssetData } from "@/app/api/parse-asset/route"
 import { ParserResponse } from "@/types/ParserResponse"
-import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
+import { isValidUrl } from "@/utils/helpers/string"
+import { Parser } from "@/utils/parsers/parser"
+
+// This is a helper function to extract the epic id from the asset url
+// /marketplace/en-US/product/faster-splinemesh -> faster-splinemesh
+const ExtractEpicIdRegex = /\/marketplace\/en-US\/product\/(.*)/
 
 export type Data = {
   pageUrl: string
@@ -11,37 +16,27 @@ export default async function parseCollectionPage({ pageUrl }: Data): Promise<Pa
     throw new Error("The function must be called with a valid URL")
   }
 
-  // Get page source using fetch
-  const response = await fetch(pageUrl)
-  const html = await response.text()
-
-  // Parse page source using JSDOM
-  const { window } = new JSDOM(html)
+  const url = new URL(pageUrl)
+  const parser = new Parser()
+  await parser.parse(url)
 
   // Get all links from "article.asset .info h3 a"
-  const elements = window.document.querySelectorAll("article.asset .info h3 a")
-  const assetUrls = Array.from(elements).map((url) => url.getAttribute("href"))
+  const elements = parser.getElements("article.asset .info h3 a")
+  const epicIds = Array
+    .from(elements)
+    .map((url) => url.getAttribute("href"))
+    .map((url) => url?.match(ExtractEpicIdRegex)?.pop())
+    .filter(Boolean)
 
-  // Run parseAsset background job for each link
-  for (const assetUrl of assetUrls) {
-    if (!assetUrl) continue
+  // Trigger parse asset API endpoint for each asset
+  for (const epicId of epicIds) {
+    const data: ParseAssetData = { assetUrlOrEpicId: epicId }
+    const response = await Parser.triggerViaAPI("/api/parse-asset", data)
 
-    const response = await fetch(`${getBaseURL()}/api/parse-asset`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": process.env.API_KEY!,
-      },
-      body: JSON.stringify({ assetUrl: makeMarketplaceURL(assetUrl) }),
-    })
+    Parser.logResponse(response, `Asset "${epicId}" successfully parsed`)
 
     // Don't sleep if the asset was skipped
-    if (response.ok) {
-      const parserResponse = await response.json() as ParserResponse
-      if (parserResponse.status === "skipped") continue
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    if (response.status !== "skipped") await new Promise((resolve) => setTimeout(resolve, 1000))
   }
 
   return { status: "success" }

@@ -11,7 +11,8 @@ import Rating from "@/components/content/Rating"
 import Button from "@/components/form/Button"
 import Label from "@/components/form/Label"
 import { AssetFull } from "@/types/AssetFull"
-import { makeMarketplaceURL, titleize } from "@/utils/helpers/string"
+import { makeAssetUrl } from "@/utils/helpers/marketplace"
+import { titleize } from "@/utils/helpers/string"
 
 export type AssetCardFullProps = {
   asset: AssetFull
@@ -71,7 +72,7 @@ export default function AssetCardFull({ asset, sidebarText } : AssetCardFullProp
       <div className="space-y-4">
         <Button
           className="w-full"
-          onClick={() => window.open(makeMarketplaceURL(asset.url), "_blank")}
+          onClick={() => window.open(makeAssetUrl(asset.epicId), "_blank")}
           resizable
         >
           <span>

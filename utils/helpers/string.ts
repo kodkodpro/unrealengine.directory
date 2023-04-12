@@ -1,11 +1,3 @@
-export const makeMarketplaceURL = (url: string) => {
-  if (url.startsWith("/")) {
-    return "https://www.unrealengine.com" + url
-  }
-
-  return url
-}
-
 export const parseMoney = (money: string) => {
   return parseFloat(money.replace(/[^0-9.]/g, ""))
 }

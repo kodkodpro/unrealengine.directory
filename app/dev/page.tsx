@@ -5,12 +5,12 @@ import Button from "@/components/form/Button"
 import Input from "@/components/form/Input"
 
 export default function Dev() {
-  const [apiKey, setApiKey] = useState<string>("")
-  const [assetUrl, setAssetUrl] = useState<string>("")
+  const [apiKey, setApiKey] = useState("")
+  const [assetUrlOrEpicId, setAssetUrlOrEpicId] = useState("")
 
-  const [collectionUrl, setCollectionUrl] = useState<string>("")
-  const [collectionSkip, setCollectionSkip] = useState<string>("")
-  const [collectionTake, setCollectionTake] = useState<string>("")
+  const [collectionUrl, setCollectionUrl] = useState("")
+  const [collectionSkip, setCollectionSkip] = useState("")
+  const [collectionTake, setCollectionTake] = useState("")
 
   const performRequest = async (url: string, data: object = {}) => {
     const response = await fetch(url, {
@@ -94,15 +94,15 @@ export default function Dev() {
         <Input
           label="Parse Asset"
           placeholder="URL"
-          value={assetUrl}
-          onChangeText={setAssetUrl}
+          value={assetUrlOrEpicId}
+          onChangeText={setAssetUrlOrEpicId}
           className="mb-2"
         />
 
         <Button
           type="button"
           className="w-full"
-          onClick={() => performRequest("/api/parse-asset", { assetUrl, force: true })}
+          onClick={() => performRequest("/api/parse-asset", { assetUrlOrEpicId, force: true })}
         >
           Parse Asset
         </Button>

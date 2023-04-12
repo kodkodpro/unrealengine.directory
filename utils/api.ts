@@ -4,7 +4,7 @@ import { z } from "zod"
 // TODO: Nice function to try TypeScript 5 decorators
 export const apiWrapper = async (
   request: NextRequest,
-  fn: Function,
+  fn: () => Promise<NextResponse>,
 ) => {
   try {
     const apiKey = request.headers.get("X-Api-Key")

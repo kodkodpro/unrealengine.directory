@@ -15,7 +15,7 @@ import Range from "@/components/form/Range"
 import Select from "@/components/form/Select"
 import { getIdsFromQuery } from "@/utils/helpers/searchParams"
 import { titleize, toBoolean } from "@/utils/helpers/string"
-import { shrinkVersions, Version } from "@/utils/versions"
+import { shrinkVersions, Version } from "@/utils/helpers/versions"
 
 const ReleasePeriodOptions = [
   { label: "Last 7 days", value: "last-7-days" },

@@ -44,7 +44,7 @@ model EngineVersion {
 
 model Asset {
   id               Int             @id @default(autoincrement())
-  url              String          @unique
+  epicId           String          @unique
   name             String
   images           String[]
   shortDescription String

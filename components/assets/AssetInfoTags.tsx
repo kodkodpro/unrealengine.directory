@@ -3,7 +3,7 @@ import clsx from "clsx"
 import { createElement } from "react"
 import Label from "@/components/form/Label"
 import { AssetFull } from "@/types/AssetFull"
-import { shrinkVersions, Version } from "@/utils/versions"
+import { shrinkVersions, Version } from "@/utils/helpers/versions"
 
 type ItemKeys = "category" | "author" | "engineVersions" | "tags"
 type Item = {

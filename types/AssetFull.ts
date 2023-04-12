@@ -9,7 +9,7 @@ export type AssetFull = Pick<Asset, keyof typeof AssetFullSelect> & {
 
 export const AssetFullSelect = {
   id: true,
-  url: true,
+  epicId: true,
   name: true,
   shortDescription: true,
   description: true,

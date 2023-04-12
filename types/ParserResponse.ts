@@ -5,11 +5,12 @@ export type ParserSuccessResponse = {
 export type ParserErrorResponse = {
   status: "error"
   error?: Error
-  errorMessage?: string
+  message?: string
 }
 
 export type ParserSkippedResponse = {
   status: "skipped"
+  message?: string
 }
 
 export type ParserResponse =

@@ -2,14 +2,12 @@ import { Prisma } from "@prisma/client"
 import * as Sentry from "@sentry/nextjs"
 import { ParserResponse } from "@/types/ParserResponse"
 import { isValidUrl } from "@/utils/helpers/string"
+import { generateRange, Version } from "@/utils/helpers/versions"
 import { Parser } from "@/utils/parsers/parser"
 import prisma from "@/utils/prisma"
-import { generateRange, Version } from "@/utils/versions"
 
 const RemoveFromTextRegex = /https:\/\/redirect.epicgames.com\/\?redirectTo=/g
-
-// Generate valid URL regexp (including en-US locale)
-const ValidMarketplaceUrlRegexp = /^https:\/\/www\.unrealengine\.com\/marketplace\/en-US\/product\/[a-z0-9-]+$/i
+const ExtractEpicIdRegex = /^https:\/\/www\.unrealengine\.com\/marketplace\/en-US\/product\/([a-z0-9-]+)$/i
 
 type AssetPlainData = {
   description?: string
@@ -22,22 +20,24 @@ type AssetPlainData = {
 }
 
 export type Data = {
-  assetUrl: string
+  assetUrlOrEpicId: string
   force?: boolean
 }
 
-export default async function parseAsset({ assetUrl, force }: Data): Promise<ParserResponse> {
-  // Force "en-US" locale in URL
-  // Example #1: https://www.unrealengine.com/marketplace/zh-CN/product/chinesemonochromes
-  // Example #2: https://www.unrealengine.com/marketplace/en-US/product/chinesemonochromes
-  assetUrl = assetUrl.replace(/\/marketplace\/[a-z]{2}-[A-Z]{2}\//, "/marketplace/en-US/")
+export default async function parseAsset({ assetUrlOrEpicId, force }: Data): Promise<ParserResponse> {
+  let epicId: string
+  let assetUrl: string
 
-  if (!isValidUrl(assetUrl)) {
-    return { status: "error", errorMessage: "assetUrl must be a valid URL" }
+  if (isValidUrl(assetUrlOrEpicId)) {
+    epicId = assetUrlOrEpicId.match(ExtractEpicIdRegex)?.pop() || ""
+    assetUrl = assetUrlOrEpicId
+  } else {
+    epicId = assetUrlOrEpicId
+    assetUrl = `https://www.unrealengine.com/marketplace/en-US/product/${epicId}`
   }
 
-  if (!ValidMarketplaceUrlRegexp.test(assetUrl)) {
-    return { status: "error", errorMessage: "assetUrl must be a valid Unreal Engine Marketplace URL" }
+  if (!epicId) {
+    return { status: "error", message: "assetUrlOrEpicId must be a valid Epic ID or Marketplace URL" }
   }
 
   const asset = await prisma.asset.findUnique({
@@ -45,7 +45,7 @@ export default async function parseAsset({ assetUrl, force }: Data): Promise<Par
       updatedAt: true,
     },
     where: {
-      url: assetUrl,
+      epicId,
     },
   })
 
@@ -54,23 +54,24 @@ export default async function parseAsset({ assetUrl, force }: Data): Promise<Par
     const diff = now.getTime() - asset.updatedAt.getTime()
     const diffInHours = Math.floor(diff / 1000 / 60 / 60)
 
-    if (diffInHours < 24) {
-      console.log(`Asset ${assetUrl} was parsed less than 24 hours ago, skipping...`)
-
-      return { status: "skipped" }
+    if (diffInHours) {
+      return { status: "skipped", message: `Asset "${epicId}" was parsed less than 24 hours ago, skipping...` }
     }
   }
 
   try {
-    const parser = new Parser()
-
     const url = new URL(assetUrl)
+    const parser = new Parser()
     await parser.parse(url)
 
     const plainData: AssetPlainData = {}
 
     // Get name from "h1.post-title"
     const name = parser.getText("h1.post-title")
+
+    if (!name) {
+      return { status: "error", message: `Asset ${epicId} can't be parsed` }
+    }
 
     // Get short description from "p.asset-detail-text"
     const shortDescription = parser.getText("p.asset-detail-text")
@@ -189,7 +190,7 @@ export default async function parseAsset({ assetUrl, force }: Data): Promise<Par
     })
 
     const data: Prisma.AssetCreateInput = {
-      url: assetUrl,
+      epicId,
       name,
       shortDescription,
       description,
@@ -221,7 +222,7 @@ export default async function parseAsset({ assetUrl, force }: Data): Promise<Par
         engineVersions: true,
       },
       where: {
-        url: assetUrl,
+        epicId,
       },
       update: data,
       create: data,
@@ -260,23 +261,21 @@ export default async function parseAsset({ assetUrl, force }: Data): Promise<Par
 
     return { status: "success" }
   } catch (error) {
-    console.error(`Failed to scrape asset: ${assetUrl}`)
-    console.error(error)
-
     if (error instanceof Error) {
       Sentry.captureException(error)
 
-      const errorMessage = `Failed to scrape asset: ${assetUrl}. Error: ${error.message}`
-      console.error(errorMessage)
-
-      return { status: "error", error: error, errorMessage }
+      return {
+        status: "error",
+        error,
+        message: `Failed to scrape asset: ${epicId || assetUrlOrEpicId}. Error: ${error.message}`,
+      }
     } else {
       const stringifiedError = JSON.stringify(error)
-      const errorMessage = `Failed to scrape asset: ${assetUrl}. Error: ${stringifiedError}`
+      const message = `Failed to scrape asset: ${epicId || assetUrlOrEpicId}. Error: ${stringifiedError}`
 
-      Sentry.captureMessage(errorMessage)
+      Sentry.captureMessage(message)
 
-      return { status: "error", errorMessage }
+      return { status: "error", message }
     }
   }
 }

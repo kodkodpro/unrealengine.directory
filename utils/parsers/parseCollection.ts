@@ -1,5 +1,7 @@
+import { ParseCollectionPageData } from "@/app/api/parse-collection-page/route"
 import { ParserResponse } from "@/types/ParserResponse"
-import { getBaseURL, isValidUrl, makeMarketplaceURL } from "@/utils/helpers/string"
+import { makeMarketplaceAbsoluteUrl } from "@/utils/helpers/marketplace"
+import { isValidUrl } from "@/utils/helpers/string"
 import { Parser } from "@/utils/parsers/parser"
 
 export const MaxResults = 1000000
@@ -16,8 +18,10 @@ export default async function parseCollection({
   skip = 0,
   take = MaxResults,
 }: Data): Promise<ParserResponse> {
+  Parser.log(`Parsing collection ${collectionUrl}`)
+
   if (!isValidUrl(collectionUrl)) {
-    throw new Error("The function must be called with a valid URL")
+    return { status: "error", message: "Invalid URL" }
   }
 
   // Set pagination params
@@ -40,19 +44,14 @@ export default async function parseCollection({
   // Get all pages urls
   while (start < totalResults && (start - skip) < take) {
     url.searchParams.set("start", start.toString())
-    const pageUrl = url.toString()
+    const pageUrl = makeMarketplaceAbsoluteUrl(url.toString())
 
-    await fetch(`${getBaseURL()}/api/parse-collection-page`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": process.env.API_KEY!,
-      },
-      body: JSON.stringify({ pageUrl: makeMarketplaceURL(pageUrl) }),
-    })
+    const data: ParseCollectionPageData = { pageUrl }
+    const response = await Parser.triggerViaAPI("/api/parse-collection-page", data)
 
-    start += 100
-    console.log(`[${new Date().toISOString()}] Parsed page ${start / 100}`)
+    Parser.logResponse(response, `📃 Page #${start / MaxResultsPerPage + 1} successfully parsed`)
+
+    start += MaxResultsPerPage
 
     // Sleep a bit, rest doesn't hurt anyone
     await new Promise((resolve) => setTimeout(resolve, 1000))
