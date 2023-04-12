@@ -75,11 +75,10 @@ export class Parser {
 
   static log(message: string, status: ParserResponse["status"] | undefined = undefined) {
     const date = new Date().toLocaleString()
-    const statusIcon = status
-      ? status === "success" ? "✅" : status === "error" ? "❌" : "⚠️"
-      : "🔷"
+    const method = status === "error" ? "error" : "info"
+    const statusIcon = status ? status === "success" ? "✅" : status === "error" ? "❌" : "⚠️" : "🔷"
 
-    console.log(`[Parser][${date}] ${statusIcon} ${message}`)
+    console[method](`[Parser][${date}] ${statusIcon} ${message}`)
   }
 
   static logResponse(response: ParserResponse, successMessage: string) {
