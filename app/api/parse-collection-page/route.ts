@@ -3,7 +3,7 @@ import { z } from "zod"
 import { apiWrapper } from "@/utils/api"
 import parseCollectionPage from "@/utils/parsers/parseCollectionPage"
 
-export const runtime = "experimental-edge"
+export const runtime = "edge"
 
 const dataSchema = z.object({
   pageUrl: z.string().url(),

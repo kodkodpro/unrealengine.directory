@@ -4,7 +4,7 @@ import { ParserResponse } from "@/types/ParserResponse"
 import { apiWrapper } from "@/utils/api"
 import parseAsset from "@/utils/parsers/parseAsset"
 
-export const runtime = "experimental-edge"
+export const runtime = "edge"
 
 const dataSchema = z.object({
   assetUrl: z.string().url(),
