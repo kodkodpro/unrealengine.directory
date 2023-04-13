@@ -13,6 +13,7 @@ export default function KittenSays({} : KittenSaysProps) {
         height={360}
         alt="Picture of a cat"
         className="mx-auto mb-4 rounded bg-neutral-800"
+        unoptimized
       />
 
       <p className="mb-1 text-center text-2xl font-semibold md:text-3xl xl:text-4xl">
