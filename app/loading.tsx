@@ -10,9 +10,7 @@ export default function Loading() {
           <AssetsFiltersForm
             assetsMaxPrice={1500}
             categories={[]}
-            tags={[]}
             engineVersions={[]}
-            authors={[]}
           />
         </Sticky>
       </div>

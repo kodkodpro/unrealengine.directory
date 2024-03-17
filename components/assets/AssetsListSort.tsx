@@ -13,6 +13,10 @@ const OrderByOptions = [
   { label: "Price: High to Low", value: "most-expensive" },
   { label: "Rating: Low to High", value: "least-popular" },
   { label: "Rating: High to Low", value: "most-popular" },
+  { label: "Rating Voters: Low to High", value: "least-voters" },
+  { label: "Rating Voters: High to Low", value: "most-voters" },
+  { label: "Name: A to Z", value: "a-to-z" },
+  { label: "Name: Z to A", value: "z-to-a" },
 ] as const
 
 const AllowedOrderByValues = OrderByOptions.map((option) => option.value)

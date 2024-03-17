@@ -2,10 +2,8 @@ import {
   getAssets,
   getAssetsCount,
   getAssetsMaxPrice,
-  getAuthors,
   getCategories,
   getEngineVersions,
-  getTags,
 } from "@/app/data"
 import AssetsFiltersForm, { FiltersQuery } from "@/components/assets/AssetsFiltersForm"
 import AssetsList from "@/components/assets/AssetsList"
@@ -22,14 +20,12 @@ export type HomeProps = {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const [assets, assetsCount, assetsMaxPrice, categories, tags, engineVersions, authors] = await Promise.all([
+  const [assets, assetsCount, assetsMaxPrice, categories, engineVersions] = await Promise.all([
     getAssets(searchParams),
     getAssetsCount(searchParams),
     getAssetsMaxPrice(),
     getCategories(),
-    getTags(),
     getEngineVersions(),
-    getAuthors(),
   ])
 
   return (
@@ -39,9 +35,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <AssetsFiltersForm
             assetsMaxPrice={Math.ceil(assetsMaxPrice || 0)}
             categories={categories}
-            tags={tags}
             engineVersions={engineVersions}
-            authors={authors}
           />
         </Sticky>
       </div>

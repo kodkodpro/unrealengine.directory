@@ -14,7 +14,7 @@ import MultiSelect from "@/components/form/MultiSelect"
 import Range from "@/components/form/Range"
 import Select from "@/components/form/Select"
 import { getIdsFromQuery } from "@/utils/helpers/searchParams"
-import { titleize, toBoolean } from "@/utils/helpers/string"
+import { toBoolean } from "@/utils/helpers/string"
 import { shrinkVersions, Version } from "@/utils/helpers/versions"
 
 const ReleasePeriodOptions = [
@@ -27,34 +27,32 @@ const ReleasePeriodOptions = [
 export type ReleasePeriod = typeof ReleasePeriodOptions[number]["value"]
 
 export type FiltersQuery = {
-  q?: string,
-  ratingFrom?: string,
-  ratingTo?: string,
-  priceFrom?: string,
-  priceTo?: string,
-  freeOnly?: string,
-  orderBy?: OrderBy,
-  releasePeriod?: ReleasePeriod,
-  categoriesIds?: string,
-  tagsIds?: string,
-  engineVersionsIds?: string,
-  authorsIds?: string,
+  q?: string
+  ratingFrom?: string
+  ratingTo?: string
+  ratingCountFrom?: string
+  ratingCountTo?: string
+  priceFrom?: string
+  priceTo?: string
+  freeOnly?: string
+  orderBy?: OrderBy
+  releasePeriod?: ReleasePeriod
+  categoriesIds?: string
+  tagsIds?: string
+  engineVersionsIds?: string
+  authorsIds?: string
 }
 
 export type AssetsFiltersFormProps = {
   assetsMaxPrice: number,
   categories: Pick<Category, "id" | "name">[]
-  tags: Pick<Tag, "id" | "name">[],
   engineVersions: Pick<EngineVersion, "id" | "name">[]
-  authors: Pick<Author, "id" | "name">[]
 } & React.HTMLAttributes<HTMLFormElement>
 
 export default function AssetsFiltersForm({
   assetsMaxPrice,
   categories,
-  tags,
   engineVersions,
-  authors,
   className,
   ...props
 }: AssetsFiltersFormProps) {
@@ -64,15 +62,15 @@ export default function AssetsFiltersForm({
   const [q, setQ] = useState(searchParams.get("q") || "")
   const [ratingFrom, setRatingFrom] = useState(parseFloat(searchParams.get("ratingFrom") || "0"))
   const [ratingTo, setRatingTo] = useState(parseFloat(searchParams.get("ratingTo") || "5"))
+  const [ratingCountFrom, setRatingCountFrom] = useState(parseInt(searchParams.get("ratingCountFrom") || "0"))
+  const [ratingCountTo, setRatingCountTo] = useState(parseInt(searchParams.get("ratingCountTo") || "9999"))
   const [priceFrom, setPriceFrom] = useState(parseInt(searchParams.get("priceFrom") || "0"))
   const [priceTo, setPriceTo] = useState(parseInt(searchParams.get("priceTo") || "") || assetsMaxPrice)
   const [freeOnly, setFreeOnly] = useState(toBoolean(searchParams.get("freeOnly")))
   const [releasePeriod, setReleasePeriod] = useState(searchParams.get("releasePeriod") || "")
 
   const [categoriesIds, setCategoriesIds] = useState(getIdsFromQuery(searchParams, "categoriesIds"))
-  const [tagsIds, setTagsIds] = useState(getIdsFromQuery(searchParams, "tagsIds"))
   const [engineVersionsIds, setEngineVersionsIds] = useState(getIdsFromQuery(searchParams, "engineVersionsIds"))
-  const [authorsIds, setAuthorsIds] = useState(getIdsFromQuery(searchParams, "authorsIds"))
 
   const engineVersionsSorted = engineVersions.sort((a, b) => b.name.localeCompare(a.name, undefined, { numeric: true }))
 
@@ -86,18 +84,18 @@ export default function AssetsFiltersForm({
       q,
       ratingFrom: ratingFrom.toString(),
       ratingTo: ratingTo.toString(),
+      ratingCountFrom: ratingCountFrom?.toString(),
+      ratingCountTo: ratingCountTo?.toString(),
       priceFrom: priceFrom.toString(),
       priceTo: priceTo.toString(),
       releasePeriod: releasePeriod as ReleasePeriod,
       categoriesIds: categoriesIds.join(","),
-      tagsIds: tagsIds.join(","),
       engineVersionsIds: engineVersionsIds.join(","),
-      authorsIds: authorsIds.join(","),
       freeOnly: freeOnly ? "1" : "",
     }
 
     Object.entries(filters).forEach(([key, value]) => {
-      if (value.length > 0) {
+      if (value && value.length > 0) {
         searchParams.set(key, value)
       } else {
         searchParams.delete(key)
@@ -144,19 +142,6 @@ export default function AssetsFiltersForm({
       />
 
       <MultiSelect
-        virtualized
-        label="Tags"
-        placeholder="All"
-        options={tags.map((tag) => ({
-          value: tag.id,
-          label: titleize(tag.name),
-        }))}
-        value={tagsIds}
-        onChange={setTagsIds}
-        onClear={() => setTagsIds([])}
-      />
-
-      <MultiSelect
         label="Engine Versions"
         placeholder="All"
         options={engineVersionsSorted.map((engineVersion) => ({
@@ -171,19 +156,6 @@ export default function AssetsFiltersForm({
         onClear={() => setEngineVersionsIds([])}
       />
 
-      <MultiSelect
-        virtualized
-        label="Authors"
-        placeholder="All"
-        options={authors.map((author) => ({
-          value: author.id,
-          label: author.name,
-        }))}
-        value={authorsIds}
-        onChange={setAuthorsIds}
-        onClear={() => setAuthorsIds([])}
-      />
-
       <Select
         label="Release date"
         placeholder="Any"
@@ -195,7 +167,7 @@ export default function AssetsFiltersForm({
 
       <div>
         <div className="mb-1 flex items-center justify-between">
-          <Label text="Price ($)" margin={false} />
+          <Label text="Price ($)" margin={false}/>
 
           <Checkbox
             label="Free only"
@@ -240,7 +212,7 @@ export default function AssetsFiltersForm({
       </div>
 
       <div>
-        <Label text="Rating" />
+        <Label text="Rating"/>
 
         <div className="mb-2 flex items-center gap-2">
           <Input
@@ -276,7 +248,34 @@ export default function AssetsFiltersForm({
         />
       </div>
 
-      <hr className="border-neutral-800" />
+      <div>
+        <Label text="Rating Voters"/>
+
+        <div className="mb-2 flex items-center gap-2">
+          <Input
+            placeholder="From"
+            value={ratingCountFrom.toString()}
+            onChangeText={(value) => setRatingCountFrom(parseInt(value) || 0)}
+            type="number"
+            min="0"
+            step="1"
+            className="w-full text-center"
+          />
+
+          <span className="text-neutral-500">&ndash;</span>
+
+          <Input
+            placeholder="To"
+            value={ratingCountTo.toString()}
+            onChangeText={(value) => setRatingCountTo(parseInt(value) || assetsMaxPrice)}
+            type="number"
+            step="1"
+            className="w-full text-center"
+          />
+        </div>
+      </div>
+
+      <hr className="border-neutral-800"/>
 
       <Button type="submit" className="w-full">
         Apply

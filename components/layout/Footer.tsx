@@ -15,13 +15,6 @@ export default function Footer() {
             >
               Andrew Kodkod
             </a>
-            {" "}as an Open Source project &rarr;{" "}
-            <a
-              href="https://github.com/kodkodpro/unrealengine.directory"
-              className="font-semibold text-white hover:text-neutral-100 hover:underline"
-            >
-              View on GitHub
-            </a>
           </p>
           <p>
             This website is not affiliated with the Epic Games Store or Epic Games, Inc.

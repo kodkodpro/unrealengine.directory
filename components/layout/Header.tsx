@@ -1,13 +1,10 @@
 import Link from "next/link"
-import OpenSourceButton from "@/components/layout/OpenSourceButton"
 import Waves from "@/components/layout/Waves"
 import UnrealEngineLogo from "@/components/UnrealEngineLogo"
 
 export default function Header() {
   return (
     <div className="relative">
-      <OpenSourceButton className="absolute right-8 top-8" />
-
       <div className="bg-neutral-800 py-12 text-center">
         <Link
           href="/"

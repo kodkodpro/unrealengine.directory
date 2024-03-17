@@ -6,6 +6,7 @@ import { toBoolean } from "@/utils/helpers/string"
 export function getFilters(searchParams: HomeProps["searchParams"]) {
   const where: Prisma.AssetWhereInput = {}
   const ratingScore: Prisma.AssetWhereInput["ratingScore"] = {}
+  const ratingCount: Prisma.AssetWhereInput["ratingCount"] = {}
   const price: Prisma.AssetWhereInput["price"] = {}
   const freeOnly = toBoolean(searchParams.freeOnly)
 
@@ -26,6 +27,18 @@ export function getFilters(searchParams: HomeProps["searchParams"]) {
 
   if (Object.keys(ratingScore).length) {
     where["ratingScore"] = ratingScore
+  }
+
+  if (searchParams.ratingCountFrom) {
+    ratingCount["gte"] = +searchParams.ratingCountFrom
+  }
+
+  if (searchParams.ratingCountTo) {
+    ratingCount["lte"] = +searchParams.ratingCountTo
+  }
+
+  if (Object.keys(ratingCount).length) {
+    where["ratingCount"] = ratingCount
   }
 
   if (searchParams.priceFrom && !freeOnly) {
@@ -123,6 +136,18 @@ export function getAssetsOrderBy(searchParams: HomeProps["searchParams"]) {
     },
     "least-expensive": {
       price: "asc",
+    },
+    "most-voters": {
+      ratingCount: "desc",
+    },
+    "least-voters": {
+      ratingCount: "asc",
+    },
+    "a-to-z": {
+      name: "asc",
+    },
+    "z-to-a": {
+      name: "desc",
     },
   }
 

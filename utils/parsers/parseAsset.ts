@@ -259,6 +259,8 @@ export default async function parseAsset({ assetUrlOrEpicId, force }: Data): Pro
       },
     })
 
+    Parser.log(`Asset "${epicId}" successfully parsed (released at ${releasedAt.toDateString()})`, "success")
+
     return { status: "success" }
   } catch (error) {
     if (error instanceof Error) {

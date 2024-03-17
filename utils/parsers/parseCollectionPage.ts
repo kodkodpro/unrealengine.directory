@@ -33,8 +33,6 @@ export default async function parseCollectionPage({ pageUrl }: Data): Promise<Pa
     const data: ParseAssetData = { assetUrlOrEpicId: epicId }
     const response = await Parser.triggerViaAPI("/api/parse-asset", data)
 
-    Parser.logResponse(response, `Asset "${epicId}" successfully parsed`)
-
     // Don't sleep if the asset was skipped
     if (response.status !== "skipped") await new Promise((resolve) => setTimeout(resolve, 1000))
   }
