@@ -1,23 +1,32 @@
 import { StarIcon } from "@heroicons/react/24/solid"
 import clsx from "clsx"
 import Image from "next/image"
+import Link from "next/link"
 import AssetInfoTags from "@/components/assets/AssetInfoTags"
 import AssetPrice from "@/components/assets/AssetPrice"
 import { AssetFull } from "@/types/AssetFull"
 
 export type AssetCardProps = {
   asset: AssetFull,
-  onClick?: () => void,
+  onMouseLeftClick?: () => void,
 }
 
-export default function AssetCard({ asset, onClick }: AssetCardProps) {
+export default function AssetCard({ asset, onMouseLeftClick }: AssetCardProps) {
+  const handleOnClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    if (onMouseLeftClick && event.button === 0) {
+      event.preventDefault()
+      onMouseLeftClick()
+    }
+  }
+
   return (
-    <div
+    <Link
+      href={`/${asset.epicId}`}
       className={clsx(
         "group",
-        onClick && "cursor-pointer",
+        onMouseLeftClick && "cursor-pointer",
       )}
-      onClick={onClick}
+      onClick={handleOnClick}
     >
       <div className={clsx(
         "relative aspect-video overflow-hidden rounded-lg bg-neutral-800",
@@ -35,7 +44,7 @@ export default function AssetCard({ asset, onClick }: AssetCardProps) {
             "absolute bottom-4 left-4 flex items-center gap-1 rounded",
             "bg-neutral-900/75 px-1.5 py-1 text-sm font-semibold",
           )}>
-            <StarIcon className="inline-block h-4 w-4 text-amber-500" />
+            <StarIcon className="inline-block size-4 text-amber-500" />
             {asset.ratingScore}
 
             <span className="text-neutral-100">
@@ -65,6 +74,6 @@ export default function AssetCard({ asset, onClick }: AssetCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

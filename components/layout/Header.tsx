@@ -15,7 +15,7 @@ export default function Header() {
           Unreal Engine Directory
         </Link>
         <p className="mt-1 font-medium text-neutral-300">
-          Like Unreal Engine Marketplace, but better
+          Like Unreal Engine Marketplace, but just a bit better
         </p>
       </div>
 

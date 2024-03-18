@@ -1,6 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/solid"
 import clsx from "clsx"
-import { LazyMotion, m } from "framer-motion"
+import { LazyMotion, motion } from "framer-motion"
 import { useHotkeys } from "react-hotkeys-hook"
 
 const loadFeatures = () => import("@/utils/framerFeatures").then((res) => res.default)
@@ -18,7 +18,7 @@ export default function Modal({ title, wide, onClose, children } : ModalProps) {
   return (
     <LazyMotion features={loadFeatures}>
       <div className="relative z-50">
-        <m.div
+        <motion.div
           className="fixed inset-0 bg-neutral-800/75"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -33,9 +33,9 @@ export default function Modal({ title, wide, onClose, children } : ModalProps) {
             )}
             onClick={onClose}
           >
-            <m.div
+            <motion.div
               className={clsx(
-                "mx-auto w-full bg-neutral-900 p-8 shadow-xl xl:p-12",
+                "mx-auto w-full bg-neutral-900 p-8 pt-6 shadow-xl xl:p-12 xl:pt-10",
                 wide ? "max-w-7xl xl:rounded-lg" : "max-w-3xl md:rounded-lg",
               )}
               initial={{ scale: 0, opacity: 0 }}
@@ -61,7 +61,7 @@ export default function Modal({ title, wide, onClose, children } : ModalProps) {
               )}
 
               {children}
-            </m.div>
+            </motion.div>
           </div>
         </div>
       </div>

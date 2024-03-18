@@ -11,6 +11,7 @@ import AssetsListSort from "@/components/assets/AssetsListSort"
 import KittenSays from "@/components/content/KittenSays"
 import Pagination from "@/components/content/Pagination"
 import Sticky from "@/components/layout/Sticky"
+import { usePathname } from "next/navigation"
 
 export type HomeProps = {
   searchParams: FiltersQuery & {

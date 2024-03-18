@@ -19,6 +19,8 @@ export type AssetsListProps = {
 export default function AssetsList({ assets }: AssetsListProps) {
   const [selectedAssetIndex, setSelectedAssetIndex] = useState<number | null>(null)
 
+  const selectedAsset = selectedAssetIndex ? assets[selectedAssetIndex] : null
+
   const prevAsset = () => {
     setSelectedAssetIndex((index) => {
       if (index === null) return null
@@ -33,6 +35,20 @@ export default function AssetsList({ assets }: AssetsListProps) {
     })
   }
 
+  const handleAssetClick = (index: number) => {
+    setSelectedAssetIndex(index)
+
+    // Update URL with the selected asset
+    window.history.pushState(null, "", `/${assets[index].epicId}`)
+  }
+
+  const handleAssetModalClose = () => {
+    setSelectedAssetIndex(null)
+
+    // Restore the original URL
+    window.history.back()
+  }
+
   // TODO: Scroll modal window to top when navigating between assets
   useHotkeys("alt+left", prevAsset)
   useHotkeys("alt+right", nextAsset)
@@ -44,21 +60,21 @@ export default function AssetsList({ assets }: AssetsListProps) {
           <AssetCard
             key={asset.id}
             asset={asset}
-            onClick={() => setSelectedAssetIndex(index)}
+            onMouseLeftClick={() => handleAssetClick(index)}
           />
         ))}
       </div>
 
       <AnimatePresence mode="wait">
-        {selectedAssetIndex !== null && (
+        {selectedAsset !== null && (
           <Modal
-            title={assets[selectedAssetIndex].name}
-            onClose={() => setSelectedAssetIndex(null)}
+            title={selectedAsset.name}
+            onClose={handleAssetModalClose}
             wide
           >
             <AssetCardFull
-              key={assets[selectedAssetIndex].id}
-              asset={assets[selectedAssetIndex]}
+              key={selectedAsset.id}
+              asset={selectedAsset}
               sidebarText={(
                 <>
                   <hr className="block border-neutral-800 md:hidden" />
@@ -69,7 +85,7 @@ export default function AssetsList({ assets }: AssetsListProps) {
                       className="w-full"
                       onClick={prevAsset}
                     >
-                      <ArrowLongLeftIcon className="mr-1 inline-block h-5 w-5" />
+                      <ArrowLongLeftIcon className="mr-1 inline-block size-5" />
                       <span>Previous</span>
                     </Button>
                     <Button
@@ -78,7 +94,7 @@ export default function AssetsList({ assets }: AssetsListProps) {
                       onClick={nextAsset}
                     >
                       <span>Next</span>
-                      <ArrowLongRightIcon className="ml-1 inline-block h-5 w-5" />
+                      <ArrowLongRightIcon className="ml-1 inline-block size-5" />
                     </Button>
                   </div>
 

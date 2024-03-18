@@ -9,14 +9,14 @@ import {
 } from "@/types/AssetFull"
 import prisma from "@/utils/prisma"
 
-export async function getAssets(searchParams: HomeProps["searchParams"]) {
+export function getAssets(searchParams: HomeProps["searchParams"]) {
   const page = searchParams.page ? +searchParams.page : 1
   const perPage = searchParams.perPage ? Math.min(+searchParams.perPage, 100) : 21
 
   const where = getFilters(searchParams)
   const orderBy = getAssetsOrderBy(searchParams)
 
-  return await prisma.asset.findMany({
+  return prisma.asset.findMany({
     select: {
       ...AssetFullSelect,
       author: {
@@ -39,8 +39,8 @@ export async function getAssets(searchParams: HomeProps["searchParams"]) {
   })
 }
 
-export async function getAssetsCount(searchParams: HomeProps["searchParams"]) {
-  return await prisma.asset.count({
+export function getAssetsCount(searchParams: HomeProps["searchParams"]) {
+  return prisma.asset.count({
     where: getFilters(searchParams),
   })
 }
@@ -55,8 +55,8 @@ export async function getAssetsMaxPrice() {
   return maxPrice._max.price
 }
 
-export async function getCategories() {
-  return await prisma.category.findMany({
+export function getCategories() {
+  return prisma.category.findMany({
     select: {
       id: true,
       name: true,
@@ -67,8 +67,8 @@ export async function getCategories() {
   })
 }
 
-export async function getTags() {
-  return await prisma.tag.findMany({
+export function getTags() {
+  return prisma.tag.findMany({
     select: {
       id: true,
       name: true,
@@ -79,8 +79,8 @@ export async function getTags() {
   })
 }
 
-export async function getEngineVersions() {
-  return await prisma.engineVersion.findMany({
+export function getEngineVersions() {
+  return prisma.engineVersion.findMany({
     select: {
       id: true,
       name: true,
@@ -91,8 +91,8 @@ export async function getEngineVersions() {
   })
 }
 
-export async function getAuthors() {
-  return await prisma.author.findMany({
+export function getAuthors() {
+  return prisma.author.findMany({
     select: {
       id: true,
       name: true,
