@@ -1,6 +1,6 @@
 import { Input as HeadlessInput, type InputProps as HeadlessInputProps } from "@headlessui/react"
-import { clsx } from "clsx"
 import { forwardRef } from "react"
+import cn from "@/lib/utils/cn"
 
 const dateTypes = ["date", "datetime-local", "month", "time", "week"]
 type DateType = (typeof dateTypes)[number]
@@ -12,7 +12,7 @@ export const Input = forwardRef<
   return (
     <span
       data-slot="control"
-      className={clsx([
+      className={cn([
         className,
 
         // Basic layout
@@ -28,15 +28,15 @@ export const Input = forwardRef<
         "after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-inset after:ring-transparent sm:after:focus-within:ring-2 sm:after:focus-within:ring-blue-500",
 
         // Disabled state
-        "has-[[db-disabled]]:opacity-50 before:has-[[db-disabled]]:bg-zinc-950/5 before:has-[[db-disabled]]:shadow-none",
+        "has-[[data-disabled]]:opacity-50 before:has-[[data-disabled]]:bg-zinc-950/5 before:has-[[data-disabled]]:shadow-none",
 
         // Invalid state
-        "before:has-[[db-invalid]]:shadow-red-500/10",
+        "before:has-[[data-invalid]]:shadow-red-500/10",
       ])}
     >
       <HeadlessInput
         ref={ref}
-        className={clsx([
+        className={cn([
           // Date classes
           props.type &&
             dateTypes.includes(props.type) && [
@@ -61,7 +61,7 @@ export const Input = forwardRef<
           "text-base/6 text-zinc-950 placeholder:text-zinc-500 sm:text-sm/6 dark:text-white",
 
           // Border
-          "border border-zinc-950/10 db-[hover]:border-zinc-950/20 dark:border-white/10 dark:db-[hover]:border-white/20",
+          "border border-zinc-950/10 data-[hover]:border-zinc-950/20 dark:border-white/10 dark:data-[hover]:border-white/20",
 
           // Background color
           "bg-transparent dark:bg-white/5",
@@ -70,10 +70,10 @@ export const Input = forwardRef<
           "focus:outline-none",
 
           // Invalid state
-          "db-[invalid]:border-red-500 db-[invalid]:db-[hover]:border-red-500 db-[invalid]:dark:border-red-500 db-[invalid]:db-[hover]:dark:border-red-500",
+          "data-[invalid]:border-red-500 data-[invalid]:data-[hover]:border-red-500 data-[invalid]:dark:border-red-500 data-[invalid]:data-[hover]:dark:border-red-500",
 
           // Disabled state
-          "db-[disabled]:border-zinc-950/20 dark:db-[hover]:db-[disabled]:border-white/15 db-[disabled]:dark:border-white/15 db-[disabled]:dark:bg-white/[2.5%]",
+          "data-[disabled]:border-zinc-950/20 dark:data-[hover]:data-[disabled]:border-white/15 data-[disabled]:dark:border-white/15 data-[disabled]:dark:bg-white/[2.5%]",
         ])}
         {...props}
       />

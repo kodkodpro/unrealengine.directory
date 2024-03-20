@@ -1,5 +1,5 @@
 import { ComponentProps, ComponentType, ReactNode, SVGProps } from "react"
-import { cn } from "@/lib/utils/cn"
+import cn from "@/lib/utils/cn"
 
 export type TagProps = ComponentProps<"span"> & {
   icon: ComponentType<SVGProps<SVGSVGElement>>

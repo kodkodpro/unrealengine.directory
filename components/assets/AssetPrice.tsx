@@ -1,5 +1,5 @@
 import { Asset } from "@prisma/client"
-import { cn } from "@/lib/utils/cn"
+import cn from "@/lib/utils/cn"
 import { formatMoney } from "@/lib/utils/string"
 
 export type AssetPriceProps = {

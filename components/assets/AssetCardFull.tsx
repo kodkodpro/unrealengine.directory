@@ -21,16 +21,14 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
       <div className="col-span-2">
         <AssetImagesCarousel asset={asset} />
 
-        <div className="prose mx-auto leading-normal dark:prose-invert">
+        <div className="prose mx-auto leading-normal dark:prose-invert prose-p:my-0.5">
           <ReactMarkdown>
             {asset.description}
           </ReactMarkdown>
 
-          <div className="prose-p:my-0.5">
-            <ReactMarkdown>
-              {asset.technicalDetails}
-            </ReactMarkdown>
-          </div>
+          <ReactMarkdown>
+            {asset.technicalDetails}
+          </ReactMarkdown>
         </div>
       </div>
       <div>

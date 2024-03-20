@@ -1,7 +1,6 @@
 import { Button as HeadlessButton, type ButtonProps as HeadlessButtonProps } from "@headlessui/react"
-import { clsx } from "clsx"
 import React from "react"
-import { cn } from "@/lib/utils/cn"
+import cn from "@/lib/utils/cn"
 import { Link } from "./link"
 
 const styles = {
@@ -13,13 +12,13 @@ const styles = {
     "px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] sm:text-sm/6",
 
     // Focus
-    "focus:outline-none db-[focus]:outline db-[focus]:outline-2 db-[focus]:outline-offset-2 db-[focus]:outline-blue-500",
+    "focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500",
 
     // Disabled
-    "db-[disabled]:opacity-50",
+    "data-[disabled]:opacity-50",
 
     // Icon
-    "[&>[db-slot=icon]]:-mx-0.5 [&>[db-slot=icon]]:my-0.5 [&>[db-slot=icon]]:size-5 [&>[db-slot=icon]]:shrink-0 [&>[db-slot=icon]]:text-[--btn-icon] [&>[db-slot=icon]]:sm:my-1 [&>[db-slot=icon]]:sm:size-4 forced-colors:[--btn-icon:ButtonText] forced-colors:db-[hover]:[--btn-icon:ButtonText]",
+    "[&>[data-slot=icon]]:-mx-0.5 [&>[data-slot=icon]]:my-0.5 [&>[data-slot=icon]]:size-5 [&>[data-slot=icon]]:shrink-0 [&>[data-slot=icon]]:text-[--btn-icon] [&>[data-slot=icon]]:sm:my-1 [&>[data-slot=icon]]:sm:size-4 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hover]:[--btn-icon:ButtonText]",
   ],
   solid: [
     // Optical border, implemented as the button background to avoid corner artifacts
@@ -47,68 +46,68 @@ const styles = {
     "after:shadow-[shadow:inset_0_1px_theme(colors.white/15%)]",
 
     // White overlay on hover
-    "after:db-[active]:bg-[--btn-hover-overlay] after:db-[hover]:bg-[--btn-hover-overlay]",
+    "after:data-[active]:bg-[--btn-hover-overlay] after:data-[hover]:bg-[--btn-hover-overlay]",
 
     // Dark mode: `after` layer expands to cover entire button
     "dark:after:-inset-px dark:after:rounded-lg",
 
     // Disabled
-    "before:db-[disabled]:shadow-none after:db-[disabled]:shadow-none",
+    "before:data-[disabled]:shadow-none after:data-[disabled]:shadow-none",
   ],
   outline: [
     // Base
-    "border-zinc-950/10 text-zinc-950 db-[active]:bg-zinc-950/[2.5%] db-[hover]:bg-zinc-950/[2.5%]",
+    "border-zinc-950/10 text-zinc-950 data-[active]:bg-zinc-950/[2.5%] data-[hover]:bg-zinc-950/[2.5%]",
 
     // Dark mode
-    "dark:border-white/15 dark:text-white dark:[--btn-bg:transparent] dark:db-[active]:bg-white/5 dark:db-[hover]:bg-white/5",
+    "dark:border-white/15 dark:text-white dark:[--btn-bg:transparent] dark:data-[active]:bg-white/5 dark:data-[hover]:bg-white/5",
 
     // Icon
-    "[--btn-icon:theme(colors.zinc.500)] db-[active]:[--btn-icon:theme(colors.zinc.700)] db-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:db-[active]:[--btn-icon:theme(colors.zinc.400)] dark:db-[hover]:[--btn-icon:theme(colors.zinc.400)]",
+    "[--btn-icon:theme(colors.zinc.500)] data-[active]:[--btn-icon:theme(colors.zinc.700)] data-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]",
   ],
   plain: [
     // Base
-    "border-transparent text-zinc-950 db-[active]:bg-zinc-950/5 db-[hover]:bg-zinc-950/5",
+    "border-transparent text-zinc-950 data-[active]:bg-zinc-950/5 data-[hover]:bg-zinc-950/5",
 
     // Dark mode
-    "dark:text-white dark:db-[active]:bg-white/10 dark:db-[hover]:bg-white/10",
+    "dark:text-white dark:data-[active]:bg-white/10 dark:data-[hover]:bg-white/10",
 
     // Icon
-    "[--btn-icon:theme(colors.zinc.500)] db-[active]:[--btn-icon:theme(colors.zinc.700)] db-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:[--btn-icon:theme(colors.zinc.500)] dark:db-[active]:[--btn-icon:theme(colors.zinc.400)] dark:db-[hover]:[--btn-icon:theme(colors.zinc.400)]",
+    "[--btn-icon:theme(colors.zinc.500)] data-[active]:[--btn-icon:theme(colors.zinc.700)] data-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:[--btn-icon:theme(colors.zinc.500)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]",
   ],
   colors: {
     "dark/zinc": [
       "text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]",
       "dark:text-white dark:[--btn-bg:theme(colors.zinc.600)] dark:[--btn-hover-overlay:theme(colors.white/5%)]",
-      "[--btn-icon:theme(colors.zinc.400)] db-[active]:[--btn-icon:theme(colors.zinc.300)] db-[hover]:[--btn-icon:theme(colors.zinc.300)]",
+      "[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)]",
     ],
     light: [
-      "text-zinc-950 [--btn-bg:white] [--btn-border:theme(colors.zinc.950/10%)] [--btn-hover-overlay:theme(colors.zinc.950/2.5%)] db-[active]:[--btn-border:theme(colors.zinc.950/15%)] db-[hover]:[--btn-border:theme(colors.zinc.950/15%)]",
+      "text-zinc-950 [--btn-bg:white] [--btn-border:theme(colors.zinc.950/10%)] [--btn-hover-overlay:theme(colors.zinc.950/2.5%)] data-[active]:[--btn-border:theme(colors.zinc.950/15%)] data-[hover]:[--btn-border:theme(colors.zinc.950/15%)]",
       "dark:text-white dark:[--btn-hover-overlay:theme(colors.white/5%)] dark:[--btn-bg:theme(colors.zinc.800)]",
-      "[--btn-icon:theme(colors.zinc.500)] db-[active]:[--btn-icon:theme(colors.zinc.700)] db-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:[--btn-icon:theme(colors.zinc.500)] dark:db-[active]:[--btn-icon:theme(colors.zinc.400)] dark:db-[hover]:[--btn-icon:theme(colors.zinc.400)]",
+      "[--btn-icon:theme(colors.zinc.500)] data-[active]:[--btn-icon:theme(colors.zinc.700)] data-[hover]:[--btn-icon:theme(colors.zinc.700)] dark:[--btn-icon:theme(colors.zinc.500)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]",
     ],
     "dark/white": [
       "text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]",
       "dark:text-zinc-950 dark:[--btn-bg:white] dark:[--btn-hover-overlay:theme(colors.zinc.950/5%)]",
-      "[--btn-icon:theme(colors.zinc.400)] db-[active]:[--btn-icon:theme(colors.zinc.300)] db-[hover]:[--btn-icon:theme(colors.zinc.300)] dark:[--btn-icon:theme(colors.zinc.500)] dark:db-[active]:[--btn-icon:theme(colors.zinc.400)] dark:db-[hover]:[--btn-icon:theme(colors.zinc.400)]",
+      "[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)] dark:[--btn-icon:theme(colors.zinc.500)] dark:data-[active]:[--btn-icon:theme(colors.zinc.400)] dark:data-[hover]:[--btn-icon:theme(colors.zinc.400)]",
     ],
     dark: [
       "text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)]",
       "dark:[--btn-hover-overlay:theme(colors.white/5%)] dark:[--btn-bg:theme(colors.zinc.800)]",
-      "[--btn-icon:theme(colors.zinc.400)] db-[active]:[--btn-icon:theme(colors.zinc.300)] db-[hover]:[--btn-icon:theme(colors.zinc.300)]",
+      "[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)]",
     ],
     white: [
-      "text-zinc-950 [--btn-bg:white] [--btn-border:theme(colors.zinc.950/10%)] [--btn-hover-overlay:theme(colors.zinc.950/2.5%)] db-[active]:[--btn-border:theme(colors.zinc.950/15%)] db-[hover]:[--btn-border:theme(colors.zinc.950/15%)]",
+      "text-zinc-950 [--btn-bg:white] [--btn-border:theme(colors.zinc.950/10%)] [--btn-hover-overlay:theme(colors.zinc.950/2.5%)] data-[active]:[--btn-border:theme(colors.zinc.950/15%)] data-[hover]:[--btn-border:theme(colors.zinc.950/15%)]",
       "dark:[--btn-hover-overlay:theme(colors.zinc.950/5%)]",
-      "[--btn-icon:theme(colors.zinc.400)] db-[active]:[--btn-icon:theme(colors.zinc.500)] db-[hover]:[--btn-icon:theme(colors.zinc.500)]",
+      "[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.500)] data-[hover]:[--btn-icon:theme(colors.zinc.500)]",
     ],
     zinc: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.zinc.600)] [--btn-border:theme(colors.zinc.700/90%)]",
       "dark:[--btn-hover-overlay:theme(colors.white/5%)]",
-      "[--btn-icon:theme(colors.zinc.400)] db-[active]:[--btn-icon:theme(colors.zinc.300)] db-[hover]:[--btn-icon:theme(colors.zinc.300)]",
+      "[--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)]",
     ],
     indigo: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.indigo.500)] [--btn-border:theme(colors.indigo.600/90%)]",
-      "[--btn-icon:theme(colors.indigo.300)] db-[active]:[--btn-icon:theme(colors.indigo.200)] db-[hover]:[--btn-icon:theme(colors.indigo.200)]",
+      "[--btn-icon:theme(colors.indigo.300)] data-[active]:[--btn-icon:theme(colors.indigo.200)] data-[hover]:[--btn-icon:theme(colors.indigo.200)]",
     ],
     cyan: [
       "text-cyan-950 [--btn-bg:theme(colors.cyan.300)] [--btn-border:theme(colors.cyan.400/80%)] [--btn-hover-overlay:theme(colors.white/25%)]",
@@ -116,11 +115,11 @@ const styles = {
     ],
     red: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.red.600)] [--btn-border:theme(colors.red.700/90%)]",
-      "[--btn-icon:theme(colors.red.300)] db-[active]:[--btn-icon:theme(colors.red.200)] db-[hover]:[--btn-icon:theme(colors.red.200)]",
+      "[--btn-icon:theme(colors.red.300)] data-[active]:[--btn-icon:theme(colors.red.200)] data-[hover]:[--btn-icon:theme(colors.red.200)]",
     ],
     orange: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.orange.500)] [--btn-border:theme(colors.orange.600/90%)]",
-      "[--btn-icon:theme(colors.orange.300)] db-[active]:[--btn-icon:theme(colors.orange.200)] db-[hover]:[--btn-icon:theme(colors.orange.200)]",
+      "[--btn-icon:theme(colors.orange.300)] data-[active]:[--btn-icon:theme(colors.orange.200)] data-[hover]:[--btn-icon:theme(colors.orange.200)]",
     ],
     amber: [
       "text-amber-950 [--btn-hover-overlay:theme(colors.white/25%)] [--btn-bg:theme(colors.amber.400)] [--btn-border:theme(colors.amber.500/80%)]",
@@ -128,51 +127,51 @@ const styles = {
     ],
     yellow: [
       "text-yellow-950 [--btn-hover-overlay:theme(colors.white/25%)] [--btn-bg:theme(colors.yellow.300)] [--btn-border:theme(colors.yellow.400/80%)]",
-      "[--btn-icon:theme(colors.yellow.600)] db-[active]:[--btn-icon:theme(colors.yellow.700)] db-[hover]:[--btn-icon:theme(colors.yellow.700)]",
+      "[--btn-icon:theme(colors.yellow.600)] data-[active]:[--btn-icon:theme(colors.yellow.700)] data-[hover]:[--btn-icon:theme(colors.yellow.700)]",
     ],
     lime: [
       "text-lime-950 [--btn-hover-overlay:theme(colors.white/25%)] [--btn-bg:theme(colors.lime.300)] [--btn-border:theme(colors.lime.400/80%)]",
-      "[--btn-icon:theme(colors.lime.600)] db-[active]:[--btn-icon:theme(colors.lime.700)] db-[hover]:[--btn-icon:theme(colors.lime.700)]",
+      "[--btn-icon:theme(colors.lime.600)] data-[active]:[--btn-icon:theme(colors.lime.700)] data-[hover]:[--btn-icon:theme(colors.lime.700)]",
     ],
     green: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.green.600)] [--btn-border:theme(colors.green.700/90%)]",
-      "[--btn-icon:theme(colors.white/60%)] db-[active]:[--btn-icon:theme(colors.white/80%)] db-[hover]:[--btn-icon:theme(colors.white/80%)]",
+      "[--btn-icon:theme(colors.white/60%)] data-[active]:[--btn-icon:theme(colors.white/80%)] data-[hover]:[--btn-icon:theme(colors.white/80%)]",
     ],
     emerald: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.emerald.600)] [--btn-border:theme(colors.emerald.700/90%)]",
-      "[--btn-icon:theme(colors.white/60%)] db-[active]:[--btn-icon:theme(colors.white/80%)] db-[hover]:[--btn-icon:theme(colors.white/80%)]",
+      "[--btn-icon:theme(colors.white/60%)] data-[active]:[--btn-icon:theme(colors.white/80%)] data-[hover]:[--btn-icon:theme(colors.white/80%)]",
     ],
     teal: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.teal.600)] [--btn-border:theme(colors.teal.700/90%)]",
-      "[--btn-icon:theme(colors.white/60%)] db-[active]:[--btn-icon:theme(colors.white/80%)] db-[hover]:[--btn-icon:theme(colors.white/80%)]",
+      "[--btn-icon:theme(colors.white/60%)] data-[active]:[--btn-icon:theme(colors.white/80%)] data-[hover]:[--btn-icon:theme(colors.white/80%)]",
     ],
     sky: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.sky.500)] [--btn-border:theme(colors.sky.600/80%)]",
-      "[--btn-icon:theme(colors.white/60%)] db-[active]:[--btn-icon:theme(colors.white/80%)] db-[hover]:[--btn-icon:theme(colors.white/80%)]",
+      "[--btn-icon:theme(colors.white/60%)] data-[active]:[--btn-icon:theme(colors.white/80%)] data-[hover]:[--btn-icon:theme(colors.white/80%)]",
     ],
     blue: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.blue.600)] [--btn-border:theme(colors.blue.700/90%)]",
-      "[--btn-icon:theme(colors.blue.400)] db-[active]:[--btn-icon:theme(colors.blue.300)] db-[hover]:[--btn-icon:theme(colors.blue.300)]",
+      "[--btn-icon:theme(colors.blue.400)] data-[active]:[--btn-icon:theme(colors.blue.300)] data-[hover]:[--btn-icon:theme(colors.blue.300)]",
     ],
     violet: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.violet.500)] [--btn-border:theme(colors.violet.600/90%)]",
-      "[--btn-icon:theme(colors.violet.300)] db-[active]:[--btn-icon:theme(colors.violet.200)] db-[hover]:[--btn-icon:theme(colors.violet.200)]",
+      "[--btn-icon:theme(colors.violet.300)] data-[active]:[--btn-icon:theme(colors.violet.200)] data-[hover]:[--btn-icon:theme(colors.violet.200)]",
     ],
     purple: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.purple.500)] [--btn-border:theme(colors.purple.600/90%)]",
-      "[--btn-icon:theme(colors.purple.300)] db-[active]:[--btn-icon:theme(colors.purple.200)] db-[hover]:[--btn-icon:theme(colors.purple.200)]",
+      "[--btn-icon:theme(colors.purple.300)] data-[active]:[--btn-icon:theme(colors.purple.200)] data-[hover]:[--btn-icon:theme(colors.purple.200)]",
     ],
     fuchsia: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.fuchsia.500)] [--btn-border:theme(colors.fuchsia.600/90%)]",
-      "[--btn-icon:theme(colors.fuchsia.300)] db-[active]:[--btn-icon:theme(colors.fuchsia.200)] db-[hover]:[--btn-icon:theme(colors.fuchsia.200)]",
+      "[--btn-icon:theme(colors.fuchsia.300)] data-[active]:[--btn-icon:theme(colors.fuchsia.200)] data-[hover]:[--btn-icon:theme(colors.fuchsia.200)]",
     ],
     pink: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.pink.500)] [--btn-border:theme(colors.pink.600/90%)]",
-      "[--btn-icon:theme(colors.pink.300)] db-[active]:[--btn-icon:theme(colors.pink.200)] db-[hover]:[--btn-icon:theme(colors.pink.200)]",
+      "[--btn-icon:theme(colors.pink.300)] data-[active]:[--btn-icon:theme(colors.pink.200)] data-[hover]:[--btn-icon:theme(colors.pink.200)]",
     ],
     rose: [
       "text-white [--btn-hover-overlay:theme(colors.white/10%)] [--btn-bg:theme(colors.rose.500)] [--btn-border:theme(colors.rose.600/90%)]",
-      "[--btn-icon:theme(colors.rose.300)] db-[active]:[--btn-icon:theme(colors.rose.200)] db-[hover]:[--btn-icon:theme(colors.rose.200)]",
+      "[--btn-icon:theme(colors.rose.300)] data-[active]:[--btn-icon:theme(colors.rose.200)] data-[hover]:[--btn-icon:theme(colors.rose.200)]",
     ],
   },
 }
@@ -189,7 +188,7 @@ export const Button = React.forwardRef(function Button(
 ) {
   const classes = cn(
     styles.base,
-    outline ? styles.outline : plain ? styles.plain : clsx(styles.solid, styles.colors[color ?? "dark/zinc"]),
+    outline ? styles.outline : plain ? styles.plain : cn(styles.solid, styles.colors[color ?? "dark/zinc"]),
     className,
   )
 
@@ -204,7 +203,7 @@ export const Button = React.forwardRef(function Button(
   ) : (
     <HeadlessButton
       {...props}
-      className={clsx(classes, "cursor-default")}
+      className={cn("cursor-pointer", classes)}
       ref={ref}
     >
       <TouchTarget>{children}</TouchTarget>

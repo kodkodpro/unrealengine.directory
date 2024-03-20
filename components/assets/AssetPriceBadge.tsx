@@ -1,6 +1,6 @@
 import AssetPrice, { AssetPriceProps } from "@/components/assets/AssetPrice"
 import { Badge } from "@/components/catalyst/badge"
-import { cn } from "@/lib/utils/cn"
+import cn from "@/lib/utils/cn"
 
 export type AssetPriceBadgeProps = AssetPriceProps & {
   className?: string

@@ -1,7 +1,7 @@
-import { ParseAssetData } from "@/app/api/parse-asset/route"
-import { ParserResponse } from "@/types/ParserResponse"
-import { isValidUrl } from "@/lib/utils/string"
 import { Parser } from "@/lib/parsers/parser"
+import { isValidUrl } from "@/lib/utils/string"
+import { ParserResponse } from "@/types/ParserResponse"
+import { ParseAssetData } from "@/app/api/parse-asset/route"
 
 // This is a helper function to extract the epic id from the asset url
 // /marketplace/en-US/product/faster-splinemesh -> faster-splinemesh

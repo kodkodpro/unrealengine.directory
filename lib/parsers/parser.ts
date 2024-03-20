@@ -2,8 +2,8 @@ import { HttpsProxyAgent } from "https-proxy-agent"
 import { JSDOM } from "jsdom"
 import fetch from "node-fetch"
 import { NodeHtmlMarkdown } from "node-html-markdown"
-import { ParserResponse } from "@/types/ParserResponse"
 import { getBaseURL, parseMoney } from "@/lib/utils/string"
+import { ParserResponse } from "@/types/ParserResponse"
 
 export class Parser {
   html?: string

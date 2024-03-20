@@ -1,5 +1,5 @@
-import clsx from "clsx"
 import type React from "react"
+import cn from "@/lib/utils/cn"
 import { Button } from "./button"
 
 export function Pagination({
@@ -11,7 +11,7 @@ export function Pagination({
     <nav
       aria-label={ariaLabel}
       {...props}
-      className={clsx(className, "flex gap-x-2")}
+      className={cn(className, "flex gap-x-2")}
     />
   )
 }
@@ -103,8 +103,8 @@ export function PaginationPage({
       plain
       aria-label={`Page ${children}`}
       aria-current={current ? "page" : undefined}
-      className={clsx(
-        "min-w-9 before:absolute before:-inset-px before:rounded-lg",
+      className={cn(
+        "min-w-[2.25rem] before:absolute before:-inset-px before:rounded-lg",
         current && "before:bg-zinc-950/5 dark:before:bg-white/10"
       )}
     >

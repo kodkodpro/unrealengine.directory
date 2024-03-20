@@ -1,19 +1,19 @@
 import { Field as HeadlessField, Radio as HeadlessRadio, RadioGroup as HeadlessRadioGroup, type FieldProps as HeadlessFieldProps, type RadioGroupProps as HeadlessRadioGroupProps, type RadioProps as HeadlessRadioProps } from "@headlessui/react"
-import { clsx } from "clsx"
+import cn from "@/lib/utils/cn"
 
 export function RadioGroup({ className, ...props }: HeadlessRadioGroupProps) {
   return (
     <HeadlessRadioGroup
       data-slot="control"
       {...props}
-      className={clsx(
+      className={cn(
         className,
 
         // Basic groups
-        "space-y-3 [&_[db-slot=label]]:font-normal",
+        "space-y-3 [&_[data-slot=label]]:font-normal",
 
         // With descriptions
-        "has-[[db-slot=description]]:space-y-6 [&_[db-slot=label]]:has-[[db-slot=description]]:font-medium"
+        "has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium"
       )}
     />
   )
@@ -24,23 +24,23 @@ export function RadioField({ className, ...props }: HeadlessFieldProps) {
     <HeadlessField
       data-slot="field"
       {...props}
-      className={clsx(
+      className={cn(
         className,
 
         // Base layout
         "grid grid-cols-[1.125rem_1fr] items-center gap-x-4 gap-y-1 sm:grid-cols-[1rem_1fr]",
 
         // Control layout
-        "[&>[db-slot=control]]:col-start-1 [&>[db-slot=control]]:row-start-1 [&>[db-slot=control]]:justify-self-center",
+        "[&>[data-slot=control]]:col-start-1 [&>[data-slot=control]]:row-start-1 [&>[data-slot=control]]:justify-self-center",
 
         // Label layout
-        "[&>[db-slot=label]]:col-start-2 [&>[db-slot=label]]:row-start-1 [&>[db-slot=label]]:justify-self-start",
+        "[&>[data-slot=label]]:col-start-2 [&>[data-slot=label]]:row-start-1 [&>[data-slot=label]]:justify-self-start",
 
         // Description layout
-        "[&>[db-slot=description]]:col-start-2 [&>[db-slot=description]]:row-start-2",
+        "[&>[data-slot=description]]:col-start-2 [&>[data-slot=description]]:row-start-2",
 
         // With description
-        "[&_[db-slot=label]]:has-[[db-slot=description]]:font-medium"
+        "[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium"
       )}
     />
   )
@@ -54,35 +54,35 @@ const base = [
   "before:absolute before:inset-0 before:-z-10 before:rounded-full before:bg-white before:shadow",
 
   // Background color when checked
-  "before:group-db-[checked]:bg-[--radio-checked-bg]",
+  "before:group-data-[checked]:bg-[--radio-checked-bg]",
 
   // Background color is moved to control and shadow is removed in dark mode so hide `before` pseudo
   "dark:before:hidden",
 
   // Background color applied to control in dark mode
-  "dark:bg-white/5 dark:group-db-[checked]:bg-[--radio-checked-bg]",
+  "dark:bg-white/5 dark:group-data-[checked]:bg-[--radio-checked-bg]",
 
   // Border
-  "border border-zinc-950/15 group-db-[checked]:border-transparent group-db-[checked]:group-db-[hover]:border-transparent group-db-[hover]:border-zinc-950/30 group-db-[checked]:bg-[--radio-checked-border]",
-  "dark:border-white/15 dark:group-db-[checked]:border-white/5 dark:group-db-[checked]:group-db-[hover]:border-white/5 dark:group-db-[hover]:border-white/30",
+  "border border-zinc-950/15 group-data-[checked]:border-transparent group-data-[checked]:group-data-[hover]:border-transparent group-data-[hover]:border-zinc-950/30 group-data-[checked]:bg-[--radio-checked-border]",
+  "dark:border-white/15 dark:group-data-[checked]:border-white/5 dark:group-data-[checked]:group-data-[hover]:border-white/5 dark:group-data-[hover]:border-white/30",
 
   // Inner highlight shadow
   "after:absolute after:inset-0 after:rounded-full after:shadow-[inset_0_1px_theme(colors.white/15%)]",
-  "dark:after:-inset-px dark:after:hidden dark:after:rounded-full dark:group-db-[checked]:after:block",
+  "dark:after:-inset-px dark:after:hidden dark:after:rounded-full dark:group-data-[checked]:after:block",
 
   // Indicator color (light mode)
-  "[--radio-indicator:transparent] group-db-[checked]:[--radio-indicator:var(--radio-checked-indicator)] group-db-[checked]:group-db-[hover]:[--radio-indicator:var(--radio-checked-indicator)] group-db-[hover]:[--radio-indicator:theme(colors.zinc.900/10%)]",
+  "[--radio-indicator:transparent] group-data-[checked]:[--radio-indicator:var(--radio-checked-indicator)] group-data-[checked]:group-data-[hover]:[--radio-indicator:var(--radio-checked-indicator)] group-data-[hover]:[--radio-indicator:theme(colors.zinc.900/10%)]",
 
   // Indicator color (dark mode)
-  "dark:group-db-[checked]:group-db-[hover]:[--radio-indicator:var(--radio-checked-indicator)] dark:group-db-[hover]:[--radio-indicator:theme(colors.zinc.700)]",
+  "dark:group-data-[checked]:group-data-[hover]:[--radio-indicator:var(--radio-checked-indicator)] dark:group-data-[hover]:[--radio-indicator:theme(colors.zinc.700)]",
 
   // Focus ring
-  "group-db-[focus]:outline group-db-[focus]:outline-2 group-db-[focus]:outline-offset-2 group-db-[focus]:outline-blue-500",
+  "group-data-[focus]:outline group-data-[focus]:outline-2 group-data-[focus]:outline-offset-2 group-data-[focus]:outline-blue-500",
 
   // Disabled state
-  "group-db-[disabled]:opacity-50",
-  "group-db-[disabled]:border-zinc-950/25 group-db-[disabled]:bg-zinc-950/5 group-db-[disabled]:[--radio-checked-indicator:theme(colors.zinc.950/50%)] group-db-[disabled]:before:bg-transparent",
-  "dark:group-db-[disabled]:border-white/20 dark:group-db-[disabled]:bg-white/[2.5%] dark:group-db-[disabled]:[--radio-checked-indicator:theme(colors.white/50%)] dark:group-db-[disabled]:group-db-[checked]:after:hidden",
+  "group-data-[disabled]:opacity-50",
+  "group-data-[disabled]:border-zinc-950/25 group-data-[disabled]:bg-zinc-950/5 group-data-[disabled]:[--radio-checked-indicator:theme(colors.zinc.950/50%)] group-data-[disabled]:before:bg-transparent",
+  "dark:group-data-[disabled]:border-white/20 dark:group-data-[disabled]:bg-white/[2.5%] dark:group-data-[disabled]:[--radio-checked-indicator:theme(colors.white/50%)] dark:group-data-[disabled]:group-data-[checked]:after:hidden",
 ]
 
 const colors = {
@@ -137,15 +137,15 @@ export function Radio({
     <HeadlessRadio
       data-slot="control"
       {...props}
-      className={clsx(className, "group inline-flex focus:outline-none")}
+      className={cn(className, "group inline-flex focus:outline-none")}
     >
-      <span className={clsx([base, colors[color]])}>
+      <span className={cn([base, colors[color]])}>
         <span
-          className={clsx(
+          className={cn(
             "size-full rounded-full border-[4.5px] border-transparent bg-[--radio-indicator] bg-clip-padding",
 
             // Forced colors mode
-            "forced-colors:border-[Canvas] forced-colors:group-db-[checked]:border-[Highlight]"
+            "forced-colors:border-[Canvas] forced-colors:group-data-[checked]:border-[Highlight]"
           )}
         />
       </span>

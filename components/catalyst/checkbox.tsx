@@ -1,20 +1,20 @@
 import { Checkbox as HeadlessCheckbox, Field as HeadlessField, type CheckboxProps as HeadlessCheckboxProps, type FieldProps as HeadlessFieldProps } from "@headlessui/react"
-import { clsx } from "clsx"
 import type React from "react"
+import cn from "@/lib/utils/cn"
 
 export function CheckboxGroup({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="control"
       {...props}
-      className={clsx(
+      className={cn(
         className,
 
         // Basic groups
         "space-y-3",
 
         // With descriptions
-        "has-[[db-slot=description]]:space-y-6 [&_[db-slot=label]]:has-[[db-slot=description]]:font-medium"
+        "has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium"
       )}
     />
   )
@@ -25,23 +25,23 @@ export function CheckboxField({ className, ...props }: HeadlessFieldProps) {
     <HeadlessField
       data-slot="field"
       {...props}
-      className={clsx(
+      className={cn(
         className,
 
         // Base layout
         "grid grid-cols-[1.125rem_1fr] items-center gap-x-4 gap-y-1 sm:grid-cols-[1rem_1fr]",
 
         // Control layout
-        "[&>[db-slot=control]]:col-start-1 [&>[db-slot=control]]:row-start-1 [&>[db-slot=control]]:justify-self-center",
+        "[&>[data-slot=control]]:col-start-1 [&>[data-slot=control]]:row-start-1 [&>[data-slot=control]]:justify-self-center",
 
         // Label layout
-        "[&>[db-slot=label]]:col-start-2 [&>[db-slot=label]]:row-start-1 [&>[db-slot=label]]:justify-self-start",
+        "[&>[data-slot=label]]:col-start-2 [&>[data-slot=label]]:row-start-1 [&>[data-slot=label]]:justify-self-start",
 
         // Description layout
-        "[&>[db-slot=description]]:col-start-2 [&>[db-slot=description]]:row-start-2",
+        "[&>[data-slot=description]]:col-start-2 [&>[data-slot=description]]:row-start-2",
 
         // With description
-        "[&_[db-slot=label]]:has-[[db-slot=description]]:font-medium"
+        "[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium"
       )}
     />
   )
@@ -55,33 +55,33 @@ const base = [
   "before:absolute before:inset-0 before:-z-10 before:rounded-[calc(0.3125rem-1px)] before:bg-white before:shadow",
 
   // Background color when checked
-  "before:group-db-[checked]:bg-[--checkbox-checked-bg]",
+  "before:group-data-[checked]:bg-[--checkbox-checked-bg]",
 
   // Background color is moved to control and shadow is removed in dark mode so hide `before` pseudo
   "dark:before:hidden",
 
   // Background color applied to control in dark mode
-  "dark:bg-white/5 dark:group-db-[checked]:bg-[--checkbox-checked-bg]",
+  "dark:bg-white/5 dark:group-data-[checked]:bg-[--checkbox-checked-bg]",
 
   // Border
-  "border border-zinc-950/15 group-db-[checked]:border-transparent group-db-[checked]:group-db-[hover]:border-transparent group-db-[hover]:border-zinc-950/30 group-db-[checked]:bg-[--checkbox-checked-border]",
-  "dark:border-white/15 dark:group-db-[checked]:border-white/5 dark:group-db-[checked]:group-db-[hover]:border-white/5 dark:group-db-[hover]:border-white/30",
+  "border border-zinc-950/15 group-data-[checked]:border-transparent group-data-[checked]:group-data-[hover]:border-transparent group-data-[hover]:border-zinc-950/30 group-data-[checked]:bg-[--checkbox-checked-border]",
+  "dark:border-white/15 dark:group-data-[checked]:border-white/5 dark:group-data-[checked]:group-data-[hover]:border-white/5 dark:group-data-[hover]:border-white/30",
 
   // Inner highlight shadow
   "after:absolute after:inset-0 after:rounded-[calc(0.3125rem-1px)] after:shadow-[inset_0_1px_theme(colors.white/15%)]",
-  "dark:after:-inset-px dark:after:hidden dark:after:rounded-[0.3125rem] dark:group-db-[checked]:after:block",
+  "dark:after:-inset-px dark:after:hidden dark:after:rounded-[0.3125rem] dark:group-data-[checked]:after:block",
 
   // Focus ring
-  "group-db-[focus]:outline group-db-[focus]:outline-2 group-db-[focus]:outline-offset-2 group-db-[focus]:outline-blue-500",
+  "group-data-[focus]:outline group-data-[focus]:outline-2 group-data-[focus]:outline-offset-2 group-data-[focus]:outline-blue-500",
 
   // Disabled state
-  "group-db-[disabled]:opacity-50",
-  "group-db-[disabled]:border-zinc-950/25 group-db-[disabled]:bg-zinc-950/5 group-db-[disabled]:[--checkbox-check:theme(colors.zinc.950/50%)] group-db-[disabled]:before:bg-transparent",
-  "dark:group-db-[disabled]:border-white/20 dark:group-db-[disabled]:bg-white/[2.5%] dark:group-db-[disabled]:[--checkbox-check:theme(colors.white/50%)] dark:group-db-[disabled]:group-db-[checked]:after:hidden",
+  "group-data-[disabled]:opacity-50",
+  "group-data-[disabled]:border-zinc-950/25 group-data-[disabled]:bg-zinc-950/5 group-data-[disabled]:[--checkbox-check:theme(colors.zinc.950/50%)] group-data-[disabled]:before:bg-transparent",
+  "dark:group-data-[disabled]:border-white/20 dark:group-data-[disabled]:bg-white/[2.5%] dark:group-data-[disabled]:[--checkbox-check:theme(colors.white/50%)] dark:group-data-[disabled]:group-data-[checked]:after:hidden",
 
   // Forced colors mode
-  "forced-colors:[--checkbox-check:HighlightText] forced-colors:[--checkbox-checked-bg:Highlight] forced-colors:group-db-[disabled]:[--checkbox-check:Highlight]",
-  "dark:forced-colors:[--checkbox-check:HighlightText] dark:forced-colors:[--checkbox-checked-bg:Highlight] dark:forced-colors:group-db-[disabled]:[--checkbox-check:Highlight]",
+  "forced-colors:[--checkbox-check:HighlightText] forced-colors:[--checkbox-checked-bg:Highlight] forced-colors:group-data-[disabled]:[--checkbox-check:Highlight]",
+  "dark:forced-colors:[--checkbox-check:HighlightText] dark:forced-colors:[--checkbox-checked-bg:Highlight] dark:forced-colors:group-data-[disabled]:[--checkbox-check:Highlight]",
 ]
 
 const colors = {
@@ -138,10 +138,10 @@ export function Checkbox({
   return (
     <HeadlessCheckbox
       data-slot="control"
-      className={clsx(className, "group inline-flex focus:outline-none")}
+      className={cn(className, "group inline-flex focus:outline-none")}
       {...props}
     >
-      <span className={clsx([base, colors[color]])}>
+      <span className={cn([base, colors[color]])}>
         <svg
           className="size-4 stroke-[--checkbox-check] opacity-0 group-data-[checked]:opacity-100 sm:size-3.5"
           viewBox="0 0 14 14"

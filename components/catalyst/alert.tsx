@@ -1,7 +1,7 @@
 import { Description as HeadlessDescription, Dialog as HeadlessDialog, DialogPanel as HeadlessDialogPanel, DialogTitle as HeadlessDialogTitle, Transition as HeadlessTransition, TransitionChild as HeadlessTransitionChild, type DialogProps as HeadlessDialogProps } from "@headlessui/react"
-import clsx from "clsx"
 import type React from "react"
 import { Fragment } from "react"
+import cn from "@/lib/utils/cn"
 import { Text } from "./text"
 
 const sizes = {
@@ -56,7 +56,7 @@ export function Alert({
           <div className="grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center p-8 sm:grid-rows-[1fr_auto_3fr] sm:p-4">
             <HeadlessTransitionChild
               as={HeadlessDialogPanel}
-              className={clsx(
+              className={cn(
                 className,
                 sizes[size],
                 "row-start-2 w-full rounded-2xl bg-white p-8 shadow-lg ring-1 ring-zinc-950/10 sm:rounded-2xl sm:p-6 dark:bg-zinc-900 dark:ring-white/10 forced-colors:outline"
@@ -81,7 +81,7 @@ export function AlertTitle({ className, ...props }: React.ComponentPropsWithoutR
   return (
     <HeadlessDialogTitle
       {...props}
-      className={clsx(
+      className={cn(
         className,
         "text-balance text-center text-base/6 font-semibold text-zinc-950 sm:text-wrap sm:text-left sm:text-sm/6 dark:text-white"
       )}
@@ -94,7 +94,7 @@ export function AlertDescription({ className, ...props }: React.ComponentPropsWi
     <HeadlessDescription
       as={Text}
       {...props}
-      className={clsx(className, "mt-2 text-pretty text-center sm:text-left")}
+      className={cn(className, "mt-2 text-pretty text-center sm:text-left")}
     />
   )
 }
@@ -103,7 +103,7 @@ export function AlertBody({ className, ...props }: React.ComponentPropsWithoutRe
   return (
     <div
       {...props}
-      className={clsx(className, "mt-4")}
+      className={cn(className, "mt-4")}
     />
   )
 }
@@ -112,7 +112,7 @@ export function AlertActions({ className, ...props }: React.ComponentPropsWithou
   return (
     <div
       {...props}
-      className={clsx(
+      className={cn(
         className,
         "mt-6 flex flex-col-reverse items-center justify-end gap-3 *:w-full sm:mt-4 sm:flex-row sm:*:w-auto"
       )}

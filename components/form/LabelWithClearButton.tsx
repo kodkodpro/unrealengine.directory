@@ -3,7 +3,7 @@ import clsx from "clsx"
 import { ComponentProps, ReactNode } from "react"
 import { BadgeButton } from "@/components/catalyst/badge"
 import { Label } from "@/components/catalyst/fieldset"
-import { cn } from "@/lib/utils/cn"
+import cn from "@/lib/utils/cn"
 
 export type LabelWithClearButtonProps = {
   showClearButton: boolean

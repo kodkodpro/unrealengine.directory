@@ -33,7 +33,6 @@ export default function Header() {
             className="-m-1.5 p-1.5"
           >
             <UnrealEngineLogo className="inline-block h-8 w-auto dark:text-white" />
-            <span className="ml-2 text-xl font-bold tracking-tighter dark:text-white">Unreal Engine Directory</span>
           </Link>
         </div>
         <div className="flex lg:hidden">

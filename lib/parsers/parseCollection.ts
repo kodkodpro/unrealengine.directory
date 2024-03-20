@@ -1,8 +1,8 @@
-import { ParseCollectionPageData } from "@/app/api/parse-collection-page/route"
-import { ParserResponse } from "@/types/ParserResponse"
+import { Parser } from "@/lib/parsers/parser"
 import { getMarketplaceAbsoluteUrl } from "@/lib/utils/marketplace"
 import { isValidUrl } from "@/lib/utils/string"
-import { Parser } from "@/lib/parsers/parser"
+import { ParserResponse } from "@/types/ParserResponse"
+import { ParseCollectionPageData } from "@/app/api/parse-collection-page/route"
 
 export const MaxResults = 1000000
 export const MaxResultsPerPage = 100

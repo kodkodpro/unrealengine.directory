@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { ComponentProps } from "react"
 import { Button } from "@/components/catalyst/button"
 import { auth, signIn } from "@/lib/auth"
-import { cn } from "@/lib/utils/cn"
+import cn from "@/lib/utils/cn"
 
 export type AuthFormProps = ComponentProps<"div">
 
@@ -23,7 +23,7 @@ export default async function AuthForm({ className, ...props }: AuthFormProps) {
       >
         <Button
           type="submit"
-          className="w-full justify-start sm:px-3 sm:py-2"
+          className="w-full"
         >
           Sign In with GitHub
         </Button>
@@ -37,7 +37,7 @@ export default async function AuthForm({ className, ...props }: AuthFormProps) {
       >
         <Button
           type="submit"
-          className="w-full justify-start sm:px-3 sm:py-2"
+          className="w-full"
         >
           Sign In with Google
         </Button>
@@ -51,7 +51,7 @@ export default async function AuthForm({ className, ...props }: AuthFormProps) {
       >
         <Button
           type="submit"
-          className="w-full justify-start sm:px-3 sm:py-2"
+          className="w-full"
         >
           Sign In with Facebook
         </Button>

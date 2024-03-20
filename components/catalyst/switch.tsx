@@ -1,20 +1,20 @@
 import { Field as HeadlessField, Switch as HeadlessSwitch, type FieldProps as HeadlessFieldProps, type SwitchProps as HeadlessSwitchProps } from "@headlessui/react"
-import { clsx } from "clsx"
 import type React from "react"
+import cn from "@/lib/utils/cn"
 
 export function SwitchGroup({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="control"
       {...props}
-      className={clsx(
+      className={cn(
         className,
 
         // Basic groups
-        "space-y-3 [&_[db-slot=label]]:font-normal",
+        "space-y-3 [&_[data-slot=label]]:font-normal",
 
         // With descriptions
-        "has-[[db-slot=description]]:space-y-6 [&_[db-slot=label]]:has-[[db-slot=description]]:font-medium"
+        "has-[[data-slot=description]]:space-y-6 [&_[data-slot=label]]:has-[[data-slot=description]]:font-medium"
       )}
     />
   )
@@ -25,23 +25,23 @@ export function SwitchField({ className, ...props }: HeadlessFieldProps) {
     <HeadlessField
       data-slot="field"
       {...props}
-      className={clsx(
+      className={cn(
         className,
 
         // Base layout
         "grid grid-cols-[1fr_auto] items-center gap-x-8 gap-y-1 sm:grid-cols-[1fr_auto]",
 
         // Control layout
-        "[&>[db-slot=control]]:col-start-2 [&>[db-slot=control]]:self-center",
+        "[&>[data-slot=control]]:col-start-2 [&>[data-slot=control]]:self-center",
 
         // Label layout
-        "[&>[db-slot=label]]:col-start-1 [&>[db-slot=label]]:row-start-1 [&>[db-slot=label]]:justify-self-start",
+        "[&>[data-slot=label]]:col-start-1 [&>[data-slot=label]]:row-start-1 [&>[data-slot=label]]:justify-self-start",
 
         // Description layout
-        "[&>[db-slot=description]]:col-start-1 [&>[db-slot=description]]:row-start-2",
+        "[&>[data-slot=description]]:col-start-1 [&>[data-slot=description]]:row-start-2",
 
         // With description
-        "[&_[db-slot=label]]:has-[[db-slot=description]]:font-medium"
+        "[&_[data-slot=label]]:has-[[data-slot=description]]:font-medium"
       )}
     />
   )
@@ -153,14 +153,14 @@ export function Switch({
   return (
     <HeadlessSwitch
       data-slot="control"
-      className={clsx(
+      className={cn(
         className,
 
         // Base styles
         "group relative isolate inline-flex h-6 w-10 cursor-default rounded-full p-[3px] sm:h-5 sm:w-8",
 
         // Transitions
-        "transition duration-0 ease-in-out db-[changing]:duration-200",
+        "transition duration-0 ease-in-out data-[changing]:duration-200",
 
         // Outline and background color in forced-colors mode so switch is still visible
         "forced-colors:outline forced-colors:[--switch-bg:Highlight] dark:forced-colors:[--switch-bg:Highlight]",
@@ -169,18 +169,18 @@ export function Switch({
         "bg-zinc-200 ring-1 ring-inset ring-black/5 dark:bg-white/5 dark:ring-white/15",
 
         // Checked
-        "db-[checked]:bg-[--switch-bg] db-[checked]:ring-[--switch-bg-ring] dark:db-[checked]:bg-[--switch-bg] dark:db-[checked]:ring-[--switch-bg-ring]",
+        "data-[checked]:bg-[--switch-bg] data-[checked]:ring-[--switch-bg-ring] dark:data-[checked]:bg-[--switch-bg] dark:data-[checked]:ring-[--switch-bg-ring]",
 
         // Focus
-        "db-[focus]:outline db-[focus]:outline-2 db-[focus]:outline-offset-2 db-[focus]:outline-blue-500 focus:outline-none",
+        "focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500",
 
         // Hover
-        "db-[hover]:db-[checked]:ring-[--switch-bg-ring] db-[hover]:ring-black/15",
-        "dark:db-[hover]:db-[checked]:ring-[--switch-bg-ring] dark:db-[hover]:ring-white/25",
+        "data-[hover]:data-[checked]:ring-[--switch-bg-ring] data-[hover]:ring-black/15",
+        "dark:data-[hover]:data-[checked]:ring-[--switch-bg-ring] dark:data-[hover]:ring-white/25",
 
         // Disabled
-        "db-[disabled]:bg-zinc-200 db-[disabled]:db-[checked]:bg-zinc-200 db-[disabled]:opacity-50 db-[disabled]:db-[checked]:ring-black/5",
-        "dark:db-[disabled]:bg-white/15 dark:db-[disabled]:db-[checked]:bg-white/15 dark:db-[disabled]:db-[checked]:ring-white/15",
+        "data-[disabled]:bg-zinc-200 data-[disabled]:data-[checked]:bg-zinc-200 data-[disabled]:opacity-50 data-[disabled]:data-[checked]:ring-black/5",
+        "dark:data-[disabled]:bg-white/15 dark:data-[disabled]:data-[checked]:bg-white/15 dark:data-[disabled]:data-[checked]:ring-white/15",
 
         // Color specific styles
         colors[color]
@@ -189,7 +189,7 @@ export function Switch({
     >
       <span
         aria-hidden="true"
-        className={clsx(
+        className={cn(
           // Basic layout
           "pointer-events-none relative inline-block size-[1.125rem] rounded-full sm:size-3.5",
 
@@ -203,11 +203,11 @@ export function Switch({
           "bg-white shadow ring-1 ring-black/5",
 
           // Checked
-          "group-db-[checked]:bg-[--switch] group-db-[checked]:shadow-[--switch-shadow] group-db-[checked]:ring-[--switch-ring]",
-          "group-db-[checked]:translate-x-4 sm:group-db-[checked]:translate-x-3",
+          "group-data-[checked]:bg-[--switch] group-data-[checked]:shadow-[--switch-shadow] group-data-[checked]:ring-[--switch-ring]",
+          "group-data-[checked]:translate-x-4 sm:group-data-[checked]:translate-x-3",
 
           // Disabled
-          "group-db-[disabled]:group-db-[checked]:bg-white group-db-[disabled]:group-db-[checked]:shadow group-db-[disabled]:group-db-[checked]:ring-black/5"
+          "group-data-[disabled]:group-data-[checked]:bg-white group-data-[disabled]:group-data-[checked]:shadow group-data-[disabled]:group-data-[checked]:ring-black/5"
         )}
       />
     </HeadlessSwitch>
