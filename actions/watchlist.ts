@@ -1,42 +1,27 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { serverAction, ServerActionError } from "@/actions/serverAction"
 import getCurrentUserId from "@/hooks/getCurrentUserId"
-import prisma from "@/lib/prisma"
+import { addToWatchlist, isInWatchlist, removeFromWatchlist } from "@/lib/db/watchlist"
 
-export async function watch(assetId: number) {
+export const watch = serverAction(async (assetId: number) => {
   const userId = await getCurrentUserId()
-  if (!userId) throw new Error("You must be signed in to watchlist an asset")
+  if (!userId) throw new ServerActionError("You must be signed in to watchlist an asset")
 
-  const isAlreadyWatching = await prisma.assetWatch.findFirst({
-    where: {
-      assetId,
-      userId,
-    },
-  })
+  if (await isInWatchlist(assetId, userId)) return true
+  await addToWatchlist(assetId, userId)
 
-  if (isAlreadyWatching) return
-  
-  await prisma.assetWatch.create({
-    data: {
-      assetId,
-      userId,
-    },
-  })
+  revalidatePath("/")
+  return true
+})
 
-  return revalidatePath("/")
-}
-
-export async function unwatch(assetId: number) {
+export const unwatch = serverAction(async (assetId: number) => {
   const userId = await getCurrentUserId()
-  if (!userId) throw new Error("You must be signed in to unwatch an asset")
+  if (!userId) throw new ServerActionError("You must be signed in to unwatch an asset")
 
-  await prisma.assetWatch.deleteMany({
-    where: {
-      assetId,
-      userId,
-    },
-  })
+  await removeFromWatchlist(assetId, userId)
 
-  return revalidatePath("/")
-}
+  revalidatePath("/")
+  return true
+})

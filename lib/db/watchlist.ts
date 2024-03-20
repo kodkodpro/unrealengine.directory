@@ -1,4 +1,23 @@
 import prisma from "@/lib/prisma"
+import { AssetFullSelectWithRelations } from "@/lib/types/AssetFull"
+
+export async function getWatchlistWithAssets(userId: string) {
+  return prisma.assetWatch.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      asset: {
+        select: {
+          ...AssetFullSelectWithRelations,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  })
+}
 
 export async function isInWatchlist(assetId: number, userId: string | null) {
   if (!userId) return false

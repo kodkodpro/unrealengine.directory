@@ -1,20 +1,25 @@
 import AssetCard from "@/components/assets/AssetCard"
-import { AssetFull } from "@/types/AssetFull"
+import { AssetFull } from "@/lib/types/AssetFull"
 
 export type AssetsListProps = {
   assets: AssetFull[]
+  showCategory?: boolean
+  showEngineVersions?: boolean
 }
 
-export default function AssetsList({ assets }: AssetsListProps) {
+export default function AssetsList({ assets, showCategory = true, showEngineVersions = true }: AssetsListProps) {
   if (assets.length === 0) {
     return <p>No assets found</p>
   }
+  
   return (
-    <div className="grid grid-cols-4 p-2">
+    <div className="grid p-2 2xl:grid-cols-4">
       {assets.map((asset) => (
         <AssetCard
           key={asset.id}
           asset={asset}
+          showCategory={showCategory}
+          showEngineVersions={showEngineVersions}
         />
       ))}
     </div>

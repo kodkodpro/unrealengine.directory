@@ -2,19 +2,20 @@
 
 import { Disclosure } from "@headlessui/react"
 import { ChevronDownIcon, FunnelIcon } from "@heroicons/react/20/solid"
-import { ClockIcon, CurrencyDollarIcon, HashtagIcon, StarIcon, UserGroupIcon } from "@heroicons/react/24/outline"
+import { ClockIcon, CurrencyDollarIcon, HashtagIcon, StarIcon, UserGroupIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { FolderIcon } from "@heroicons/react/24/solid"
 import { Category, EngineVersion } from "@prisma/client"
 import { useRouter, useSearchParams } from "next/navigation"
-import { createElement, startTransition, useEffect, useState } from "react"
+import React, { createElement, startTransition, useEffect, useState } from "react"
 import { useDebounceValue } from "usehooks-ts"
-import { Badge } from "@/components/catalyst/badge"
+import { Badge, BadgeButton } from "@/components/catalyst/badge"
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from "@/components/catalyst/dropdown"
 import { Field, Fieldset, Label } from "@/components/catalyst/fieldset"
 import { Input } from "@/components/catalyst/input"
 import { Listbox, ListboxLabel, ListboxOption } from "@/components/catalyst/listbox"
 import { Radio, RadioField, RadioGroup } from "@/components/catalyst/radio"
 import LabelWithClearButton from "@/components/form/LabelWithClearButton"
+import { formatNumber } from "@/lib/utils/string"
 
 const FiltersConfig = {
   price: {
@@ -25,6 +26,17 @@ const FiltersConfig = {
       { value: "0-25", label: "$0 – $25" },
       { value: "25-50", label: "$25 – $50" },
       { value: "50-100", label: "$50 – $100" },
+      { value: "100+", label: "$100+" },
+    ],
+  },
+  discount: {
+    label: "Discount",
+    icon: XMarkIcon,
+    options: [
+      { value: "1+", label: "$1+" },
+      { value: "10+", label: "$10+" },
+      { value: "25+", label: "$25+" },
+      { value: "50+", label: "$50+" },
       { value: "100+", label: "$100+" },
     ],
   },
@@ -81,32 +93,36 @@ const SortOptions = [
 
 type FiltersState = {
   price: string
+  discount: string
   rating: string
   ratingVoters: string
   releasePeriod: string
 }
 
 export type AssetsFiltersAndOrderProps = {
+  assetsCount: number
   categories: Pick<Category, "id" | "name">[]
   engineVersions: Pick<EngineVersion, "id" | "name">[]
 }
 
-export default function AssetsFiltersAndOrder({ categories, engineVersions }: AssetsFiltersAndOrderProps) {
+export default function AssetsFiltersAndOrder({ assetsCount, categories, engineVersions }: AssetsFiltersAndOrderProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const [q, setQ] = useState(searchParams.get("q") ?? "")
   const [qDebounced, setQDebounced] = useDebounceValue(q, 300)
 
-  const price = searchParams.get("price")
-  const rating = searchParams.get("rating")
-  const ratingVoters = searchParams.get("ratingVoters")
-  const releasePeriod = searchParams.get("releasePeriod")
-  const categoryId = searchParams.get("categoryId")
-  const engineVersionId = searchParams.get("engineVersionId")
+  const price = searchParams.get("price") ?? ""
+  const discount = searchParams.get("discount") ?? ""
+  const rating = searchParams.get("rating") ?? ""
+  const ratingVoters = searchParams.get("ratingVoters") ?? ""
+  const releasePeriod = searchParams.get("releasePeriod") ?? ""
+  const categoryId = searchParams.get("categoryId") ?? ""
+  const engineVersionId = searchParams.get("engineVersionId") ?? ""
   const orderBy = searchParams.get("orderBy") ?? "newest"
+  const page = parseInt(searchParams.get("page") ?? "1")
 
-  const filters = { price, rating, ratingVoters, releasePeriod } as FiltersState
+  const filters = { price, discount, rating, ratingVoters, releasePeriod } satisfies FiltersState
 
   const nonEmptyFilters = Object.entries(filters).filter(([, value]) => !!value)
   const nonEmptyFiltersCount = nonEmptyFilters.length + (categoryId ? 1 : 0) + (engineVersionId ? 1 : 0)
@@ -165,7 +181,7 @@ export default function AssetsFiltersAndOrder({ categories, engineVersions }: As
 
               {nonEmptyFiltersCount > 0 ? (
                 <>
-                  <span>{nonEmptyFiltersCount} Filters</span>
+                  <span className="font-semibold">{nonEmptyFiltersCount} Filters</span>
 
                   {categoryId && (
                     <Badge color="zinc">
@@ -173,14 +189,14 @@ export default function AssetsFiltersAndOrder({ categories, engineVersions }: As
                       {categories.find((category) => String(category.id) === categoryId)!.name}
                     </Badge>
                   )}
-                  
+
                   {engineVersionId && (
                     <Badge color="zinc">
                       <HashtagIcon className="-mr-1 inline-block size-4" />
                       {engineVersions.find((engineVersion) => String(engineVersion.id) === engineVersionId)!.name}
                     </Badge>
                   )}
-                  
+
                   {nonEmptyFilters.map(([filterKey, value]) => (
                     <Badge
                       key={filterKey}
@@ -195,26 +211,34 @@ export default function AssetsFiltersAndOrder({ categories, engineVersions }: As
                   ))}
                 </>
               ) : (
-                "Filters"
+                <span className="font-semibold">Filters</span>
               )}
             </Disclosure.Button>
-          </div>
-          {nonEmptyFiltersCount > 0 && (
-            <div className="pl-6">
-              <button
-                type="button"
-                className="text-zinc-500 hover:opacity-80 active:opacity-100 dark:text-zinc-400"
+
+            {nonEmptyFiltersCount > 0 && (
+              <BadgeButton
                 onClick={handleFiltersReset}
               >
-                Clear all
-              </button>
+                <XMarkIcon className="-mr-1 inline-block size-4 text-red-500" />
+                <span>Clear all filters</span>
+              </BadgeButton>
+            )}
+          </div>
+
+          <div className="pl-6 text-zinc-500 dark:text-zinc-400">
+            Found {formatNumber(assetsCount)} assets
+          </div>
+
+          {page > 1 && (
+            <div className="pl-6 text-zinc-500 dark:text-zinc-400">
+              Page {page}
             </div>
           )}
         </div>
       </div>
       <Disclosure.Panel className="border-t border-zinc-200 py-10 dark:border-white/10">
-        <div className="mx-auto grid grid-cols-2 gap-x-4 px-4 text-sm sm:px-6 md:gap-x-6 lg:grid-cols-6 lg:px-8">
-          <Fieldset className="space-y-4 pr-2">
+        <div className="mx-auto grid gap-4 px-4 text-sm sm:px-6 md:grid-cols-2 md:gap-6 lg:grid-cols-4 lg:px-8 xl:grid-cols-6">
+          <Fieldset className="space-y-4 lg:pr-6 xl:pr-8 2xl:pr-10">
             <Field>
               <LabelWithClearButton
                 showClearButton={!!q}
@@ -293,7 +317,7 @@ export default function AssetsFiltersAndOrder({ categories, engineVersions }: As
               </LabelWithClearButton>
 
               <RadioGroup
-                value={filters[filterKey] ?? ""}
+                value={filters[filterKey]}
                 onChange={(value) => setSearchParam(filterKey, value)}
               >
                 {FiltersConfig[filterKey].options.map((option) => (

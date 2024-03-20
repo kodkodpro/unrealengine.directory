@@ -19,6 +19,13 @@ export const formatMoney = (money: number, options: Intl.NumberFormatOptions = {
   })
 }
 
+export const formatNumber = (number: number, options: Intl.NumberFormatOptions = {}) => {
+  return (number || 0).toLocaleString("en-US", {
+    ...options,
+  })
+    
+}
+
 export const toBoolean = (value: unknown): boolean => {
   if (typeof value === "boolean") {
     return value

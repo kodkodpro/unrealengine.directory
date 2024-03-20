@@ -3,7 +3,7 @@ import { Parser } from "@/lib/parsers/parser"
 import prisma from "@/lib/prisma"
 import { isValidUrl } from "@/lib/utils/string"
 import { generateRange, Version } from "@/lib/utils/versions"
-import { ParserResponse } from "@/types/ParserResponse"
+import { ParserResponse } from "@/lib/types/ParserResponse"
 
 const RemoveFromTextRegex = /https:\/\/redirect.epicgames.com\/\?redirectTo=/g
 const ExtractEpicIdRegex = /^https:\/\/www\.unrealengine\.com\/marketplace\/en-US\/product\/([a-z0-9-]+)$/i

@@ -92,10 +92,12 @@ export function PaginationPage({
   href,
   children,
   current = false,
+  onClick,
 }: {
   href: string
   children: string
   current?: boolean
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void
 }) {
   return (
     <Button
@@ -107,6 +109,7 @@ export function PaginationPage({
         "min-w-[2.25rem] before:absolute before:-inset-px before:rounded-lg",
         current && "before:bg-zinc-950/5 dark:before:bg-white/10"
       )}
+      onClick={onClick}
     >
       <span className="-mx-0.5">{children}</span>
     </Button>

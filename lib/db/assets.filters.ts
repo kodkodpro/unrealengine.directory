@@ -5,6 +5,7 @@ export type AssetsFilters = {
   categoryId?: string
   engineVersionId?: string
   price?: AssetsPrice
+  discount?: AssetsDiscount
   rating?: AssetsRating
   ratingVoters?: AssetsRatingVoters
   releasePeriod?: AssetsReleasePeriod
@@ -15,6 +16,13 @@ export type AssetsPrice =
   | "0-25"
   | "25-50"
   | "50-100"
+  | "100+"
+
+export type AssetsDiscount =
+  | "1+"
+  | "10+"
+  | "25+"
+  | "50+"
   | "100+"
 
 export type AssetsRating =
@@ -58,6 +66,8 @@ export function getAssetsWhere(filters: AssetsFilters) {
       contains: filters.q,
       mode: "insensitive",
     }
+
+    // TODO: Add search by author and tags
   }
   
   if (filters.categoryId) {
@@ -90,6 +100,18 @@ export function getAssetsWhere(filters: AssetsFilters) {
       gte: from,
       lte: to,
     }
+  }
+
+  if (filters.discount) {
+    const gte = {
+      "1+": 1,
+      "10+": 10,
+      "25+": 25,
+      "50+": 50,
+      "100+": 100,
+    }[filters.discount]
+
+    if (gte) where["discount"] = { gte }
   }
   
   if (filters.rating) {

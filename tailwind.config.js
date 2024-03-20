@@ -16,6 +16,7 @@ module.exports = {
   plugins: [
     require("tailwind-scrollbar"),
     require("@tailwindcss/typography"),
+    require("@tailwindcss/container-queries"),
     require("tailwindcss-animation-delay"),
   ],
 }

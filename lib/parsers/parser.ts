@@ -3,7 +3,7 @@ import { JSDOM } from "jsdom"
 import fetch from "node-fetch"
 import { NodeHtmlMarkdown } from "node-html-markdown"
 import { getBaseURL, parseMoney } from "@/lib/utils/string"
-import { ParserResponse } from "@/types/ParserResponse"
+import { ParserResponse } from "@/lib/types/ParserResponse"
 
 export class Parser {
   html?: string

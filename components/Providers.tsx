@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react"
 import { ReactNode } from "react"
+import DataProvider from "@/components/DataProvider"
 
 export type ProvidersProps = {
   children: ReactNode
@@ -10,7 +11,9 @@ export type ProvidersProps = {
 export default function Providers({ children }: ProvidersProps) {
   return (
     <SessionProvider>
-      {children}
+      <DataProvider>
+        {children}
+      </DataProvider>
     </SessionProvider>
   )
 }

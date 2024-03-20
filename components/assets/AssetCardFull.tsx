@@ -1,14 +1,16 @@
+import { shrinkVersions, Version } from "@/lib/utils/versions"
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid"
-import { FolderIcon, HashtagIcon, TagIcon, UserIcon } from "@heroicons/react/24/outline"
+import { ShoppingCartIcon, FolderIcon, HashtagIcon, TagIcon, UserIcon } from "@heroicons/react/24/outline"
 import ReactMarkdown from "react-markdown"
 import AssetImagesCarousel from "@/components/assets/AssetImagesCarousel"
 import AssetPrice from "@/components/assets/AssetPrice"
+import AssetWatchButton from "@/components/assets/AssetWatchButton"
 import { Button } from "@/components/catalyst/button"
 import { Text } from "@/components/catalyst/text"
 import Rating from "@/components/content/Rating"
 import Tag from "@/components/content/Tag"
+import { AssetFull } from "@/lib/types/AssetFull"
 import { getAssetMarketplaceUrl } from "@/lib/utils/marketplace"
-import { AssetFull } from "@/types/AssetFull"
 
 export type AssetCardFullProps = {
   asset: AssetFull
@@ -38,17 +40,20 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
             <Text className="mb-6">{asset.shortDescription}</Text>
           </>
         )}
+        
+        <AssetWatchButton
+          assetId={asset.id}
+          className="mb-3"
+        />
 
         <Button
           href={getAssetMarketplaceUrl(asset.epicId)}
-          color="amber"
-          className="mb-3 w-full sm:py-6 sm:text-xl"
+          color="dark"
+          className="mb-6 w-full sm:py-6 sm:text-xl [&>[data-slot=icon]]:sm:size-6"
           target="_blank"
         >
-          <span className="text-center leading-6">
-            Get for <AssetPrice asset={asset} /><br />
-            <span className="text-base opacity-80">Unreal Engine Marketplace</span>
-          </span>
+          <ShoppingCartIcon />
+          <AssetPrice asset={asset} /> at Marketplace
         </Button>
 
         <Rating
@@ -57,7 +62,7 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
           className="mb-6"
         />
 
-        <ul className="mb-6 space-y-1">
+        <ul className="mb-6 space-y-2">
           <li>
             <Tag
               icon={UserIcon}
@@ -82,7 +87,7 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
               className="text-base"
               classNameIcon="size-5 mr-1.5"
             >
-              {asset.engineVersions.map((version) => version.name).join(", ")}
+              {shrinkVersions(asset.engineVersions.map((engineVersion) => engineVersion.name as Version))}
             </Tag>
           </li>
           <li>

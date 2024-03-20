@@ -1,23 +1,11 @@
 import { AssetsFilters, AssetsOrderBy, getAssetsOrderBy, getAssetsWhere } from "@/lib/db/assets.filters"
 import prisma from "@/lib/prisma"
-import { AssetFull, AssetFullAuthorSelect, AssetFullCategorySelect, AssetFullEngineVersionsSelect, AssetFullSelect, AssetFullTagsSelect } from "@/types/AssetFull"
+import { AssetFull, AssetFullAuthorSelect, AssetFullCategorySelect, AssetFullEngineVersionsSelect, AssetFullSelect, AssetFullSelectWithRelations, AssetFullTagsSelect } from "@/lib/types/AssetFull"
 
 export function getAssets(filters: AssetsFilters, orderBy: AssetsOrderBy, page: number, perPage: number): Promise<AssetFull[]> {
   return prisma.asset.findMany({
     select: {
-      ...AssetFullSelect,
-      author: {
-        select: AssetFullAuthorSelect,
-      },
-      category: {
-        select: AssetFullCategorySelect,
-      },
-      tags: {
-        select: AssetFullTagsSelect,
-      },
-      engineVersions: {
-        select: AssetFullEngineVersionsSelect,
-      },
+      ...AssetFullSelectWithRelations,
     },
     where: getAssetsWhere(filters),
     orderBy: getAssetsOrderBy(orderBy),

@@ -5,7 +5,7 @@ import { useRef } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
 import { Carousel } from "react-responsive-carousel"
 import cn from "@/lib/utils/cn"
-import { AssetFull } from "@/types/AssetFull"
+import { AssetFull } from "@/lib/types/AssetFull"
 
 export type AssetImagesCarouselProps = {
   asset: AssetFull

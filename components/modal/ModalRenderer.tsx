@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence } from "framer-motion"
-import { useIsOpenModal, useModalComponent } from "@/lib/stores/modal"
+import { useIsOpenModal, useModalComponent } from "@/stores/modal"
 
 export default function ModalRenderer() {
   const isOpen = useIsOpenModal()

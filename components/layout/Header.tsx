@@ -3,24 +3,27 @@
 import { Dialog } from "@headlessui/react"
 import { ChevronDownIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/react/16/solid"
 import { ArrowRightIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+import { EyeIcon } from "@heroicons/react/24/solid"
+import Image from "next/image"
 import Link from "next/link"
+import { User } from "next-auth"
 import { useState } from "react"
 import { signOut } from "@/actions/auth"
 import { Button } from "@/components/catalyst/button"
-import { Dropdown, DropdownButton, DropdownItem, DropdownLabel, DropdownMenu } from "@/components/catalyst/dropdown"
-import UnrealEngineLogo from "@/components/UnrealEngineLogo"
+import { Dropdown, DropdownButton, DropdownItem, DropdownLabel, DropdownMenu, DropdownSeparator } from "@/components/catalyst/dropdown"
 import useCurrentUser from "@/hooks/useCurrentUser"
 
 const navigation = [
-  { name: "Top Assets", href: "#" },
-  { name: "Recent Assets", href: "#" },
-  { name: "Discounts", href: "#" },
+  { name: "⏱️ Recent Assets", href: "/?orderBy=newest" },
+  { name: "👑 Top Assets", href: "/?rating=4%2B&ratingVoters=25%2B&orderBy=most-voters" },
+  { name: "🔥 Discounts", href: "/?discount=1%2B&orderBy=newest" },
+  { name: "🚀 Top with Discounts", href: "/?rating=4%2B&ratingVoters=25%2B&discount=1%2B&orderBy=most-voters" },
 ]
 
 export default function Header() {
   const currentUser = useCurrentUser()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+  
   return (
     <header className="border-b border-zinc-950/10 dark:border-white/10">
       <nav
@@ -32,7 +35,21 @@ export default function Header() {
             href="/"
             className="-m-1.5 p-1.5"
           >
-            <UnrealEngineLogo className="inline-block h-8 w-auto dark:text-white" />
+            <Image
+              src="/logo-white.png"
+              alt="Unreal Engine Directory"
+              className="hidden h-8 w-auto dark:inline-block"
+              width={614}
+              height={84}
+            />
+
+            <Image
+              src="/logo-black.png"
+              alt="Unreal Engine Directory"
+              className="inline-block h-8 w-auto dark:hidden"
+              width={614}
+              height={84}
+            />
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -60,28 +77,7 @@ export default function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          {currentUser ? (
-            <Dropdown>
-              <DropdownButton plain>
-                {currentUser.name ?? "Account"}
-                <ChevronDownIcon />
-              </DropdownButton>
-              <DropdownMenu>
-                <DropdownItem onClick={() => signOut()}>
-                  <ArrowRightStartOnRectangleIcon />
-                  <DropdownLabel>Sign Out</DropdownLabel>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          ) : (
-            <Button
-              plain
-              href="/sign-in"
-            >
-              Sign In
-              <ArrowRightIcon />
-            </Button>
-          )}
+          <UserMenu currentUser={currentUser} />
         </div>
       </nav>
       <Dialog
@@ -97,9 +93,20 @@ export default function Header() {
               href="#"
               className="-m-1.5 p-1.5"
             >
-              <span className="sr-only">UnrealEngine Directory</span>
-              <UnrealEngineLogo
-                className="h-8 w-auto dark:text-white"
+              <Image
+                src="/logo-white.png"
+                alt="Unreal Engine Directory"
+                className="hidden h-8 w-auto dark:inline-block"
+                width={614}
+                height={84}
+              />
+
+              <Image
+                src="/logo-black.png"
+                alt="Unreal Engine Directory"
+                className="inline-block h-8 w-auto dark:hidden"
+                width={614}
+                height={84}
               />
             </a>
             <button
@@ -129,18 +136,46 @@ export default function Header() {
                 ))}
               </div>
               <div className="py-6">
-                <Button
-                  plain
-                  href="/sign-in"
-                  className="block w-full justify-start"
-                >
-                  Sign In
-                </Button>
+                <UserMenu currentUser={currentUser} />
               </div>
             </div>
           </div>
         </Dialog.Panel>
       </Dialog>
     </header>
+  )
+}
+
+function UserMenu({ currentUser }: { currentUser: User | null }) {
+  if (!currentUser) {
+    return (
+      <Button
+        plain
+        href="/sign-in"
+      >
+        Sign In
+        <ArrowRightIcon />
+      </Button>
+    )
+  }
+  
+  return (
+    <Dropdown>
+      <DropdownButton plain>
+        {currentUser.name ?? "Account"}
+        <ChevronDownIcon />
+      </DropdownButton>
+      <DropdownMenu className="z-20">
+        <DropdownItem href="/watchlist">
+          <EyeIcon />
+          <DropdownLabel>Watchlist</DropdownLabel>
+        </DropdownItem>
+        <DropdownSeparator />
+        <DropdownItem onClick={() => signOut()}>
+          <ArrowRightStartOnRectangleIcon />
+          <DropdownLabel>Sign Out</DropdownLabel>
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   )
 }

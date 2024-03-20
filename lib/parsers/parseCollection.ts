@@ -1,7 +1,7 @@
 import { Parser } from "@/lib/parsers/parser"
 import { getMarketplaceAbsoluteUrl } from "@/lib/utils/marketplace"
 import { isValidUrl } from "@/lib/utils/string"
-import { ParserResponse } from "@/types/ParserResponse"
+import { ParserResponse } from "@/lib/types/ParserResponse"
 import { ParseCollectionPageData } from "@/app/api/parse-collection-page/route"
 
 export const MaxResults = 1000000

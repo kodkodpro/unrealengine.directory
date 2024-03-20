@@ -41,9 +41,9 @@ export function Badge({ color = "zinc", className, ...props }: BadgeProps & Reac
     <span
       {...props}
       className={cn(
-        className,
         "inline-flex items-center gap-x-1.5 rounded-md px-1.5 py-0.5 text-sm/5 font-medium sm:text-xs/5 forced-colors:outline",
-        colors[color]
+        colors[color],
+        className,
       )}
     />
   )
@@ -59,8 +59,8 @@ export const BadgeButton = React.forwardRef(function BadgeButton(
   ref: React.ForwardedRef<HTMLElement>
 ) {
   const classes = cn(
+    "group relative inline-flex rounded-md focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500",
     className,
-    "group relative inline-flex rounded-md focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500"
   )
 
   return "href" in props ? (

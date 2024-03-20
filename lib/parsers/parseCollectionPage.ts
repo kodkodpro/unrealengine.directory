@@ -1,6 +1,6 @@
 import { Parser } from "@/lib/parsers/parser"
 import { isValidUrl } from "@/lib/utils/string"
-import { ParserResponse } from "@/types/ParserResponse"
+import { ParserResponse } from "@/lib/types/ParserResponse"
 import { ParseAssetData } from "@/app/api/parse-asset/route"
 
 // This is a helper function to extract the epic id from the asset url
