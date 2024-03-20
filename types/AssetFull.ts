@@ -3,8 +3,8 @@ import { Asset, Author, Category } from "@prisma/client"
 export type AssetFull = Pick<Asset, keyof typeof AssetFullSelect> & {
   author: Pick<Author, keyof typeof AssetFullAuthorSelect>,
   category: Pick<Category, keyof typeof AssetFullCategorySelect>,
-  tags: Array<Pick<Category, keyof typeof AssetFullTagsSelect>>,
-  engineVersions: Array<Pick<Category, keyof typeof AssetFullEngineVersionsSelect>>,
+  tags: Pick<Category, keyof typeof AssetFullTagsSelect>[],
+  engineVersions: Pick<Category, keyof typeof AssetFullEngineVersionsSelect>[],
 }
 
 export const AssetFullSelect = {

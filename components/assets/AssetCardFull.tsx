@@ -1,127 +1,106 @@
-"use client"
-
-import Image from "next/image"
-import { ReactNode, useEffect, useRef } from "react"
-import { useHotkeys } from "react-hotkeys-hook"
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid"
+import { FolderIcon, HashtagIcon, TagIcon, UserIcon } from "@heroicons/react/24/outline"
 import ReactMarkdown from "react-markdown"
-import { Carousel } from "react-responsive-carousel"
-import AssetInfoTags from "@/components/assets/AssetInfoTags"
+import AssetImagesCarousel from "@/components/assets/AssetImagesCarousel"
 import AssetPrice from "@/components/assets/AssetPrice"
+import { Button } from "@/components/catalyst/button"
+import { Text } from "@/components/catalyst/text"
 import Rating from "@/components/content/Rating"
-import Button from "@/components/form/Button"
-import Label from "@/components/form/Label"
+import Tag from "@/components/content/Tag"
+import { getAssetMarketplaceUrl } from "@/lib/utils/marketplace"
 import { AssetFull } from "@/types/AssetFull"
-import { makeAssetUrl } from "@/utils/helpers/marketplace"
-import { titleize } from "@/utils/helpers/string"
 
 export type AssetCardFullProps = {
   asset: AssetFull
-  sidebarText?: ReactNode
+  showTitle?: boolean
 }
 
-export default function AssetCardFull({ asset, sidebarText } : AssetCardFullProps) {
-  const carouselRef = useRef<Carousel>(null)
-
-  useHotkeys("left", () => carouselRef.current?.decrement())
-  useHotkeys("right", () => carouselRef.current?.increment())
-
-  useEffect(() => {
-    carouselRef.current?.moveTo(0)
-  }, [asset])
-
+export default function AssetCardFull({ asset, showTitle = true }: AssetCardFullProps) {
   return (
-    <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-      <div className="mb-8 xl:col-span-2 xl:mb-0">
-        <Carousel
-          ref={carouselRef}
-          showStatus={false}
-          className="h-fit"
-        >
-          {asset.images.map((image) => (
-            <div
-              key={image}
-              className="aspect-video overflow-hidden rounded-lg"
-            >
-              <Image
-                src={image}
-                alt={`Image of ${asset.name}`}
-                className="rounded-lg"
-                unoptimized
-                fill
-              />
-            </div>
-          ))}
-        </Carousel>
+    <div className="grid grid-cols-3 gap-8">
+      <div className="col-span-2">
+        <AssetImagesCarousel asset={asset} />
 
-        <AssetInfoTags
-          asset={asset}
-          className="mb-4"
-        />
-
-        <div className="prose prose-invert leading-normal prose-p:my-2">
+        <div className="prose mx-auto leading-normal dark:prose-invert">
           <ReactMarkdown>
             {asset.description}
           </ReactMarkdown>
 
-          <ReactMarkdown>
-            {asset.technicalDetails}
-          </ReactMarkdown>
+          <div className="prose-p:my-0.5">
+            <ReactMarkdown>
+              {asset.technicalDetails}
+            </ReactMarkdown>
+          </div>
         </div>
       </div>
+      <div>
+        {showTitle && (
+          <>
+            <h1 className="mb-1 text-3xl font-bold tracking-tight">{asset.name}</h1>
+            <Text className="mb-6">{asset.shortDescription}</Text>
+          </>
+        )}
 
-      <div className="space-y-4">
         <Button
-          className="w-full"
-          onClick={() => window.open(makeAssetUrl(asset.epicId), "_blank")}
-          resizable
+          href={getAssetMarketplaceUrl(asset.epicId)}
+          color="amber"
+          className="mb-3 w-full sm:py-6 sm:text-xl"
+          target="_blank"
         >
-          <span>
-            <span className="text-xl font-semibold">
-              <AssetPrice
-                asset={asset}
-                colors={{
-                  free: "text-white",
-                  price: "text-white",
-                }}
-                showDiscountPercentage
-              />
-            </span>
-            <br />
-            <span className="text-white">
-              Unreal Marketplace
-            </span>
+          <span className="text-center leading-6">
+            Get for <AssetPrice asset={asset} /><br />
+            <span className="text-base opacity-80">Unreal Engine Marketplace</span>
           </span>
         </Button>
 
         <Rating
           score={asset.ratingScore}
           count={asset.ratingCount}
+          className="mb-6"
         />
 
-        <AssetInfoTags
-          asset={asset}
-          showAll
-          showLabel
-          asList
-        />
+        <ul className="mb-6 space-y-1">
+          <li>
+            <Tag
+              icon={UserIcon}
+              className="text-base"
+              classNameIcon="size-5 mr-1.5"
+            >
+              {asset.author.name}
+            </Tag>
+          </li>
+          <li>
+            <Tag
+              icon={FolderIcon}
+              className="text-base"
+              classNameIcon="size-5 mr-1.5"
+            >
+              {asset.category.name}
+            </Tag>
+          </li>
+          <li>
+            <Tag
+              icon={HashtagIcon}
+              className="text-base"
+              classNameIcon="size-5 mr-1.5"
+            >
+              {asset.engineVersions.map((version) => version.name).join(", ")}
+            </Tag>
+          </li>
+          <li>
+            <Tag
+              icon={TagIcon}
+              className="text-base"
+              classNameIcon="size-5 mr-1.5"
+            >
+              {asset.tags.map((tag) => tag.name).join(", ")}
+            </Tag>
+          </li>
+        </ul>
 
-        <div>
-          <Label text="Tags" />
-
-          <div className="flex flex-wrap gap-x-3 gap-y-2">
-            {asset.tags.map((tag) => (
-              <a
-                key={tag.name}
-                href={`/?tagsIds=${tag.id}`}
-                className="rounded-md bg-neutral-800 px-2 py-1 text-sm font-medium text-amber-500 hover:text-amber-600"
-              >
-                {titleize(tag.name)}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {sidebarText}
+        <Text>
+          Use <ArrowLeftIcon className="inline size-5 text-zinc-950 dark:text-zinc-200" /> and <ArrowRightIcon className="inline size-5 text-zinc-950 dark:text-zinc-200" /> keys to navigate between images
+        </Text>
       </div>
     </div>
   )

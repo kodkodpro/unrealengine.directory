@@ -1,13 +1,14 @@
+import Header from "@/components/layout/Header"
+import ModalRenderer from "@/components/modal/ModalRenderer"
+import Providers from "@/components/Providers"
 import clsx from "clsx"
-import { Metadata } from "next"
+import { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import Script from "next/script"
-import Footer from "@/components/layout/Footer"
-import Header from "@/components/layout/Header"
-import ScrollToTop from "@/components/layout/ScrollToTop"
 import "@total-typescript/ts-reset"
-import "./globals.css"
-import { getBaseURL } from "@/utils/helpers/string"
+import "./global.css"
+import { ReactNode } from "react"
+import { getBaseURL } from "@/lib/utils/string"
 
 const inter = Inter({
   preload: true,
@@ -21,7 +22,6 @@ export const metadata: Metadata = {
   title: "Unreal Engine Directory",
   description: "🚀 A directory of Unreal Engine plugins and assets. Like Unreal Marketplace, but better.",
   manifest: "/manifest.json",
-  themeColor: "#ffffff",
   applicationName: "Unreal Engine Directory",
   icons: {
     apple: "/apple-touch-icon.png",
@@ -39,30 +39,41 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+}
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
   return (
-    <html lang="en">
-      <body className={clsx(
-        "bg-neutral-800 font-sans text-neutral-100 antialiased",
-        "flex min-h-screen flex-col",
-        inter.variable,
-      )}>
-        <Header />
-
-        <div className="flex flex-1 flex-col bg-neutral-900 px-4 py-8 md:px-12">
+    <html
+      lang="en"
+      className="h-full"
+    >
+      <body
+        className={clsx(
+          "flex h-full flex-col bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-900 dark:text-white",
+          inter.variable,
+        )}
+      >
+        <Providers>
+          <Header />
           {children}
-        </div>
-
-        <Footer />
-        <ScrollToTop />
+          <ModalRenderer />
+        </Providers>
       </body>
 
       {GA_MEASUREMENT_ID && (
         <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="lazyOnload" />
-          <Script id="google-analytics" strategy="lazyOnload">
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            strategy="lazyOnload"
+          />
+          <Script
+            id="google-analytics"
+            strategy="lazyOnload"
+          >
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}

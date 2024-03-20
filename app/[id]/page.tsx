@@ -1,6 +1,8 @@
-import { getAsset } from "@/app/[id]/data"
+import { notFound } from "next/navigation"
+import AssetCardFull from "@/components/assets/AssetCardFull"
+import { getAsset } from "@/lib/db/assets"
 
-export type AssetPageProps = {
+type AssetPageProps = {
   params: {
     id: string
   }
@@ -8,10 +10,11 @@ export type AssetPageProps = {
 
 export default async function AssetPage({ params: { id } }: AssetPageProps) {
   const asset = await getAsset(id)
+  if (!asset) return notFound()
 
   return (
-    <div>
-      <pre>{JSON.stringify(asset, null, 2)}</pre>
+    <div className="p-8">
+      <AssetCardFull asset={asset} />
     </div>
   )
 }

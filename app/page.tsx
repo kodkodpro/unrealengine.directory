@@ -1,61 +1,40 @@
-import {
-  getAssets,
-  getAssetsCount,
-  getAssetsMaxPrice,
-  getCategories,
-  getEngineVersions,
-} from "@/app/data"
-import AssetsFiltersForm, { FiltersQuery } from "@/components/assets/AssetsFiltersForm"
+import AssetsFiltersAndOrder from "@/components/assets/AssetsFiltersAndOrder"
 import AssetsList from "@/components/assets/AssetsList"
-import AssetsListSort from "@/components/assets/AssetsListSort"
-import KittenSays from "@/components/content/KittenSays"
-import Pagination from "@/components/content/Pagination"
-import Sticky from "@/components/layout/Sticky"
-import { usePathname } from "next/navigation"
+import { getAssets, getCategories, getEngineVersions } from "@/lib/db/assets"
+import { AssetsFilters, AssetsOrderBy } from "@/lib/db/assets.filters"
 
-export type HomeProps = {
-  searchParams: FiltersQuery & {
-    page?: string,
-    perPage?: string,
+const DefaultOrderBy: AssetsOrderBy = "newest"
+
+type HomePageProps = {
+  searchParams: AssetsFilters & {
+    orderBy?: AssetsOrderBy
+    page?: string
+    perPage?: string
   }
 }
 
-export default async function Home({ searchParams }: HomeProps) {
-  const [assets, assetsCount, assetsMaxPrice, categories, engineVersions] = await Promise.all([
-    getAssets(searchParams),
-    getAssetsCount(searchParams),
-    getAssetsMaxPrice(),
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const {
+    orderBy = DefaultOrderBy, 
+    page = 1, 
+    perPage = 25,
+    ...filters
+  } = searchParams
+  
+  const [assets, categories, engineVersions] = await Promise.all([
+    getAssets(filters, orderBy, Number(page), Number(perPage)),
     getCategories(),
     getEngineVersions(),
   ])
 
   return (
-    <div className="flex-row gap-8 pb-24 xl:flex">
-      <div className="mb-16 xl:mb-0 xl:basis-80">
-        <Sticky offsetTop={32} offsetBottom={32}>
-          <AssetsFiltersForm
-            assetsMaxPrice={Math.ceil(assetsMaxPrice || 0)}
-            categories={categories}
-            engineVersions={engineVersions}
-          />
-        </Sticky>
-      </div>
+    <div>
+      <AssetsFiltersAndOrder
+        categories={categories}  
+        engineVersions={engineVersions} 
+      />
 
-      {assetsCount > 0 ? (
-        <div className="flex-1 pb-8">
-          <AssetsListSort assetsCount={assetsCount} className="mb-2" />
-          <AssetsList assets={assets} />
-
-          <Pagination
-            totalRecords={assetsCount}
-            className="mt-8"
-          />
-        </div>
-      ) : (
-        <div className="flex-1 py-8 xl:py-24">
-          <KittenSays text="No results found" />
-        </div>
-      )}
+      <AssetsList assets={assets} />
     </div>
   )
 }
