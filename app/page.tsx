@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import AssetsFiltersAndOrder from "@/components/assets/AssetsFiltersAndOrder"
 import AssetsList from "@/components/assets/AssetsList"
 import { Button } from "@/components/catalyst/button"
@@ -37,10 +38,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   ])
 
   return (
-    <div>
+    <>
       <AssetsFiltersAndOrder
         assetsCount={assetsCount}
-        categories={categories}  
+        categories={categories}
         engineVersions={engineVersions}
       />
 
@@ -71,6 +72,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           totalRecords={assetsCount}
         />
       </div>
-    </div>
+    </>
   )
 }
