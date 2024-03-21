@@ -229,9 +229,11 @@ export default function AssetsFiltersAndOrder({ assetsCount, categories, engineV
             )}
           </div>
 
-          <div className="pl-6 text-zinc-500 dark:text-zinc-400">
-            Found {formatNumber(assetsCount)} assets
-          </div>
+          {assetsCount > 0 && (
+            <div className="pl-6 text-zinc-500 dark:text-zinc-400">
+              Found {formatNumber(assetsCount)} assets
+            </div>
+          )}
 
           {page > 1 && (
             <div className="pl-6 text-zinc-500 dark:text-zinc-400">
