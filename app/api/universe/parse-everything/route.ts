@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
   const result = await parseCollection({
     collectionUrl: "https://www.unrealengine.com/marketplace/en-US/assets",
     sortDirection: "ASC",
-    take: 150,
   })
 
   return NextResponse.json(result)
