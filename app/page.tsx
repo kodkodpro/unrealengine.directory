@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import AssetsFiltersAndOrder from "@/components/assets/AssetsFiltersAndOrder"
 import AssetsList from "@/components/assets/AssetsList"
 import { Button } from "@/components/catalyst/button"
