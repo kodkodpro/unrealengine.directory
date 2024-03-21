@@ -126,10 +126,21 @@ export default function AssetsFiltersAndOrder({ assetsCount, categories, engineV
   const orderBy = searchParams.get("orderBy") ?? "newest"
   const page = parseInt(searchParams.get("page") ?? "1")
 
-  const filters = { price, discount, rating, ratingVoters, releasePeriod } satisfies FiltersState
+  const [filters, setFilters] = useState<FiltersState>({ price, discount, rating, ratingVoters, releasePeriod })
 
   const nonEmptyFilters = Object.entries(filters).filter(([, value]) => !!value)
   const nonEmptyFiltersCount = nonEmptyFilters.length + (categoryId ? 1 : 0) + (engineVersionId ? 1 : 0)
+
+  const updateFilter = (key: FilterKey, value: string | null) => {
+    setFilters((prevFilters) => {
+      return {
+        ...prevFilters,
+        [key]: value ?? "",
+      }
+    })
+
+    setSearchParam(key, value)
+  }
 
   const setSearchParam = (key: string, value: string | null) => {
     const searchParams = new URLSearchParams(window.location.search)
@@ -317,14 +328,14 @@ export default function AssetsFiltersAndOrder({ assetsCount, categories, engineV
                 showClearButton={!!filters[filterKey]}
                 clearButtonClassName="float-none ml-2 -mt-2 translate-y-1"
                 className="font-medium"
-                onClear={() => setSearchParam(filterKey, null)}
+                onClear={() => updateFilter(filterKey, null)}
               >
                 {FiltersConfig[filterKey].label}
               </LabelWithClearButton>
 
               <RadioGroup
                 value={filters[filterKey]}
-                onChange={(value) => setSearchParam(filterKey, value)}
+                onChange={(value) => updateFilter(filterKey, value)}
               >
                 {FiltersConfig[filterKey].options.map((option) => (
                   <RadioField key={option.value}>
