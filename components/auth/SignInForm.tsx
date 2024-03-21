@@ -40,14 +40,14 @@ export default function SignInForm({ className, ...props }: AuthFormProps) {
         Sign In with Google
       </Button>
 
-      <Button
-        color="sky"
-        disabled={loading}
-        className="w-full sm:py-3"
-        onClick={() => handleSignInClick("email")}
-      >
-        Sign In with Facebook
-      </Button>
+      {/*<Button*/}
+      {/*  color="sky"*/}
+      {/*  disabled={loading}*/}
+      {/*  className="w-full sm:py-3"*/}
+      {/*  onClick={() => handleSignInClick("email")}*/}
+      {/*>*/}
+      {/*  Sign In with Facebook*/}
+      {/*</Button>*/}
     </div>
   )
 }
