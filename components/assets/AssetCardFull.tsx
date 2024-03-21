@@ -1,5 +1,6 @@
+import { formatDate } from "@/lib/utils/string"
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid"
-import { ShoppingCartIcon, FolderIcon, HashtagIcon, TagIcon, UserIcon } from "@heroicons/react/24/outline"
+import { ShoppingCartIcon, FolderIcon, HashtagIcon, TagIcon, UserIcon, CalendarIcon } from "@heroicons/react/24/outline"
 import ReactMarkdown from "react-markdown"
 import AssetCollectionButton from "@/components/assets/AssetCollectionButton"
 import AssetImagesCarousel from "@/components/assets/AssetImagesCarousel"
@@ -94,6 +95,17 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
               {shrinkVersions(asset.engineVersions.map((engineVersion) => engineVersion.name as Version))}
             </Tag>
           </li>
+          {asset.releasedAt && (
+            <li>
+              <Tag
+                icon={CalendarIcon}
+                className="text-base"
+                classNameIcon="size-5 mr-1.5"
+              >
+                {formatDate(asset.releasedAt)}
+              </Tag>
+            </li>
+          )}
           <li>
             <Tag
               icon={TagIcon}

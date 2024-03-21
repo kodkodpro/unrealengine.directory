@@ -23,7 +23,7 @@ export type AssetsDiscount =
   | "10+"
   | "25+"
   | "50+"
-  | "100+"
+  | "75+"
 
 export type AssetsRating =
   | "1+"
@@ -55,6 +55,10 @@ export type AssetsOrderBy =
   | "most-popular"
   | "least-voters"
   | "most-voters"
+  | "discount-highest"
+  | "discount-lowest"
+  | "discount-percent-highest"
+  | "discount-percent-lowest"
   | "a-to-z"
   | "z-to-a"
 
@@ -108,10 +112,10 @@ export function getAssetsWhere(filters: AssetsFilters) {
       "10+": 10,
       "25+": 25,
       "50+": 50,
-      "100+": 100,
+      "75+": 75,
     }[filters.discount]
 
-    if (gte) where["discount"] = { gte }
+    if (gte) where["discountPercent"] = { gte }
   }
   
   if (filters.rating) {
@@ -185,6 +189,18 @@ export function getAssetsOrderBy(orderBy: AssetsOrderBy) {
     },
     "least-voters": {
       ratingCount: "asc",
+    },
+    "discount-highest": {
+      discount: "desc",
+    },
+    "discount-lowest": {
+      discount: "asc",
+    },
+    "discount-percent-highest": {
+      discountPercent: "desc",
+    },
+    "discount-percent-lowest": {
+      discountPercent: "asc",
     },
     "a-to-z": {
       name: "asc",

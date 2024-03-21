@@ -33,11 +33,11 @@ const FiltersConfig = {
     label: "Discount",
     icon: XMarkIcon,
     options: [
-      { value: "1+", label: "$1+" },
-      { value: "10+", label: "$10+" },
-      { value: "25+", label: "$25+" },
-      { value: "50+", label: "$50+" },
-      { value: "100+", label: "$100+" },
+      { value: "1+", label: "1%+" },
+      { value: "10+", label: "10%+" },
+      { value: "25+", label: "25%+" },
+      { value: "50+", label: "50%+" },
+      { value: "75+", label: "75%+" },
     ],
   },
   rating: {
@@ -87,6 +87,10 @@ const SortOptions = [
   { label: "Rating: High to Low", value: "most-popular" },
   { label: "Rating Voters: Low to High", value: "least-voters" },
   { label: "Rating Voters: High to Low", value: "most-voters" },
+  { label: "Discount ($): High to Low", value: "discount-highest" },
+  { label: "Discount ($): Low to High", value: "discount-lowest" },
+  { label: "Discount (%): High to Low", value: "discount-percent-highest" },
+  { label: "Discount (%): Low to High", value: "discount-percent-lowest" },
   { label: "Name: A to Z", value: "a-to-z" },
   { label: "Name: Z to A", value: "z-to-a" },
 ] as const

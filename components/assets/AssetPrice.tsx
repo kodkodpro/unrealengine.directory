@@ -3,7 +3,7 @@ import cn from "@/lib/utils/cn"
 import { formatMoney } from "@/lib/utils/string"
 
 export type AssetPriceProps = {
-  asset: Pick<Asset, "discount" | "price">
+  asset: Pick<Asset, "price" | "discount" | "discountPercent">
   freeClassName?: string
   discountClassName?: string
 }

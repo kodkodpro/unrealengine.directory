@@ -1,5 +1,7 @@
 import AssetsFiltersAndOrder from "@/components/assets/AssetsFiltersAndOrder"
 import AssetsList from "@/components/assets/AssetsList"
+import { Button } from "@/components/catalyst/button"
+import EmptyState from "@/components/content/EmptyState"
 import { Paginator } from "@/components/content/Paginator"
 import { getAssets, getAssetsCount, getCategories, getEngineVersions } from "@/lib/db/assets"
 import { AssetsFilters, AssetsOrderBy } from "@/lib/db/assets.filters"
@@ -46,6 +48,20 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         assets={assets}
         showCategory={!filters.categoryId}
         showEngineVersions={!filters.engineVersionId}
+        emptyState={(
+          <EmptyState
+            title="No assets found"
+            description="Try adjusting your filters"
+            actions={(
+              <Button
+                href="/"
+                color="amber"
+              >
+                Clear filters
+              </Button>
+            )}
+          />
+        )}
       />
 
       <div className="mx-auto max-w-2xl px-8">

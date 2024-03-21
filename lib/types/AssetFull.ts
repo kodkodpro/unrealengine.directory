@@ -16,9 +16,11 @@ export const AssetFullSelect = {
   technicalDetails: true,
   price: true,
   discount: true,
+  discountPercent: true,
   ratingScore: true,
   ratingCount: true,
   images: true,
+  releasedAt: true,
 }
 
 export const AssetFullAuthorSelect = {

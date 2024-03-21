@@ -101,6 +101,7 @@ model Asset {
   technicalDetails String
   price            Float
   discount         Float
+  discountPercent  Int               @default(0)
   ratingScore      Float
   ratingCount      Int
   releasedAt       DateTime

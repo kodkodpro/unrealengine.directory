@@ -114,6 +114,7 @@ export default async function parseAsset({ epicId, force }: Data): Promise<Parse
     // Get price from "span.save-discount.discounted" and "span.base-price"
     let price
     let discount
+    let discountPercent
 
     // If "span.save-discount.discounted" exists, then get discounted price and calculate discount amount
     if (parser.elementExists("span.save-discount.discounted")) {
@@ -125,10 +126,12 @@ export default async function parseAsset({ epicId, force }: Data): Promise<Parse
 
       // Calculate discount amount
       discount = basePrice - price
+      discountPercent = Math.round((discount / basePrice) * 100)
     } else {
       // Get price from "span.save-discount"
       price = parser.getMoney("span.save-discount") || 0
       discount = 0
+      discountPercent = 0
     }
 
     plainData.price = parser.getText("span.save-discount")
@@ -164,6 +167,7 @@ export default async function parseAsset({ epicId, force }: Data): Promise<Parse
       technicalDetails,
       price,
       discount,
+      discountPercent,
       images,
       ratingScore,
       ratingCount,

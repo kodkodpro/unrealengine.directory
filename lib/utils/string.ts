@@ -23,7 +23,15 @@ export const formatNumber = (number: number, options: Intl.NumberFormatOptions =
   return (number || 0).toLocaleString("en-US", {
     ...options,
   })
-    
+}
+
+export const formatDate = (date: Date | string, options: Intl.DateTimeFormatOptions = {}) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    ...options,
+  })
 }
 
 export const toBoolean = (value: unknown): boolean => {

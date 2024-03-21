@@ -32,12 +32,14 @@ export default function AssetCard({ asset, showCategory = true, showEngineVersio
       className="relative block rounded-lg p-3 pb-2 transition-all hover:bg-black/[3%] xl:p-4 xl:pb-3 2xl:p-5 2xl:pb-4 dark:hover:bg-white/[3%]"
       onClick={handleClick}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={asset.images[0]}
-        alt={asset.name}
-        className="mb-2 aspect-video rounded"
-      />
+      <div className="mb-2 aspect-video bg-zinc-100 dark:bg-white/[2.5%] rounded overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={asset.images[0]}
+          alt={asset.name}
+          className="aspect-video"
+        />
+      </div>
 
       <h2 className="line-clamp-1 text-lg font-semibold dark:text-white">{asset.name}</h2>
       <p className="mb-2 line-clamp-2 h-10 text-sm text-zinc-600 dark:text-zinc-400">{asset.shortDescription}</p>
