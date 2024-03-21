@@ -1,4 +1,3 @@
-import { formatDate } from "@/lib/utils/string"
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid"
 import { ShoppingCartIcon, FolderIcon, HashtagIcon, TagIcon, UserIcon, CalendarIcon } from "@heroicons/react/24/outline"
 import ReactMarkdown from "react-markdown"
@@ -11,6 +10,7 @@ import Rating from "@/components/content/Rating"
 import Tag from "@/components/content/Tag"
 import { AssetFull } from "@/lib/types/AssetFull"
 import { getAssetMarketplaceUrl } from "@/lib/utils/marketplace"
+import { formatDate } from "@/lib/utils/string"
 import { shrinkVersions, Version } from "@/lib/utils/versions"
 
 export type AssetCardFullProps = {
