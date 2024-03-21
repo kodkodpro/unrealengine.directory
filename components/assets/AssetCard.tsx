@@ -32,6 +32,7 @@ export default function AssetCard({ asset, showCategory = true, showEngineVersio
       className="relative block rounded-lg p-3 pb-2 transition-all hover:bg-black/[3%] xl:p-4 xl:pb-3 2xl:p-5 2xl:pb-4 dark:hover:bg-white/[3%]"
       onClick={handleClick}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={asset.images[0]}
         alt={asset.name}

@@ -1,5 +1,6 @@
 export type ParserSuccessResponse = {
   status: "success"
+  data?: unknown
 }
 
 export type ParserErrorResponse = {

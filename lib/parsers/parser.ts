@@ -1,30 +1,15 @@
-import { HttpsProxyAgent } from "https-proxy-agent"
 import { JSDOM } from "jsdom"
 import fetch from "node-fetch"
 import { NodeHtmlMarkdown } from "node-html-markdown"
-import { getBaseURL, parseMoney } from "@/lib/utils/string"
 import { ParserResponse } from "@/lib/types/ParserResponse"
+import { parseMoney } from "@/lib/utils/string"
 
 export class Parser {
   html?: string
   jsdom?: JSDOM
-  parsedUrl?: URL
 
-  async parse(url: URL) {
-    this.parsedUrl = url
-
-    let agent: HttpsProxyAgent | undefined
-
-    if (process.env.PROXY_HOST && process.env.PROXY_PORT && process.env.PROXY_AUTH) {
-      agent = new HttpsProxyAgent({
-        host: process.env.PROXY_HOST,
-        port: parseInt(process.env.PROXY_PORT),
-        auth: process.env.PROXY_AUTH,
-      })
-    }
-
-    const response = await fetch(url, { agent })
-
+  async getPage(url: URL | string) {
+    const response = await fetch(url)
     if (!response.ok) throw new Error(`Failed to fetch ${url}. Error: ${await response.text()}`)
 
     this.html = await response.text()
@@ -56,28 +41,12 @@ export class Parser {
     return this.getElements(selector).length > 0
   }
 
-  static async triggerViaAPI(url: string, data: object): Promise<ParserResponse> {
-    const response = await fetch(`${getBaseURL()}${url}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": process.env.API_KEY!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-      },
-      body: JSON.stringify(data),
-    })
-
-    if (response.ok) {
-      return await response.json() as ParserResponse
-    } else {
-      return { status: "error", message: `Failed to trigger ${url}. Error: ${await response.text()}` }
-    }
-  }
-
   static log(message: string, status: ParserResponse["status"] | undefined = undefined) {
     const date = new Date().toLocaleString()
     const method = status === "error" ? "error" : "info"
     const statusIcon = status ? status === "success" ? "✅" : status === "error" ? "❌" : "⚠️" : "🔷"
 
+    // eslint-disable-next-line no-console
     console[method](`[Parser][${date}] ${statusIcon} ${message}`)
   }
 

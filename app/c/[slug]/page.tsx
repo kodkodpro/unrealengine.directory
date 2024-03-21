@@ -33,6 +33,7 @@ export default async function CollectionPublicPage({ params: { slug } }: Collect
             <Text>
               by{" "}
               {user.image && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={user.image}
                   alt={`${user.name}'s profile picture`}

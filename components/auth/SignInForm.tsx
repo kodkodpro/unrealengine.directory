@@ -3,6 +3,7 @@
 import { ComponentProps, useState } from "react"
 import { signIn } from "@/actions/auth"
 import { Button } from "@/components/catalyst/button"
+import cn from "@/lib/utils/cn"
 
 export type AuthFormProps = ComponentProps<"div">
 
@@ -17,7 +18,10 @@ export default function SignInForm({ className, ...props }: AuthFormProps) {
   }
 
   return (
-    <div className="space-y-2">
+    <div
+      className={cn("space-y-2", className)}
+      {...props}
+    >
       <Button
         color="dark"
         disabled={loading}

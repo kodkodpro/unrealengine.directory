@@ -1,9 +1,9 @@
-import { Textarea } from "@/components/catalyst/textarea"
 import { Collection } from "@prisma/client"
 import { useEffect, useState } from "react"
 import { Description, ErrorMessage, Field, FieldGroup, Fieldset, Label } from "@/components/catalyst/fieldset"
 import { Input } from "@/components/catalyst/input"
 import { Switch, SwitchField } from "@/components/catalyst/switch"
+import { Textarea } from "@/components/catalyst/textarea"
 import { Errors } from "@/lib/types"
 
 export type CollectionFormProps = {

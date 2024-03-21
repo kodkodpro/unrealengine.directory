@@ -21,7 +21,10 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
   return (
     <div className="grid grid-cols-3 gap-8">
       <div className="col-span-2">
-        <AssetImagesCarousel asset={asset} />
+        <AssetImagesCarousel
+          asset={asset}
+          className="mb-6"
+        />
 
         <div className="prose mx-auto leading-normal dark:prose-invert prose-p:my-0.5">
           <ReactMarkdown>
@@ -102,8 +105,9 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
           </li>
         </ul>
 
-        <Text>
-          Use <ArrowLeftIcon className="inline size-5 text-zinc-950 dark:text-zinc-200" /> and <ArrowRightIcon className="inline size-5 text-zinc-950 dark:text-zinc-200" /> keys to navigate between images
+        <Text className="text-balance">
+          Use <ArrowLeftIcon className="inline size-5 text-zinc-900 dark:text-zinc-300" /> and <ArrowRightIcon className="inline size-5 text-zinc-900 dark:text-zinc-300" /> keys to navigate between images{" "}
+          or click on the left/right side of the image
         </Text>
       </div>
     </div>

@@ -1,61 +1,90 @@
+import parseCollectionPage from "@/lib/parsers/parseCollectionPage"
 import { Parser } from "@/lib/parsers/parser"
+import { ParserResponse } from "@/lib/types/ParserResponse"
 import { getMarketplaceAbsoluteUrl } from "@/lib/utils/marketplace"
 import { isValidUrl } from "@/lib/utils/string"
-import { ParserResponse } from "@/lib/types/ParserResponse"
-import { ParseCollectionPageData } from "@/app/api/parse-collection-page/route"
 
-export const MaxResults = 1000000
-export const MaxResultsPerPage = 100
+export const MaxAssetsToParse = 1000000
+export const AssetsPerPage = 100
 
 export type Data = {
   collectionUrl: string
-  skip: number
-  take: number
+  skip?: number
+  take?: number
+  sortDirection?: "ASC" | "DESC"
+  batchSize?: number
 }
 
 export default async function parseCollection({
   collectionUrl,
   skip = 0,
-  take = MaxResults,
+  take = MaxAssetsToParse,
+  sortDirection = "DESC",
+  batchSize = 1,
 }: Data): Promise<ParserResponse> {
-  Parser.log(`Parsing collection ${collectionUrl}`)
-
   if (!isValidUrl(collectionUrl)) {
     return { status: "error", message: "Invalid URL" }
   }
 
+  Parser.log(`Parsing collection ${collectionUrl}`)
+
   // Set pagination params
   const url = new URL(collectionUrl)
   url.searchParams.set("start", "0")
-  url.searchParams.set("count", MaxResultsPerPage.toString())
+  url.searchParams.set("count", AssetsPerPage.toString())
   url.searchParams.set("sortBy", "effectiveDate")
-  url.searchParams.set("sortDir", "DESC")
+  url.searchParams.set("sortDir", sortDirection)
 
   const parser = new Parser()
-  await parser.parse(url)
+  await parser.getPage(url)
 
   // Get content from "li.rc-pagination-total-text"
   // Example: Showing 1 - 20 of 1140 results
   const totalText = parser.getText("li.rc-pagination-total-text")
-  const totalResults = parseInt(totalText.match(/\d+/g)?.pop() || MaxResultsPerPage.toString())
+  const totalResults = parseInt(totalText.match(/\d+/g)?.pop() || AssetsPerPage.toString())
 
+  Parser.log(`Total results found: ${totalResults}`)
+
+  const pageUrls = []
   let start = skip
 
-  // Get all pages urls
+  // Generate pages urls
+  //
   while (start < totalResults && (start - skip) < take) {
     url.searchParams.set("start", start.toString())
+
     const pageUrl = getMarketplaceAbsoluteUrl(url.toString())
+    const pageNumber = start / AssetsPerPage + 1
+    pageUrls.push({ pageNumber, pageUrl })
 
-    const data: ParseCollectionPageData = { pageUrl }
-    const response = await Parser.triggerViaAPI("/api/parse-collection-page", data)
-
-    Parser.logResponse(response, `📃 Page #${start / MaxResultsPerPage + 1} successfully parsed`)
-
-    start += MaxResultsPerPage
-
-    // Sleep a bit, rest doesn't hurt anyone
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    start += AssetsPerPage
+  }
+  
+  // Create batches
+  //
+  const batches = []
+  
+  for (let i = 0; i < pageUrls.length; i += batchSize) {
+    const batch = pageUrls.slice(i, i + batchSize)
+    batches.push(batch)
   }
 
-  return { status: "success" }
+  // Parse in batches
+  //
+  const responses: Record<string, ParserResponse> = {}
+
+  for (const batch of batches) {
+    const promises = batch.map(async ({ pageNumber, pageUrl }) => {
+      Parser.log(`Parsing page #${pageNumber} (${pageUrl})`)
+
+      const response = await parseCollectionPage({ pageUrl })
+      responses[`page-${pageNumber}`] = response
+
+      Parser.logResponse(response, `📃 Page #${pageNumber} successfully parsed`)
+    })
+        
+    await Promise.all(promises)
+  }
+
+  return { status: "success", data: responses }
 }

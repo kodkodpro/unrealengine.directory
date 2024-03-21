@@ -1,9 +1,9 @@
+import { XMarkIcon } from "@heroicons/react/24/solid"
 import AssetCardFull from "@/components/assets/AssetCardFull"
 import { Button } from "@/components/catalyst/button"
 import { Dialog, DialogBody, DialogDescription, DialogTitle } from "@/components/catalyst/dialog"
 import { AssetFull } from "@/lib/types/AssetFull"
 import { closeModal } from "@/stores/modal"
-import { XMarkIcon } from "@heroicons/react/24/solid"
 
 export type AssetCardFullModalProps = {
   asset: AssetFull

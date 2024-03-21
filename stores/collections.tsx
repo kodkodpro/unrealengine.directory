@@ -10,7 +10,7 @@ import { currentUser } from "@/stores/currentUser"
 import { openModal } from "./modal"
 
 type Action = "add" | "remove"
-type Collections = Record<string, number[]>
+type Collections = Record<number, number[]>
 
 const ActionToServerAction: Record<Action, ServerActionFn> = {
   add: serverActions.addToCollection,
@@ -30,10 +30,10 @@ type CollectionsStore = {
   fetch: () => void
   reset: () => void
 
-  add: (collectionId: string, assetId: number) => void
-  remove: (collectionId: string, assetId: number) => void
-  inCollections: (assetId: number) => string[]
-  perform: (action: Action, collectionId: string, assetId: number) => Promise<void>
+  add: (collectionId: number, assetId: number) => void
+  remove: (collectionId: number, assetId: number) => void
+  inCollections: (assetId: number) => number[]
+  perform: (action: Action, collectionId: number, assetId: number) => Promise<void>
 }
 
 const store = create<CollectionsStore>()(
@@ -84,7 +84,7 @@ const store = create<CollectionsStore>()(
 
         return Object.entries(collectionMap)
           .filter(([_, collection]) => collection.includes(assetId))
-          .map(([collectionId]) => collectionId)
+          .map(([collectionId]) => Number(collectionId))
       },
 
       perform: async (action, collectionId, assetId) => {
@@ -123,5 +123,5 @@ export const useInCollections = (assetId: number) => store((state) => state.inCo
 
 export const fetchCollections = async () => store.getState().fetch()
 export const resetCollections = () => store.getState().reset()
-export const addToCollection = (collectionId: string, assetId: number) => store.getState().perform("add", collectionId, assetId)
-export const removeFromCollection = (collectionId: string, assetId: number) => store.getState().perform("remove", collectionId, assetId)
+export const addToCollection = (collectionId: number, assetId: number) => store.getState().perform("add", collectionId, assetId)
+export const removeFromCollection = (collectionId: number, assetId: number) => store.getState().perform("remove", collectionId, assetId)

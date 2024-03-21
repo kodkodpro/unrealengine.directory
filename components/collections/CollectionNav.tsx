@@ -4,7 +4,7 @@ import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from "@/componen
 
 export type CollectionNavProps = {
   collections: Collection[]
-  currentCollectionId: string
+  currentCollectionId: number
 }
 
 export default function CollectionNav({ collections, currentCollectionId }: CollectionNavProps) {

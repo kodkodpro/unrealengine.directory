@@ -167,6 +167,7 @@ module.exports = {
     "build/",
     "public/",
     "coverage/",
+    "components/catalyst/"
   ],
 
   globals: {

@@ -23,7 +23,7 @@ export default async function CollectionsPage({ params: { id = [] } }: Collectio
 
   const collectionsWithSystem = await getCollectionsByUserId(currentUserId)
   const collections = collectionsWithSystem.filter((collection) => !collection.systemName)
-  const currentCollection = collections.find((collection) => collection.id === id[0]) ?? collections[0]
+  const currentCollection = collections.find((collection) => collection.id.toString() === id[0]) ?? collections[0]
 
   if (!currentCollection) {
     return (

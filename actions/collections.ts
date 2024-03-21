@@ -27,7 +27,7 @@ export const createCollection = serverAction(async (rawData: Partial<Collection>
   return collection
 })
 
-export const updateCollection = serverAction(async (id: string, rawData: Partial<Collection>) => {
+export const updateCollection = serverAction(async (id: number, rawData: Partial<Collection>) => {
   const userId = await getCurrentUserId()
   if (!userId) throw new ServerActionError("You must be signed in to create a collection")
 
@@ -43,7 +43,7 @@ export const updateCollection = serverAction(async (id: string, rawData: Partial
   return updatedCollection
 })
 
-export const addToCollection = serverAction(async (collectionId: string, assetId: number) => {
+export const addToCollection = serverAction(async (collectionId: number, assetId: number) => {
   const userId = await getCurrentUserId()
   if (!userId) throw new ServerActionError("You must be signed in to collections an asset")
 
@@ -57,7 +57,7 @@ export const addToCollection = serverAction(async (collectionId: string, assetId
   return true
 })
 
-export const removeFromCollection = serverAction(async (collectionId: string, assetId: number) => {
+export const removeFromCollection = serverAction(async (collectionId: number, assetId: number) => {
   const userId = await getCurrentUserId()
   if (!userId) throw new ServerActionError("You must be signed in to unwatch an asset")
 

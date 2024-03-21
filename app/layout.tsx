@@ -1,6 +1,3 @@
-import Header from "@/components/layout/Header"
-import ModalRenderer from "@/components/modal/ModalRenderer"
-import Providers from "@/components/Providers"
 import clsx from "clsx"
 import { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
@@ -8,6 +5,9 @@ import Script from "next/script"
 import "@total-typescript/ts-reset"
 import "./global.css"
 import { ReactNode } from "react"
+import Footer from "@/components/layout/Footer"
+import Header from "@/components/layout/Header"
+import Providers from "@/components/Providers"
 import { getBaseURL } from "@/lib/utils/string"
 
 const inter = Inter({
@@ -59,8 +59,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <Providers>
           <Header />
-          {children}
-          <ModalRenderer />
+          
+          <div className="flex flex-1 flex-col">
+            {children}
+          </div>
+          
+          <Footer />
         </Providers>
       </body>
 

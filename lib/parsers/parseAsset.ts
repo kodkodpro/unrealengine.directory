@@ -1,12 +1,10 @@
 import { Prisma } from "@prisma/client"
 import { Parser } from "@/lib/parsers/parser"
 import prisma from "@/lib/prisma"
-import { isValidUrl } from "@/lib/utils/string"
-import { generateRange, Version } from "@/lib/utils/versions"
 import { ParserResponse } from "@/lib/types/ParserResponse"
+import { generateRange, Version } from "@/lib/utils/versions"
 
 const RemoveFromTextRegex = /https:\/\/redirect.epicgames.com\/\?redirectTo=/g
-const ExtractEpicIdRegex = /^https:\/\/www\.unrealengine\.com\/marketplace\/en-US\/product\/([a-z0-9-]+)$/i
 
 type AssetPlainData = {
   description?: string
@@ -19,49 +17,19 @@ type AssetPlainData = {
 }
 
 export type Data = {
-  assetUrlOrEpicId: string
+  epicId: string
   force?: boolean
 }
 
-export default async function parseAsset({ assetUrlOrEpicId, force }: Data): Promise<ParserResponse> {
-  let epicId: string
-  let assetUrl: string
-
-  if (isValidUrl(assetUrlOrEpicId)) {
-    epicId = assetUrlOrEpicId.match(ExtractEpicIdRegex)?.pop() || ""
-    assetUrl = assetUrlOrEpicId
-  } else {
-    epicId = assetUrlOrEpicId
-    assetUrl = `https://www.unrealengine.com/marketplace/en-US/product/${epicId}`
-  }
-
-  if (!epicId) {
-    return { status: "error", message: "assetUrlOrEpicId must be a valid Epic ID or Marketplace URL" }
-  }
-
-  const asset = await prisma.asset.findUnique({
-    select: {
-      updatedAt: true,
-    },
-    where: {
-      epicId,
-    },
-  })
-
-  if (asset && !force) {
-    const now = new Date()
-    const diff = now.getTime() - asset.updatedAt.getTime()
-    const diffInHours = Math.floor(diff / 1000 / 60 / 60)
-
-    if (diffInHours) {
-      return { status: "skipped", message: `Asset "${epicId}" was parsed less than 24 hours ago, skipping...` }
-    }
+export default async function parseAsset({ epicId, force }: Data): Promise<ParserResponse> {
+  if (!force && await skipAssetParsing(epicId)) {
+    return { status: "skipped", message: `Asset "${epicId}" was parsed less than 24 hours ago, skipping...` }
   }
 
   try {
-    const url = new URL(assetUrl)
+    const url = new URL(`https://www.unrealengine.com/marketplace/en-US/product/${epicId}`)
     const parser = new Parser()
-    await parser.parse(url)
+    await parser.getPage(url)
 
     const plainData: AssetPlainData = {}
 
@@ -258,21 +226,38 @@ export default async function parseAsset({ assetUrlOrEpicId, force }: Data): Pro
       },
     })
 
-    Parser.log(`Asset "${epicId}" successfully parsed (released at ${releasedAt.toDateString()})`, "success")
-
     return { status: "success" }
   } catch (error) {
     if (error instanceof Error) {
       return {
         status: "error",
         error,
-        message: `Failed to scrape asset: ${epicId || assetUrlOrEpicId}. Error: ${error.message}`,
+        message: `Failed to scrape asset: ${epicId || epicId}. Error: ${error.message}`,
       }
     } else {
       const stringifiedError = JSON.stringify(error)
-      const message = `Failed to scrape asset: ${epicId || assetUrlOrEpicId}. Error: ${stringifiedError}`
+      const message = `Failed to scrape asset: ${epicId || epicId}. Error: ${stringifiedError}`
 
       return { status: "error", message }
     }
   }
+}
+
+export async function skipAssetParsing(epicId: string, hoursToSkip = 24) {
+  const asset = await prisma.asset.findUnique({
+    select: {
+      updatedAt: true,
+    },
+    where: {
+      epicId,
+    },
+  })
+
+  if (!asset) return false
+
+  const now = new Date()
+  const diff = now.getTime() - asset.updatedAt.getTime()
+  const diffInHours = Math.floor(diff / 1000 / 60 / 60)
+
+  return diffInHours < hoursToSkip
 }

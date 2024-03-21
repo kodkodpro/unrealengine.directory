@@ -124,7 +124,7 @@ model Asset {
 }
 
 model Collection {
-  id          String   @id @default(cuid())
+  id          Int      @id @default(autoincrement())
   slug        String?  @unique
   userId      String
   user        User     @relation(fields: [userId], references: [id])
@@ -142,7 +142,7 @@ model Collection {
 
 model CollectionAsset {
   id           Int        @id @default(autoincrement())
-  collectionId String
+  collectionId Int
   collection   Collection @relation(fields: [collectionId], references: [id])
   assetId      Int
   asset        Asset      @relation(fields: [assetId], references: [id])

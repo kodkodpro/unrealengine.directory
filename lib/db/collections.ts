@@ -3,7 +3,7 @@ import cryptoRandomString from "crypto-random-string"
 import prisma from "@/lib/prisma"
 import { AssetFullSelectWithRelations } from "@/lib/types/AssetFull"
 
-export async function getCollection(id: string) {
+export async function getCollection(id: number) {
   return prisma.collection.findUnique({
     where: {
       id,
@@ -11,7 +11,7 @@ export async function getCollection(id: string) {
   })
 }
 
-export async function getCollectionAssets(collectionId: string) {
+export async function getCollectionAssets(collectionId: number) {
   return prisma.asset.findMany({
     select: AssetFullSelectWithRelations,
     where: {
@@ -59,7 +59,7 @@ export async function getOrCreateWatchlistCollection(userId: string) {
   })
 }
 
-export async function isNameUnique(userId: string, name: string, excludeIds: string[] = []) {
+export async function isNameUnique(userId: string, name: string, excludeIds: number[] = []) {
   const collection = await prisma.collection.findFirst({
     where: {
       id: {
@@ -78,7 +78,7 @@ export async function createCollection(data: Prisma.CollectionCreateArgs["data"]
   return prisma.collection.create({ data })
 }
 
-export async function updateCollection(id: string, data: Prisma.CollectionUpdateArgs["data"]) {
+export async function updateCollection(id: number, data: Prisma.CollectionUpdateArgs["data"]) {
   return prisma.collection.update({
     where: {
       id,
@@ -87,7 +87,7 @@ export async function updateCollection(id: string, data: Prisma.CollectionUpdate
   })
 }
 
-export async function isInCollection(collectionId: string, assetId: number) {
+export async function isInCollection(collectionId: number, assetId: number) {
   const collectionAsset = await prisma.collectionAsset.findFirst({
     where: {
       collectionId,
@@ -98,7 +98,7 @@ export async function isInCollection(collectionId: string, assetId: number) {
   return collectionAsset !== null
 }
 
-export async function addToCollection(collectionId: string, assetId: number) {
+export async function addToCollection(collectionId: number, assetId: number) {
   return prisma.collectionAsset.create({
     data: {
       collectionId,
@@ -107,7 +107,7 @@ export async function addToCollection(collectionId: string, assetId: number) {
   })
 }
 
-export async function removeFromCollection(collectionId: string, assetId: number) {
+export async function removeFromCollection(collectionId: number, assetId: number) {
   return prisma.collectionAsset.deleteMany({
     where: {
       collectionId,
