@@ -130,6 +130,8 @@ export default function AssetsFiltersAndOrder({ assetsCount, categories, engineV
 
   const nonEmptyFilters = Object.entries(filters).filter(([, value]) => !!value)
   const nonEmptyFiltersCount = nonEmptyFilters.length + (categoryId ? 1 : 0) + (engineVersionId ? 1 : 0)
+  const selectedCategory = categoryId ? categories.find((category) => String(category.id) === categoryId) : null
+    const selectedEngineVersion = engineVersionId ? engineVersions.find((engineVersion) => String(engineVersion.id) === engineVersionId) : null
 
   const updateFilter = (key: FilterKey, value: string | null) => {
     setFilters((prevFilters) => {
@@ -198,17 +200,17 @@ export default function AssetsFiltersAndOrder({ assetsCount, categories, engineV
                 <>
                   <span className="font-semibold">{nonEmptyFiltersCount} Filters</span>
 
-                  {categoryId && (
+                  {selectedCategory && (
                     <Badge color="zinc">
                       <FolderIcon className="-mr-1 inline-block size-4" />
-                      {categories.find((category) => String(category.id) === categoryId)!.name}
+                      {selectedCategory.name}
                     </Badge>
                   )}
 
-                  {engineVersionId && (
+                  {selectedEngineVersion && (
                     <Badge color="zinc">
                       <HashtagIcon className="-mr-1 inline-block size-4" />
-                      {engineVersions.find((engineVersion) => String(engineVersion.id) === engineVersionId)!.name}
+                      {selectedEngineVersion.name}
                     </Badge>
                   )}
 
