@@ -1,4 +1,3 @@
-import Facebook from "@auth/core/providers/facebook"
 import Google from "@auth/core/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import NextAuth from "next-auth"
@@ -12,5 +11,5 @@ export const {
   signOut,
 } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [GitHub, Google, Facebook],
+  providers: [GitHub, Google],
 })
