@@ -1,24 +1,24 @@
+import { useSession } from "next-auth/react"
 import { ReactNode, useEffect } from "react"
-import useCurrentUser from "@/hooks/useCurrentUser"
-import { setCurrentUser } from "@/stores/currentUser"
-import { fetchWatchlist, resetWatchlist } from "@/stores/watchlist"
+import { fetchCollections, resetCollections } from "@/stores/collections"
+import { fetchCurrentUser, resetCurrentUser } from "@/stores/currentUser"
 
 export type DataProviderProps = {
   children: ReactNode
 }
 
 export default function DataProvider({ children }: DataProviderProps) {
-  const currentUser = useCurrentUser()
+  const session = useSession()
 
   useEffect(() => {
-    if (currentUser) {
-      setCurrentUser(currentUser)
-      fetchWatchlist()
-    } else {
-      setCurrentUser(null)
-      resetWatchlist()
+    if (session.status === "authenticated") {
+      fetchCurrentUser()
+      fetchCollections()
+    } else if (session.status === "unauthenticated") {
+      resetCurrentUser()
+      resetCollections()
     }
-  }, [currentUser?.email])
+  }, [session.status])
   
   return children
 }

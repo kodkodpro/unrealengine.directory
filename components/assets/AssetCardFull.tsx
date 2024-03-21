@@ -1,16 +1,16 @@
-import { shrinkVersions, Version } from "@/lib/utils/versions"
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid"
 import { ShoppingCartIcon, FolderIcon, HashtagIcon, TagIcon, UserIcon } from "@heroicons/react/24/outline"
 import ReactMarkdown from "react-markdown"
+import AssetCollectionButton from "@/components/assets/AssetCollectionButton"
 import AssetImagesCarousel from "@/components/assets/AssetImagesCarousel"
 import AssetPrice from "@/components/assets/AssetPrice"
-import AssetWatchButton from "@/components/assets/AssetWatchButton"
 import { Button } from "@/components/catalyst/button"
 import { Text } from "@/components/catalyst/text"
 import Rating from "@/components/content/Rating"
 import Tag from "@/components/content/Tag"
 import { AssetFull } from "@/lib/types/AssetFull"
 import { getAssetMarketplaceUrl } from "@/lib/utils/marketplace"
+import { shrinkVersions, Version } from "@/lib/utils/versions"
 
 export type AssetCardFullProps = {
   asset: AssetFull
@@ -40,21 +40,22 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
             <Text className="mb-6">{asset.shortDescription}</Text>
           </>
         )}
-        
-        <AssetWatchButton
-          assetId={asset.id}
-          className="mb-3"
-        />
 
-        <Button
-          href={getAssetMarketplaceUrl(asset.epicId)}
-          color="dark"
-          className="mb-6 w-full sm:py-6 sm:text-xl [&>[data-slot=icon]]:sm:size-6"
-          target="_blank"
-        >
-          <ShoppingCartIcon />
-          <AssetPrice asset={asset} /> at Marketplace
-        </Button>
+        <div className="mb-6 grid grid-cols-2 gap-2">
+          <AssetCollectionButton
+            asset={asset}
+            className="sm:py-3"
+          />
+
+          <Button
+            href={getAssetMarketplaceUrl(asset.epicId)}
+            color="dark"
+            target="_blank"
+          >
+            <ShoppingCartIcon />
+            <AssetPrice asset={asset} /> at Marketplace
+          </Button>
+        </div>
 
         <Rating
           score={asset.ratingScore}

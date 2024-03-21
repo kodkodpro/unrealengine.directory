@@ -2,16 +2,18 @@
 
 import { Dialog } from "@headlessui/react"
 import { ChevronDownIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/react/16/solid"
-import { ArrowRightIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+import { ArrowRightIcon, Bars3Icon, FolderIcon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { EyeIcon } from "@heroicons/react/24/solid"
+import { User } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
-import { User } from "next-auth"
 import { useState } from "react"
 import { signOut } from "@/actions/auth"
 import { Button } from "@/components/catalyst/button"
 import { Dropdown, DropdownButton, DropdownItem, DropdownLabel, DropdownMenu, DropdownSeparator } from "@/components/catalyst/dropdown"
-import useCurrentUser from "@/hooks/useCurrentUser"
+import EditProfileModal from "@/components/user/EditProfileModal"
+import { useCurrentUser } from "@/stores/currentUser"
+import { openModal } from "@/stores/modal"
 
 const navigation = [
   { name: "⏱️ Recent Assets", href: "/?orderBy=newest" },
@@ -162,13 +164,21 @@ function UserMenu({ currentUser }: { currentUser: User | null }) {
   return (
     <Dropdown>
       <DropdownButton plain>
-        {currentUser.name ?? "Account"}
+        {currentUser.name || "Account"}
         <ChevronDownIcon />
       </DropdownButton>
       <DropdownMenu className="z-20">
+        <DropdownItem onClick={() => openModal(<EditProfileModal user={currentUser} />)}>
+          <UserIcon />
+          <DropdownLabel>Profile</DropdownLabel>
+        </DropdownItem>
         <DropdownItem href="/watchlist">
           <EyeIcon />
           <DropdownLabel>Watchlist</DropdownLabel>
+        </DropdownItem>
+        <DropdownItem href="/collections">
+          <FolderIcon />
+          <DropdownLabel>Collections</DropdownLabel>
         </DropdownItem>
         <DropdownSeparator />
         <DropdownItem onClick={() => signOut()}>

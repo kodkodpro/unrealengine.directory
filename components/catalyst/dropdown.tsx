@@ -76,8 +76,6 @@ export function DropdownItem(props: { href?: string } & HeadlessMenuItemProps<"b
       type={props.href ? undefined : "button"}
       {...props}
       className={cn(
-        props.className,
-
         // Base styles
         "group cursor-default rounded-lg px-3.5 py-2.5 focus:outline-none sm:px-3 sm:py-1.5",
 
@@ -98,7 +96,9 @@ export function DropdownItem(props: { href?: string } & HeadlessMenuItemProps<"b
 
         // Icon
         "[&>[data-slot=icon]]:col-start-1 [&>[data-slot=icon]]:row-start-1 [&>[data-slot=icon]]:mr-2.5 [&>[data-slot=icon]]:size-5 sm:[&>[data-slot=icon]]:mr-2 [&>[data-slot=icon]]:sm:size-4",
-        "[&>[data-slot=icon]]:text-zinc-500 [&>[data-slot=icon]]:data-[focus]:text-white [&>[data-slot=icon]]:dark:text-zinc-500 [&>[data-slot=icon]]:data-[focus]:dark:text-white"
+        "[&>[data-slot=icon]]:text-zinc-500 [&>[data-slot=icon]]:data-[focus]:text-white [&>[data-slot=icon]]:dark:text-zinc-500 [&>[data-slot=icon]]:data-[focus]:dark:text-white",
+
+        props.className,
       )}
     />
   )

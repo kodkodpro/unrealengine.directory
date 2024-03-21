@@ -84,7 +84,7 @@ export function DialogTitle({ className, ...props }: React.ComponentPropsWithout
   return (
     <HeadlessDialogTitle
       {...props}
-      className={cn(className, "text-balance text-lg/6 font-semibold text-zinc-950 sm:text-base/6 dark:text-white")}
+      className={cn("text-balance text-lg/6 font-semibold text-zinc-950 sm:text-base/6 dark:text-white", className)}
     />
   )
 }

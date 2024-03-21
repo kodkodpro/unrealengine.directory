@@ -23,6 +23,7 @@ export default function AssetImagesCarousel({ asset, className }: AssetImagesCar
       autoPlay
       ref={carouselRef}
       showStatus={false}
+      showThumbs={false}
       className={cn("h-fit", className)}
     >
       {asset.images.map((image) => (

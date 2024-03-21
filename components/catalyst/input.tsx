@@ -13,8 +13,6 @@ export const Input = forwardRef<
     <span
       data-slot="control"
       className={cn([
-        className,
-
         // Basic layout
         "relative block w-full",
 
@@ -32,6 +30,8 @@ export const Input = forwardRef<
 
         // Invalid state
         "before:has-[[data-invalid]]:shadow-red-500/10",
+
+        className,
       ])}
     >
       <HeadlessInput

@@ -1,17 +1,14 @@
 "use client"
 
 import { HashtagIcon, FolderIcon, StarIcon } from "@heroicons/react/24/outline"
-import { XMarkIcon } from "@heroicons/react/24/solid"
 import Link from "next/link"
-import AssetCardFull from "@/components/assets/AssetCardFull"
+import AssetCardFullModal from "@/components/assets/AssetCardFullModal"
 import AssetPriceBadge from "@/components/assets/AssetPriceBadge"
-import { Button } from "@/components/catalyst/button"
-import { Dialog, DialogBody, DialogDescription, DialogTitle } from "@/components/catalyst/dialog"
 import Tag from "@/components/content/Tag"
 import { AssetFull } from "@/lib/types/AssetFull"
 import { pluralize } from "@/lib/utils/string"
 import { shrinkVersions, Version } from "@/lib/utils/versions"
-import { closeModal, openModal } from "@/stores/modal"
+import { openModal } from "@/stores/modal"
 
 export type AssetCardProps = {
   asset: AssetFull
@@ -26,41 +23,13 @@ export default function AssetCard({ asset, showCategory = true, showEngineVersio
     }
 
     event.preventDefault()
-
-    openModal(
-      <Dialog
-        open
-        size="screen-2xl"
-        onClose={closeModal}
-      >
-        <DialogTitle className="sm:text-2xl">
-          {asset.name}
-          
-          <Button
-            plain
-            className="float-right [&>[data-slot=icon]]:sm:size-6"
-            onClick={closeModal}
-          >
-            <XMarkIcon />
-          </Button>
-        </DialogTitle>
-        <DialogDescription>
-          {asset.shortDescription}
-        </DialogDescription>
-        <DialogBody>
-          <AssetCardFull
-            asset={asset}
-            showTitle={false}
-          />
-        </DialogBody>
-      </Dialog>
-    )
+    openModal(<AssetCardFullModal asset={asset} />)
   }
 
   return (
     <Link
       href={`/${asset.epicId}`}  
-      className="block rounded-lg p-6 pb-5 transition-all hover:bg-black/[3%] dark:hover:bg-white/[3%]"
+      className="relative block rounded-lg p-3 pb-2 transition-all hover:bg-black/[3%] xl:p-4 xl:pb-3 2xl:p-5 2xl:pb-4 dark:hover:bg-white/[3%]"
       onClick={handleClick}
     >
       <img
@@ -74,13 +43,19 @@ export default function AssetCard({ asset, showCategory = true, showEngineVersio
 
       <div className="flex flex-row items-center gap-2">
         {showCategory && (
-          <Tag icon={FolderIcon}>
+          <Tag
+            icon={FolderIcon}
+            className="whitespace-nowrap"
+          >
             {asset.category.name}
           </Tag>
         )}
 
         {showEngineVersions && (
-          <Tag icon={HashtagIcon}>
+          <Tag
+            icon={HashtagIcon}
+            className="whitespace-nowrap"
+          >
             {shrinkVersions(asset.engineVersions.map((engineVersion) => engineVersion.name as Version))}
           </Tag>
         )}
@@ -88,9 +63,9 @@ export default function AssetCard({ asset, showCategory = true, showEngineVersio
         <Tag
           icon={StarIcon}
           title={`${asset.ratingScore} stars (${asset.ratingCount} ${pluralize(asset.ratingCount, "voter", "voters")})`}
-          classNameIcon="-mt-0.5"
+          classNameIcon="-mt-0.5 whitespace-nowrap"
         >
-          {asset.ratingCount > 0 ? `${asset.ratingScore} (${asset.ratingCount})` : "No rating"}
+          {asset.ratingCount > 0 ? `${asset.ratingScore} (${asset.ratingCount})` : "0"}
         </Tag>
 
         <AssetPriceBadge

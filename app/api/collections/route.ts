@@ -1,20 +1,25 @@
 import { NextResponse } from "next/server"
 import getCurrentUserId from "@/hooks/getCurrentUserId"
+import { getOrCreateWatchlistCollection } from "@/lib/db/collections"
 import prisma from "@/lib/prisma"
 
 export async function GET() {
   const currentUserId = await getCurrentUserId()
   if (!currentUserId) return NextResponse.json([])
 
-  const assetWatch = await prisma.assetWatch.findMany({
+  // TODO: Find a more appropriate place for this
+  await getOrCreateWatchlistCollection(currentUserId)
+
+  const collections = await prisma.collection.findMany({
     where: {
       userId: currentUserId,
     },
     select: {
-      assetId: true,
+      id: true,
+      name: true,
+      isPublic: true,
     },
   })
 
-  const assetsIds = assetWatch.map((watch) => watch.assetId)
-  return NextResponse.json(assetsIds)
+  return NextResponse.json(collections)
 }

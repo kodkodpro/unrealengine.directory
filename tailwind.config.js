@@ -12,6 +12,10 @@ module.exports = {
         sans: ["var(--font-inter)", "Inter var", "Inter", ...defaultTheme.fontFamily.sans],
       },
     },
+    screens: {
+      ...defaultTheme.screens,
+      "3xl": "1920px",
+    },
   },
   plugins: [
     require("tailwind-scrollbar"),
