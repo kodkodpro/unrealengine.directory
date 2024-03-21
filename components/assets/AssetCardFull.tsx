@@ -57,7 +57,7 @@ export default function AssetCardFull({ asset, showTitle = true }: AssetCardFull
             target="_blank"
           >
             <ShoppingCartIcon />
-            <AssetPrice asset={asset} /> at Marketplace
+            <AssetPrice asset={asset} />
           </Button>
         </div>
 
