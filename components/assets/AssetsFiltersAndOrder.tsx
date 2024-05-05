@@ -131,7 +131,7 @@ export default function AssetsFiltersAndOrder({ assetsCount, categories, engineV
   const nonEmptyFilters = Object.entries(filters).filter(([, value]) => !!value)
   const nonEmptyFiltersCount = nonEmptyFilters.length + (categoryId ? 1 : 0) + (engineVersionId ? 1 : 0)
   const selectedCategory = categoryId ? categories.find((category) => String(category.id) === categoryId) : null
-    const selectedEngineVersion = engineVersionId ? engineVersions.find((engineVersion) => String(engineVersion.id) === engineVersionId) : null
+  const selectedEngineVersion = engineVersionId ? engineVersions.find((engineVersion) => String(engineVersion.id) === engineVersionId) : null
 
   const updateFilter = (key: FilterKey, value: string | null) => {
     setFilters((prevFilters) => {
